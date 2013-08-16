@@ -17,10 +17,15 @@ public class VehiculeServiceImpl implements VehiculeService {
 	public void deleteVehicule(int id) {
 		this.vehiculeRepository.delete(id);
 	}
+	
+	@Override
+	public Vehicule getVehicule(int id){
+		return this.vehiculeRepository.findOne(id);
+	}
 
 	@Override
 	public List<Vehicule> getVehicules() {
-		return this.vehiculeRepository.findAll();
+		return this.vehiculeRepository.findAllOrderByName();
 	}
 
 	@Override

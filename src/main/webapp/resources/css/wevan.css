@@ -1,0 +1,19 @@
+.vehicules td.id{
+	width: 30px;
+}
+
+.vehicules td.name, .vehicules td.name input{
+	width: 200px;
+}
+
+.vehicules td.branch, .vehicules td.branch input{
+	width: 100px;
+}
+
+.vehicules td.registration, .vehicules td.registration input{
+	width: 200px;
+}
+
+.vehicules td.model, .vehicules td.model input{
+	width: 300px;
+}
