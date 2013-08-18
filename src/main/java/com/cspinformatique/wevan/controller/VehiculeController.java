@@ -17,7 +17,7 @@ import com.cspinformatique.wevan.entity.Vehicule;
 import com.cspinformatique.wevan.service.VehiculeService;
 
 @Controller
-@RequestMapping("/vehicule")
+@RequestMapping({"/", "/vehicule"})
 public class VehiculeController {
 	@Autowired
 	private VehiculeService vehiculeService;
