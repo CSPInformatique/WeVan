@@ -9,7 +9,7 @@ window.VehiculeListView = Backbone.View.extend({
 	
     events : {
         "click .delete" : "deleteVehicule",
-        "click #newVehicule button" : "saveNewVehicule"
+        "click .newVehicule button" : "saveNewVehicule"
     },
     
     initialize : function() {
