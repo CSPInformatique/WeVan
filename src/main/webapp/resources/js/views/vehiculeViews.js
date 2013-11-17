@@ -14,6 +14,7 @@ window.VehiculeListView = Backbone.View.extend({
     
     initialize : function() {
     	this.collection.fetch();
+    	
         this.template = _.template($("#vehiculeList-template").html());
 
         /*--- binding ---*/
@@ -48,6 +49,7 @@ window.VehiculeListView = Backbone.View.extend({
 	},
     	
     render : function(){;
+    	this.collection.sortBy("branch","name", "model"); 
     	var renderedContent = this.template({vehiculeList : this.collection.toJSON()});
         $(this.el).html(renderedContent);
         return this;

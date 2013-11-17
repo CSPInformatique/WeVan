@@ -25,7 +25,7 @@ public class VehiculeServiceImpl implements VehiculeService {
 
 	@Override
 	public List<Vehicule> getVehicules() {
-		return this.vehiculeRepository.findAllOrderByName();
+		return this.vehiculeRepository.findAll();
 	}
 
 	@Override

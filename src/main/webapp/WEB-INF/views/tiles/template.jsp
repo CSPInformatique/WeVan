@@ -25,6 +25,7 @@
 		<script src="resources/js/libs/underscore.js"></script>
 	    <script src="resources/js/libs/backbone.js"></script>
 	    <script src="resources/js/libs/bootstrap.min.js"></script>
+	    <script src="resources/js/libs/multi-sort.collection.js"></script>
     
     	<script type="text/javascript">
 	    	_.templateSettings = {

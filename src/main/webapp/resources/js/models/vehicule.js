@@ -7,7 +7,7 @@ window.Vehicule = Backbone.Model.extend({
 	},
 });
 
-window.VehiculeList = Backbone.Collection.extend({
+window.VehiculeList = MultiSortCollection.extend({
 	model: Vehicule,
 	url: "vehicule.json"
 });

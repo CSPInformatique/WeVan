@@ -14,6 +14,7 @@
 			<th>Modèle</th>
 			<th>Registration</th>
 			<th># Succursale</th>
+			<th>&nbsp;</th>
 		</tr>
 		<@ _.each(vehiculeList, function(vehicule) { @>
 			<tr>
@@ -38,7 +39,6 @@
 	</tr>
 </script>
 
-        
 <div class="row vehicules">
 	<h2>Véhicules</h2>
 	<div id="vehiculeList-container"></div>
