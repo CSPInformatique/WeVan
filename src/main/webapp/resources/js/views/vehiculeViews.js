@@ -28,7 +28,7 @@ window.VehiculeListView = Backbone.View.extend({
     },
     
     newVehicule: function(){
-    	$(".vehicules table").append($("#newVehicule-template").html());
+    	$(".vehicules table tbody").append($("#newVehicule-template").html());
     },
     
 	saveNewVehicule: function(){
@@ -37,6 +37,7 @@ window.VehiculeListView = Backbone.View.extend({
 			{	id: null,
 				branch: $(".newVehicule .branch input").val(),
 				name: $(".newVehicule .name input").val(),
+				number: $(".newVehicule .number input").val(),
 				model: $(".newVehicule .model input").val(),
 				registration: $(".newVehicule .registration input").val()
 			},
@@ -49,7 +50,7 @@ window.VehiculeListView = Backbone.View.extend({
 	},
     	
     render : function(){;
-    	this.collection.sortBy("branch","name", "model"); 
+    	this.collection.sortBy("branch","name", "number", "model"); 
     	var renderedContent = this.template({vehiculeList : this.collection.toJSON()});
         $(this.el).html(renderedContent);
         return this;

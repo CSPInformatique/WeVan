@@ -11,6 +11,7 @@ public class Vehicule {
 	private int id;
 	private int branch;
 	private String name;
+	private int number;
 	private String model;
 	private String registration;
 	
@@ -18,10 +19,11 @@ public class Vehicule {
 		
 	}
 
-	public Vehicule(int id, int branch, String name, String model, String registration) {
+	public Vehicule(int id, int branch, String name, int number, String model, String registration) {
 		this.id = id;
 		this.branch = branch;
 		this.name = name;
+		this.number = number;
 		this.model = model;
 		this.registration = registration;
 	}
@@ -50,6 +52,14 @@ public class Vehicule {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public int getNumber() {
+		return number;
+	}
+
+	public void setNumber(int number) {
+		this.number = number;
 	}
 
 	public String getModel() {

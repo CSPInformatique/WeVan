@@ -1,0 +1,17 @@
+UPDATE `wevan`.`vehicule` SET `name`='Bessie', `number`='1' WHERE `id`='1';
+UPDATE `wevan`.`vehicule` SET `name`='Bessie', `number`='5' WHERE `id`='2';
+UPDATE `wevan`.`vehicule` SET `name`='Bessie', `number`='6' WHERE `id`='3';
+UPDATE `wevan`.`vehicule` SET `name`='Bessie', `number`='7' WHERE `id`='4';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='1' WHERE `id`='5';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='7' WHERE `id`='11';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='8' WHERE `id`='12';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='9' WHERE `id`='13';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='10' WHERE `id`='14';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='11' WHERE `id`='15';
+UPDATE `wevan`.`vehicule` SET `name`='Janis', `number`='1' WHERE `id`='16';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='2' WHERE `id`='21';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='3' WHERE `id`='22';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='6' WHERE `id`='23';
+UPDATE `wevan`.`vehicule` SET `name`='Billie', `number`='12' WHERE `id`='24';
+UPDATE `wevan`.`vehicule` SET `name`='Janis', `number`='4' WHERE `id`='25';
+UPDATE `wevan`.`vehicule` SET `name`='Janis', `number`='5' WHERE `id`='26';

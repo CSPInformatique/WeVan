@@ -40,11 +40,9 @@
 		<tiles:insertAttribute name="header" />
 		<tiles:insertAttribute name="menu" />
 	
-		<div class="container">
-			<div class="body-content">
-				<tiles:insertAttribute name="content" />
-				<tiles:insertAttribute name="footer" />
-			</div>
+		<div class="body-content">
+			<tiles:insertAttribute name="content" />
+			<tiles:insertAttribute name="footer" />
 		</div>
 	  	
 	  	<!-- Models -->

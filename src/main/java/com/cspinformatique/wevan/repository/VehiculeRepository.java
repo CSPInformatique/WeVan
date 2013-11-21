@@ -11,6 +11,6 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, Integer> {
 	@Query("SELECT v FROM Vehicule v ORDER BY v.branch ASC, v.model ASC, v.name ASC")
 	public List<Vehicule> findAll();
 	
-	@Query("SELECT v FROM Vehicule v WHERE v.branch = ?1 ORDER BY v.branch ASC, v.model ASC, v.name ASC")
+	@Query("SELECT v FROM Vehicule v WHERE v.branch = ?1 ORDER BY v.branch ASC, v.name ASC, v.number ASC, v.model ASC")
 	public List<Vehicule> findByBranch(int branch);
 }
