@@ -48,13 +48,13 @@ public class VehiculeController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(produces="application/json")
+	@RequestMapping(produces="application/json", method=RequestMethod.GET)
 	public @ResponseBody List<Vehicule> getVehicules(){
 		return this.vehiculeService.getVehicules();
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(method=RequestMethod.POST, produces="application/json")
+	@RequestMapping(method={RequestMethod.POST, RequestMethod.PUT}, produces="application/json", value={"", "/{id}"})
 	public @ResponseBody Vehicule saveVehicule(@RequestBody Vehicule vehicule){
 		this.vehiculeService.saveVehicule(vehicule);
 		

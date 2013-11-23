@@ -16,7 +16,7 @@
 	    <title>WeVan - Gestionnaire de véhicule</title>
 	
 	    <!-- Bootstrap core CSS -->
-	    <link href="resources/css/libs/bootstrap.css" rel="stylesheet">
+	    <link href="resources/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	
 	    <!-- Custom styles for this template -->
 	    <link href="resources/css/wevan.css" rel="stylesheet">
@@ -24,7 +24,7 @@
 		<script src="resources/js/libs/jquery.js"></script>
 		<script src="resources/js/libs/underscore.js"></script>
 	    <script src="resources/js/libs/backbone.js"></script>
-	    <script src="resources/js/libs/bootstrap.min.js"></script>
+	    <script src="resources/lib/bootstrap/js/bootstrap.min.js"></script>
 	    <script src="resources/js/libs/multi-sort.collection.js"></script>
     
     	<script type="text/javascript">

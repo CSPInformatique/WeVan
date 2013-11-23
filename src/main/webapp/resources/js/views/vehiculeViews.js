@@ -1,58 +1,100 @@
 window.VehiculeListView = Backbone.View.extend({
+	closeModal: function(){
+		$('.modal').modal('hide');
+	},
+	
 	deleteVehicule: function(e){
-		this.collection.get($(e.currentTarget).data("id")).destroy({
+		this.collection.get($(e.currentTarget).data('id')).destroy({
 			wait : true
 		});
 	},
 	
-	el : $("#vehiculeList-container"),
+	editVehicule: function(vehiculeId){
+		this.openVehicule(this.collection.get(vehiculeId).toJSON());
+	},
+	
+	el : $('#vehiculeList-container'),
 	
     events : {
-        "click .delete" : "deleteVehicule",
-        "click .newVehicule button" : "saveNewVehicule"
+    	'click .delete button' : 'deleteVehicule',
     },
     
     initialize : function() {
     	this.collection.fetch();
     	
-        this.template = _.template($("#vehiculeList-template").html());
+        this.template = _.template($('#vehiculeList-template').html());
 
         /*--- binding ---*/
-        _.bindAll(this, "render");
-        this.collection.bind("change", this.render);
-        this.collection.bind("add", this.render);
-        this.collection.bind("remove", this.render);
+        _.bindAll(this, 'render');
+        _.bindAll(this, 'openNewVehicule');
+        _.bindAll(this, 'saveVehicule');
+        this.collection.bind('change', this.render);
+        this.collection.bind('add', this.render);
+        this.collection.bind('remove', this.render);
         /*---------------*/
         
-        $(".vehicules > button").click(this.newVehicule);
+        $(".new button").click(this.openNewVehicule);
+        $("button.save").click(this.saveVehicule);
     },
     
-    newVehicule: function(){
-    	$(".vehicules table tbody").append($("#newVehicule-template").html());
+    openVehicule : function(vehicule){
+    	$('.modal .modal-body').html(
+    			_.template($('#newVehicule-template').html())({
+	    		vehicule : vehicule
+    		})
+    	);
+    	
+    	$('.modal').modal({backdrop : 'static'});
+    	
+    	$("button.save").prop('disabled', false);
+    	$("button.close").prop('disabled', false);
     },
     
-	saveNewVehicule: function(){
+    openNewVehicule: function(){
+    	this.openVehicule({
+    		id : 0,
+			name : '',
+			number : '',
+			branch : '',
+			registration : ''
+		});
+    },
+    	
+    render : function(){;
+    	this.collection.sortBy('branch', 'name', 'number', 'model'); 
+    	var vehiculeList = this.collection.toJSON();
+    	
+    	var renderedContent = this.template({vehiculeList : vehiculeList});
+        $(this.el).html(renderedContent);
+        
+        var vehiculeListView = this;
+        $(".edit button").click(function(){
+        	vehiculeListView.editVehicule($(this).attr("data-id"));
+        });
+        
+        return this;
+    },
+    
+    saveVehicule: function(){
+    	$("button.save").prop('disabled', true);
+    	$("button.close").prop('disabled', true);
+    	
 		var collection = this.collection;
 		this.collection.create(
-			{	id: null,
-				branch: $(".newVehicule .branch input").val(),
-				name: $(".newVehicule .name input").val(),
-				number: $(".newVehicule .number input").val(),
-				model: $(".newVehicule .model input").val(),
-				registration: $(".newVehicule .registration input").val()
+			{	id: $('form input.id').val(),
+				branch: $('form .branch input').val(),
+				name: $('form .name input').val(),
+				number: $('form .number input').val(),
+				model: $('form .model input').val(),
+				registration: $('form .registration input').val()
 			},
 			{	wait : true,
 				success : function(resp){
 			        collection.fetch();
+			        
+			        $('.modal').modal('hide');
 			    }
 			}	
 		);		
 	},
-    	
-    render : function(){;
-    	this.collection.sortBy("branch","name", "number", "model"); 
-    	var renderedContent = this.template({vehiculeList : this.collection.toJSON()});
-        $(this.el).html(renderedContent);
-        return this;
-    }
 });
