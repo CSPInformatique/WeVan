@@ -32,7 +32,7 @@
 	    	    interpolate: /\<\@\=(.+?)\@\>/gim,
 	    	    evaluate: /\<\@([\s\S]+?)\@\>/gim,
 	    	    escape: /\<\@\-(.+?)\@\>/gim
-	    	};
+	    	};resources/lib/bootstrap/js/bootstrap.min.js
     	</script>
 	</head>
 
