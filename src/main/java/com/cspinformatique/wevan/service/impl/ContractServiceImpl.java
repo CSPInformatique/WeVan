@@ -2,12 +2,14 @@ package com.cspinformatique.wevan.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.cspinformatique.wevan.entity.Contract;
+import com.cspinformatique.wevan.entity.Contract.Status;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.ContractService;
 
@@ -15,6 +17,11 @@ import com.cspinformatique.wevan.service.ContractService;
 @Transactional
 public class ContractServiceImpl implements ContractService {
 	@Autowired private ContractRepository contractRepository;
+	
+	@Override
+	public List<Contract> findByStatus(Status status){
+		return this.contractRepository.findByStatus(status);
+	}
 	
 	@Override
 	public Contract generateNewContract(int branchId){
@@ -26,7 +33,20 @@ public class ContractServiceImpl implements ContractService {
 		}else{
 			++contractId;
 		}
-		Contract contract = new Contract(contractId, branchId);
+		Contract contract =	new Contract(
+								contractId, 
+								branchId, 
+								null, 
+								null,
+								null,
+								null, 
+								0, 
+								0d,
+								null, 
+								0d, 
+								0d,
+								null
+							);
 		
 		this.saveContract(contract);
 		

@@ -15,13 +15,16 @@ import com.cspinformatique.wevan.service.ContractService;
 public class ContractController {
 	@Autowired private ContractService contractService;
 	
-	@RequestMapping(method=RequestMethod.GET)
-	public String getDemoContratPage(){
-		return "contract/demo";
-	}
+	@RequestMapping(produces="application/json", params="status")
+	public @ResponseBody Contract
 	
 	@RequestMapping(produces="application/json")
 	public @ResponseBody Contract getNewContract(@RequestParam int branch){
 		return this.contractService.generateNewContract(branch);
+	}
+	
+	@RequestMapping(method=RequestMethod.GET)
+	public String getDemoContratPage(){
+		return "contract/demo";
 	}
 }
