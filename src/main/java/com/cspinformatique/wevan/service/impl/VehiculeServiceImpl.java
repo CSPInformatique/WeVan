@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Vehicule;
 import com.cspinformatique.wevan.repository.VehiculeRepository;
 import com.cspinformatique.wevan.service.VehiculeService;
@@ -29,7 +30,7 @@ public class VehiculeServiceImpl implements VehiculeService {
 	}
 
 	@Override
-	public List<Vehicule> getVehiculesByBranch(int branch) {
+	public List<Vehicule> getVehiculesByBranch(Branch branch) {
 		return this.vehiculeRepository.findByBranch(branch);
 	}
 

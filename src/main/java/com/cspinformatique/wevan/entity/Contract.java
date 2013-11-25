@@ -2,21 +2,22 @@ package com.cspinformatique.wevan.entity;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="contract")
 public class Contract {
 	private long id;
-	private int branchId;
+	private Branch branch;
 	
 	public Contract(){
 		
 	}
 	
-	public Contract(long id, int branchId){
+	public Contract(long id, Branch branch){
 		this.id = id;
-		this.branchId = branchId;
+		this.branch = branch;
 	}
 
 	@Id
@@ -28,11 +29,12 @@ public class Contract {
 		this.id = id;
 	}
 
-	public int getBranchId() {
-		return branchId;
+	@ManyToOne
+	public Branch getBranch() {
+		return branch;
 	}
 
-	public void setBranchId(int branchId) {
-		this.branchId = branchId;
+	public void setBranch(Branch branch) {
+		this.branch = branch;
 	}
 }

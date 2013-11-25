@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
@@ -28,12 +27,6 @@ public class VehiculeController {
 		this.vehiculeService.deleteVehicule(id);
 		
 		return id;
-	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(params="branch")
-	public @ResponseBody List<Vehicule> getBranchVehicule(@RequestParam int branch){
-		return this.vehiculeService.getVehiculesByBranch(branch);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)

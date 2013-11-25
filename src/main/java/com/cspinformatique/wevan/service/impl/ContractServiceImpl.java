@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.ContractService;
@@ -17,8 +18,8 @@ public class ContractServiceImpl implements ContractService {
 	@Autowired private ContractRepository contractRepository;
 	
 	@Override
-	public Contract generateNewContract(int branchId){
-		Long contractId = this.findLastestContract(branchId);
+	public Contract generateNewContract(Branch branch){
+		Long contractId = this.findLastestContract(branch);
 		String sysdatePrefix = new SimpleDateFormat("yyMMdd").format(new Date());
 		
 		if(contractId == null || !String.valueOf(contractId).startsWith(sysdatePrefix)){
@@ -26,7 +27,7 @@ public class ContractServiceImpl implements ContractService {
 		}else{
 			++contractId;
 		}
-		Contract contract = new Contract(contractId, branchId);
+		Contract contract = new Contract(contractId, branch);
 		
 		this.saveContract(contract);
 		
@@ -34,8 +35,8 @@ public class ContractServiceImpl implements ContractService {
 	}
 	
 	@Override
-	public Long findLastestContract(int branchId) {
-		return this.contractRepository.findLatestContractId(branchId);
+	public Long findLastestContract(Branch branch) {
+		return this.contractRepository.findLatestContractId(branch);
 	}
 
 	@Override

@@ -3,13 +3,14 @@ package com.cspinformatique.wevan.entity;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name="vehicule")
 public class Vehicule {
 	private int id;
-	private int branch;
+	private Branch branch;
 	private String name;
 	private int number;
 	private String model;
@@ -19,7 +20,7 @@ public class Vehicule {
 		
 	}
 
-	public Vehicule(int id, int branch, String name, int number, String model, String registration) {
+	public Vehicule(int id, Branch branch, String name, int number, String model, String registration) {
 		this.id = id;
 		this.branch = branch;
 		this.name = name;
@@ -38,11 +39,12 @@ public class Vehicule {
 		this.id = id;
 	}
 
-	public int getBranch() {
+	@ManyToOne
+	public Branch getBranch() {
 		return branch;
 	}
 
-	public void setBranch(int branch) {
+	public void setBranch(Branch branch) {
 		this.branch = branch;
 	}
 
