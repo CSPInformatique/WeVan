@@ -9,17 +9,12 @@
 			http://www.springframework.org/schema/security/spring-security-3.1.xsd"
 >
 	<authentication-manager>
-		<authentication-provider>
-			<jdbc-user-service
-				data-source-ref="datasource"
-				users-by-username-query="select username, password, true from user where username = ?"
-				authorities-by-username-query="select username, type from user where username = ?"
-			/>
-		</authentication-provider>
+		<authentication-provider user-service-ref="userServiceImpl" />
 	</authentication-manager>
 	
 	<http use-expressions="true">
 		<http-basic />
-		<intercept-url pattern="/**" access="hasRole('user')"/>
+		<intercept-url pattern="/resources/**" access="permitAll"/>
+		<intercept-url pattern="/**" access="isAuthenticated()"/>
 	</http>	
 </beans:beans>

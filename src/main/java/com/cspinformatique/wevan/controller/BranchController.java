@@ -7,19 +7,27 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.entity.Vehicule;
+import com.cspinformatique.wevan.service.BranchService;
 import com.cspinformatique.wevan.service.ContractService;
 import com.cspinformatique.wevan.service.VehiculeService;
 
 @Controller("/branch")
 public class BranchController {
+	@Autowired private BranchService branchService;
 	@Autowired private ContractService contractService;
 	@Autowired private VehiculeService vehiculeService;
+	
+	@RequestMapping(produces="application/json", method=RequestMethod.GET)
+	public @ResponseBody List<Branch> getBranchs(){
+		return this.branchService.findAll();
+	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping("/{branch}/vehicule")
@@ -27,6 +35,7 @@ public class BranchController {
 		return this.vehiculeService.getVehiculesByBranch(branch);
 	}
 	
+	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping("/{branch}/contract")
 	public @ResponseBody Contract getNewContract(@PathVariable Branch branch){
 		return this.contractService.generateNewContract(branch);

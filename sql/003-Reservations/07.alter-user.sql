@@ -1,0 +1,1 @@
+ALTER TABLE `wevan`.`user` DROP COLUMN `type` ;

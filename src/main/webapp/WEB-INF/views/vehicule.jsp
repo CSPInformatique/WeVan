@@ -1,7 +1,19 @@
-<!-- Example row of columns -->
+<%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
+<security:authentication property="principal.username" var="username" />
+
 <script type="text/javascript">
 	$(document).ready(function(){
 		$(".nav li.vehicule").addClass("active");
+		
+		// Retreives current user.
+		var user = new User({username : "${username}"});
+		
+		user.fetch({wait : true});
+		
+		// If the user is an admin. load all branch list.
+		
+		
+		// If the user not an admin, load all vehicules for his branch.
 		
 		new VehiculeListView({ collection : new VehiculeList()});
 	});
