@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <security:authentication property="principal.username" var="username" />
 
@@ -5,48 +6,69 @@
 	$(document).ready(function(){
 		$(".nav li.vehicule").addClass("active");
 		
-		// Retreives current user.
-		var user = new User({username : "${username}"});
-		
-		user.fetch({wait : true});
-		
 		// If the user is an admin. load all branch list.
-		
-		
-		// If the user not an admin, load all vehicules for his branch.
-		
-		new VehiculeListView({ collection : new VehiculeList()});
+		if(user.hasRole("ADMIN")){
+			var branchesComboBoxView = new BranchesComboBoxView({collection : new BranchList()});
+			
+			branchesComboBoxView.collection.fetch({success : function(){
+				var vehiculeList = new VehiculeList();
+				vehiculeList.branch = $("select.branches").select2("val");
+				
+				var vehiculeListView =	new VehiculeListView({collection : vehiculeList});
+
+				$("select.branches").on("change", function(e){
+					vehiculeListView.collection.branch = e.val;
+					vehiculeListView.collection.fetch();
+				});
+			}});
+		}else{
+			// Hide combox box container.
+			$(".branchesComboBox-container").hide();
+			
+			// If the user not an admin, load all vehicules for his branch.
+			var vehiculeList = new VehiculeList();
+			vehiculeList.branch = user.toJSON().branch.id;
+			
+			new VehiculeListView({ collection : vehiculeList});	
+		}
 	});
 </script>
+
+<script type="text/template" id="branchesComboBox-template">
+	<select class="branches">
+		<@ _.each(branchesList, function(branch) { @>
+			<option value="<@= branch.id @>"><@= branch.name @></option>
+		<@ }); @>
+	</select>
+</script>
+
 <script type="text/template" id="vehiculeList-template">
 	<table class="table">
 		<thead>
-			<tr>
+			<tr class="active">
 				<th>Nom</th>
 				<th class="text-center">#</th>
 				<th>Modèle</th>
 				<th>Enregistrement</th>
-				<th class="text-center"># Succursale</th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 			</tr>
 		</thead>
 		<tbody>
-			<@ _.each(vehiculeList, function(vehicule) { @>
-				<tr>
-					<td class="name"><@= vehicule.name @></td>
-					<td class="number text-center"><@= vehicule.number @></td>
-					<td class="model"><@= vehicule.model @></td>
-					<td class="registration"><@= vehicule.registration @></td>
-					<td class="branch text-center"><@= vehicule.branch @></td>
-					<td class="edit">
-						<button class="btn btn-primary" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-edit"></span></button>
-					</td>
-					<td class="delete">
-						<button class="btn btn-danger" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-remove"></span></button>
-					</td>
-				</tr>
-			<@}); @>
+<@	_.each(vehiculeList, function(vehicule) { @>
+			<tr>
+				<td class="name"><@= vehicule.name @></td>
+				<td class="number text-center"><@= vehicule.number @></td>
+				<td class="model"><@= vehicule.model @></td>
+				<td class="registration"><@= vehicule.registration @></td>
+				<td class="edit">
+					<button class="btn btn-primary" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-edit"></span></button>
+				</td>
+				<td class="delete">
+					<button class="btn btn-danger" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-remove"></span></button>
+				</td>
+			</tr>
+<@	}); @>
 		</tbody>
 	</table>
 </script>
@@ -69,16 +91,40 @@
     <input type="text" class="form-control" id="registration" placeholder="Enregistrement" value="<@= vehicule.registration @>">
   </div>
   <div class="branch form-group">
-    <label for="registration">Numéro succursale</label>
-    <input type="text" class="form-control" id="registration" placeholder="Numéro succursale" value="<@= vehicule.branch @>">
+    <label for="branch">Succursale</label>
+<@	if(user.hasRole("ADMIN")){	@>
+    <select class="form-control" id="branch">
+<@	}else{	@>
+    <select class="form-control" id="branch" disabled="disabled">
+<@	}
+	_.each(branchList, function(branch) {
+		if(	(vehicule.branch == "" && branch.id == selectedBranch) || 
+			(vehicule.branch != "" && branch.id == vehicule.branch.id)
+		){	@>
+		<option value="<@= branch.id @>" selected="selected"><@= branch.name @></option>
+<@		}	@>
+		<option value="<@= branch.id @>"><@= branch.name @></option>
+<@	});	@>
+	</select>
   </div> 
 </script>
-<div class="container">
-	<div class="row vehicules">
-		<h2>Véhicules</h2>
-		<div id="vehiculeList-container"></div>
-		<div class="new"><button class="btn btn-primary">Nouveau</button></div>
+<div class="row filters">
+	<div class="col-xs-12">
+		<div class="branches">
+			<h4>Succursale</h4>
+			<div class="branchesComboBox-container"></div>
+		</div>
 	</div>
+</div>
+
+<div class="row vehicules">
+	<div class="table-responsive">
+		<div id="vehiculeList-container"></div>
+	</div>
+</div>
+
+<div class="row">
+	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
 </div>
 
 <div class="modal fade">

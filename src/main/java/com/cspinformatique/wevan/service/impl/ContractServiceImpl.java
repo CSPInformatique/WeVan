@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
+import com.cspinformatique.wevan.entity.Driver;
 import com.cspinformatique.wevan.entity.Contract.Status;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.ContractService;
@@ -20,8 +21,23 @@ public class ContractServiceImpl implements ContractService {
 	@Autowired private ContractRepository contractRepository;
 	
 	@Override
-	public List<Contract> findBranchAndStatus(Branch branch, Status status){
-		return this.contractRepository.findByBranchAndStatus(branch, status);
+	public void deleteContract(long id){
+		this.contractRepository.delete(id);
+	}
+	
+	@Override
+	public List<Contract> findByBranch(Branch branch){
+		return this.contractRepository.findByBranchOrderByIdDesc(branch);
+	}
+	
+	@Override
+	public List<Contract> findByBranchAndStatus(Branch branch, List<Status> status){
+		return this.contractRepository.findByBranchAndStatusInOrderByIdDesc(branch, status);
+	}
+	
+	@Override
+	public Contract findOne(long id){
+		return this.contractRepository.findOne(id);
 	}
 	
 	@Override
@@ -61,7 +77,7 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
-	public void saveContract(Contract contract) {
-		this.contractRepository.save(contract);
+	public Contract saveContract(Contract contract) {
+		return this.contractRepository.save(contract);
 	}
 }

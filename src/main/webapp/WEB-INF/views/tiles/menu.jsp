@@ -15,8 +15,8 @@
     </div>
     <div class="collapse navbar-collapse">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="vehicule">Véhicules</a></li>
-        <li><a href="contract">Demo contrat</a></li>
+        <li class="vehicule"><a href='<c:url value="/vehicule" />'>Véhicules</a></li>
+        <li class="contract"><a href='<c:url value="/contract" />'>Contracts</a></li>
       </ul>
     </div><!--/.nav-collapse -->
   </div>

@@ -7,11 +7,17 @@ import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.entity.Contract.Status;
 
 public interface ContractService {
-	public List<Contract> findBranchAndStatus(Branch branch, Status status);
+	public void deleteContract(long id);
+	
+	public List<Contract> findByBranch(Branch branch);
+	
+	public List<Contract> findByBranchAndStatus(Branch branch, List<Status> status);
+	
+	public Contract findOne(long id);
 	
 	public Long findLastestContract(Branch branch);
 	
 	public Contract generateNewContract(Branch branch);
 	
-	public void saveContract(Contract contract);
+	public Contract saveContract(Contract contract);
 }

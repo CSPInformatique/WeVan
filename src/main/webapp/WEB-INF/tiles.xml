@@ -14,8 +14,12 @@
 		<put-attribute name="menu" value="/WEB-INF/views/tiles/menu.jsp" />
 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" />
 	</definition>
+		
+	<definition name="contract" extends="menuTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/contract.jsp" />
+	</definition>
 	
-	<definition name="contract/demo" template="/WEB-INF/views/contractDemo.jsp" />
+	<definition name="contract/print" template="/WEB-INF/views/printContract.jsp" />
 		
 	<definition name="vehicule" extends="menuTemplate">
 		<put-attribute name="content" value="/WEB-INF/views/vehicule.jsp" />

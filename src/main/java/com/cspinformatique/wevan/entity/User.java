@@ -7,6 +7,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 
@@ -16,6 +17,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 public class User implements UserDetails {
 	private static final long serialVersionUID = 487179158734855592L;
 	
+	private Branch branch;
 	private String username;
 	private String password;
 	private List<Role> roles;
@@ -24,7 +26,8 @@ public class User implements UserDetails {
 		
 	}
 	
-	public User(String username, String password, List<Role> roles) {
+	public User(Branch branch, String username, String password, List<Role> roles) {
+		this.branch = branch;
 		this.username = username;
 		this.password = password;
 		this.roles = roles;
@@ -40,6 +43,16 @@ public class User implements UserDetails {
 		this.username = username;
 	}
 	
+	@ManyToOne
+	@JoinColumn(name="branch")
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public void setBranch(Branch branch) {
+		this.branch = branch;
+	}
+
 	@Override
 	public String getPassword() {
 		return this.password;
@@ -53,7 +66,7 @@ public class User implements UserDetails {
 	@JoinTable(
 		name="userRole", 
 		joinColumns=@JoinColumn(name="user", referencedColumnName="username"), 
-		inverseJoinColumns=@JoinColumn(name="role", referencedColumnName="name")
+		inverseJoinColumns=@JoinColumn(name="role", referencedColumnName="id")
 	)
 	public List<Role> getRoles() {
 		return roles;

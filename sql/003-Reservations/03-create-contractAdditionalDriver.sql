@@ -1,4 +1,4 @@
-CREATE  TABLE `wevan`.`ContractAdditionalDriver` (
+CREATE  TABLE `wevan`.`contractAdditionalDriver` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `contract` INT NOT NULL ,
   `driver` INT NOT NULL ,
@@ -16,3 +16,7 @@ CREATE  TABLE `wevan`.`ContractAdditionalDriver` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION
  );
+ 
+ALTER TABLE `wevan`.`contractAdditionalDriver` DROP COLUMN `id` 
+, DROP PRIMARY KEY 
+, ADD PRIMARY KEY (`contract`, `driver`) ;

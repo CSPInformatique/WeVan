@@ -1,10 +1,13 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html>
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     
-    <link href="resources/lib/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="<c:url value='/resources/lib/bootstrap/css/bootstrap.css' />" rel="stylesheet">
 
     <style type="text/css">
       body{
@@ -79,6 +82,7 @@
       }
 
       .driversInfo .leftSection{
+        border-right: solid 1px #2B4A77;
         float: left;
       }
 
@@ -91,7 +95,6 @@
       }
 
       .driversInfo .rightSection{
-        border-left: solid 1px #2B4A77;
         float: right;
       }
 
@@ -148,7 +151,7 @@
       .conditions{
         font-size: 11pt;
         list-style-position: inside;
-        list-style-image: url("resources/img/contract/arrow.png");
+        list-style-image: url("<c:url value='/resources/img/contract/arrow.png' />");
         margin-top: 20px;
         margin-bottom: 20px;
         text-align: center;
@@ -184,7 +187,7 @@
       .endorsement .statement{
         float: left;
         list-style-position: inside;
-        list-style-image: url("resources/img/contract/checkmark.png");
+        list-style-image: url("<c:url value='/resources/img/contract/checkmark.png' />");
         border-right:solid 1px #2B4A77;
       }
 
@@ -219,23 +222,23 @@
       <div class="header"> <!-- Header -->
         <div class="leftSection"> <!-- Left section -->
           <div>
-            <img src="resources/img/contract/wevan.png">
+            <img src="<c:url value='/resources/img/contract/wevan.png' />">
           </div>
           <div class="title">
             <span class="capital">C</span><span>ONTRAT DE </span><span class="capital">L</span><span>OCATION</span>
           </div>
           <div>
             <span>N&ordm;</span>
-            <span>121123007</span>
+            <span>${contract.id}</span>
           </div>
         </div> <!-- Left section -->
         <div class="rightSection"><!-- Right section -->
           <div> <!-- Agence --> 
             <div class="pull-left">Votre agence</div>
             <div class="contactInfo agency">
-              <div>+33 (0) 1 47 35 69 96</div>
-              <div>33, Avenue Léon Gambetta</div>
-              <div>92120 Montrouge, France</div>
+              <div>${contract.branch.phone}</div>
+              <div>${contract.branch.addressNumber}, ${contract.branch.addressStreet}</div>
+              <div>${contract.branch.postalCode} ${contract.branch.city}, ${contract.branch.country}</div>
             </div>
           </div> <!-- Agence --> 
 
@@ -261,15 +264,15 @@
               <tbody>
                 <tr>
                   <td>Raison sociale :</td>
-                  <td class="input">Elliot Filmus</td>
+                  <td class="input">${contract.driver.corporateName}</td>
                 </tr>
                 <tr>
                   <td>Nom &amp; prénom :</td>
-                  <td class="input">Jean Jean gui</td>
+                  <td class="input">${contract.driver.lastName} ${contract.driver.firstName}</td>
                 </tr>
                 <tr>
                   <td>Permis de conduire n&ordm; :</td>
-                  <td class="input">01324048399</td>
+                  <td class="input">${contract.driver.driverLicense}</td>
                 </tr>
               </tbody>
             </table>
@@ -287,18 +290,12 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td class="name">Boby Jones</td>
-                  <td class="license">38392201231</td>
-                </tr>
-                <tr>
-                  <td class="name">Gérard Boucher</td>
-                  <td class="license">74820102312</td>
-                </tr>
-                <tr>
-                  <td class="name">Armand Dubois</td>
-                  <td class="license">12301239123</td>
-                </tr>
+              	<c:forEach items="${contract.additionalDrivers}" var="driver">
+	                <tr>
+	                  <td class="name">${driver.lastName} ${driver.firstName}</td>
+	                  <td class="license">${driver.driverLicense}</td>
+	                </tr>
+              	</c:forEach>
               </tbody>
             </table>
           </div>
@@ -311,17 +308,17 @@
         <div class="title">La location</div>
         <div class="subtitle">
           <span>Location du </span>
-          <span>24/11/2013</span>
+          <span><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></span>
           <span>à</span>
-          <span>12:30</span>
+          <span><fmt:formatDate pattern="HH:mm" value="${contract.startDate}" /></span>
           <span>au</span>
-          <span>24/11/2013</span>
+          <span><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.endDate}" /></span>
           <span>à</span>
-          <span>12:30</span>
+          <span><fmt:formatDate pattern="HH:mm" value="${contract.endDate}" /></span>
         </div>
         <div>
           <span>Forfait kilométrique :</span>
-          <span>3 000</span>
+          <span>${contract.kilometers}</span>
           <span>km</span>
         </div>
       </div>  <!-- Location -->
@@ -332,15 +329,15 @@
           <tbody>
             <tr>
               <td>Appellation We-Van :</td>
-              <td>Bessie 1</td>
+              <td>${contract.vehicule.name} ${contract.vehicule.number}</td>
             </tr>
             <tr>
               <td>Modèle :</td>
-              <td>Transporter T5 Volkswagen</td>
+              <td>${contract.vehicule.model}</td>
             </tr>
             <tr>
               <td>Immatriculation :</td>
-              <td>CH-113-JT</td>
+              <td>${contract.vehicule.registration}</td>
             </tr>
           </tbody>
         </table>
@@ -352,15 +349,15 @@
           <tbody>
             <tr>
               <td>Montant total :</td>
-              <td>1 233,00 &euro; TTC</td>
+              <td>${contract.totalAmount} &euro; TTC</td>
             </tr>
             <tr>
               <td>Franchise :</td>
-              <td>Rachat partiel (450 &euro; TTC)</td>
+              <td>${contract.deductible} &euro; TTC</td>
             </tr>
             <tr>
               <td>Dépôt de garantie :</td>
-              <td>450 &euro;</td>
+              <td>${contract.deposit} &euro;</td>
             </tr>
           </tbody>
         </table>
@@ -392,7 +389,7 @@
         </div>
 
         <div class="signature">
-          <div class="title">A Montrouge, le 23/12/2013</div>
+          <div class="title">A Montrouge, le <fmt:formatDate pattern="dd/MM/yyyy" value="${date}" /></div>
           <div class="instructions">(Signature précédée de la mention « lu et approuvé »)</div>
         </div>
         <div class="clearfix"></div>

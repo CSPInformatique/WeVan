@@ -14,5 +14,7 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 	 @Query("SELECT MAX(c.id) FROM Contract c WHERE c.branch = :branch")
 	 public Long findLatestContractId(@Param("branch") Branch branch);
 	 
-	 public List<Contract> findByBranchAndStatus(Branch branch, Status status);
+	 public List<Contract> findByBranchOrderByIdDesc(Branch branch);
+	 
+	 public List<Contract> findByBranchAndStatusInOrderByIdDesc(Branch branch, List<Status> status);
 }

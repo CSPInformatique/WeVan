@@ -38,9 +38,22 @@ window.VehiculeListView = Backbone.View.extend({
     },
     
     openVehicule : function(vehicule){
+    	var branchList = new BranchList();
+    	branchList.fetch({async : false});
+    	
+    	var branchesSelect = $(".branches select");
+    	var branch = null;
+    	if(branchesSelect.size() > 0){
+    		branch = branchesSelect.select2("val");
+    	}else{
+    		branch = user.toJSON().branch.id;
+    	}
+    	
     	$('.modal .modal-body').html(
-    			_.template($('#newVehicule-template').html())({
-	    		vehicule : vehicule
+			_.template($('#newVehicule-template').html())({
+	    		vehicule : vehicule,
+	    		branchList : branchList.toJSON(),
+	    		selectedBranch : branch
     		})
     	);
     	
@@ -65,11 +78,18 @@ window.VehiculeListView = Backbone.View.extend({
     	var vehiculeList = this.collection.toJSON();
     	
     	var renderedContent = this.template({vehiculeList : vehiculeList});
-        $(this.el).html(renderedContent);
+    	$('#vehiculeList-container').html(renderedContent);
+        
+    	$('#vehiculeList-container').find("select.branch").select2();
         
         var vehiculeListView = this;
         $(".edit button").click(function(){
         	vehiculeListView.editVehicule($(this).attr("data-id"));
+        });
+
+        $("table").floatThead({
+        	scrollingTop: 50,
+        	useAbsolutePositioning: false
         });
         
         return this;
@@ -80,9 +100,10 @@ window.VehiculeListView = Backbone.View.extend({
     	$("button.close").prop('disabled', true);
     	
 		var collection = this.collection;
+		
 		this.collection.create(
 			{	id: $('form input.id').val(),
-				branch: $('form .branch input').val(),
+				branch: {id : $('form .branch select').val()},
 				name: $('form .name input').val(),
 				number: $('form .number input').val(),
 				model: $('form .model input').val(),

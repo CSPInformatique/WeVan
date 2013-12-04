@@ -16,5 +16,7 @@
 		<http-basic />
 		<intercept-url pattern="/resources/**" access="permitAll"/>
 		<intercept-url pattern="/**" access="isAuthenticated()"/>
+		
+		<logout logout-url="/sign-out"/>
 	</http>	
 </beans:beans>

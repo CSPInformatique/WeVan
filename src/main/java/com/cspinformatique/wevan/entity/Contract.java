@@ -3,7 +3,11 @@ package com.cspinformatique.wevan.entity;
 import java.util.Date;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -65,6 +69,7 @@ public class Contract {
 	}
 
 	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public long getId() {
 		return id;
 	}
@@ -74,6 +79,7 @@ public class Contract {
 	}
 
 	@ManyToOne
+	@JoinColumn(name="branchId")
 	public Branch getBranch() {
 		return branch;
 	}
@@ -90,7 +96,8 @@ public class Contract {
 		this.status = status;
 	}
 
-	@OneToOne
+	@JoinColumn(name="driver")
+	@OneToOne(cascade=CascadeType.ALL)
 	public Driver getDriver() {
 		return driver;
 	}
@@ -132,6 +139,7 @@ public class Contract {
 	}
 
 	@ManyToOne
+	@JoinColumn(name="vehicule")
 	public Vehicule getVehicule() {
 		return vehicule;
 	}
@@ -156,12 +164,12 @@ public class Contract {
 		this.deposit = deposit;
 	}
 
-	@OneToMany
     @JoinTable(
 	    name="contractAdditionalDriver",
-	    joinColumns = @JoinColumn( name="contract"),
-	    inverseJoinColumns = @JoinColumn( name="driver")
+	    joinColumns = @JoinColumn( name="contract", referencedColumnName="id"),
+	    inverseJoinColumns = @JoinColumn( name="driver", referencedColumnName="id")
     )
+    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
 	public List<Driver> getAdditionalDrivers() {
 		return additionalDrivers;
 	}

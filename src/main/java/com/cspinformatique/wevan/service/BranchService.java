@@ -6,4 +6,6 @@ import com.cspinformatique.wevan.entity.Branch;
 
 public interface BranchService {
 	public List<Branch> findAll();
+	
+	public Branch findOne(int id);
 }

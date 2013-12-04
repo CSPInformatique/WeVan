@@ -1,11 +1,54 @@
+body{
+	padding-top: 60px;
+}
+
+.contracts input.small, 
 .vehicules input.small{
 	width: 50px;
 }
 
+.contracts input.medium, 
 .vehicules input.medium{
 	width: 100px;
 }
 
+.contracts input.large, 
 .vehicules input.large{
 	width:200px;
+}
+
+.contractList tbody tr:HOVER{
+	cursor: pointer;
+}
+
+.contractActions .modal-body button{
+	margin : 5px;
+	width: 100%;
+}
+
+
+
+.filters{
+	padding-bottom: 20px;
+}
+
+.filters .branches, .filters .status{
+	float: left;
+	padding-right : 10px;
+}
+
+.filters .status{
+	width: 200px;
+}
+
+.filters select{
+	width: 100%;
+}
+
+.editContract .additionalDrivers input{
+	margin-bottom: 5px;
+	width: 150px;
+}
+.editContract .vehicule select{
+	width: 100%;
 }

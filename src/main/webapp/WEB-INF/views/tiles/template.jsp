@@ -16,7 +16,10 @@
 	    <title>WeVan - Gestionnaire de véhicule</title>
 	
 	    <!-- Bootstrap core CSS -->
-	    <link href="resources/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	   	<link href="resources/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+	    <link href="resources/lib/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet">
+	    <link href="resources/lib/select2/css/select2.css" rel="stylesheet">
+	    
 	
 	    <!-- Custom styles for this template -->
 	    <link href="resources/css/wevan.css" rel="stylesheet">
@@ -25,14 +28,34 @@
 		<script src="resources/js/libs/underscore.js"></script>
 	    <script src="resources/js/libs/backbone.js"></script>
 	    <script src="resources/lib/bootstrap/js/bootstrap.min.js"></script>
+	    <script src="resources/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+	    <script src="resources/lib/jquery.floatThead/js/jquery.floatThead.min.js"></script>
+	    <script src="resources/lib/moment/js/moment-with-langs.js"></script>
 	    <script src="resources/js/libs/multi-sort.collection.js"></script>
+	    <script src="resources/lib/select2/js/select2.min.js"></script>
+	    
+	  	<!-- Models -->
+	  	<script src="resources/js/models/branch.js"></script>
+	  	<script src="resources/js/models/contract.js"></script>
+	  	<script src="resources/js/models/user.js"></script>
+	  	<script src="resources/js/models/vehicule.js"></script>
+	  	
+	  	<!-- Views -->
+	  	<script src="resources/js/views/branchViews.js"></script>
+	  	<script src="resources/js/views/contractViews.js"></script>
+	  	<script src="resources/js/views/vehiculeViews.js"></script>
     
     	<script type="text/javascript">
+    		var ctx = "${pageContext.servletContext.contextPath}";
+    		
+    		var user = new User();
+    		user.fetch({async : false});
+    		
 	    	_.templateSettings = {
 	    	    interpolate: /\<\@\=(.+?)\@\>/gim,
 	    	    evaluate: /\<\@([\s\S]+?)\@\>/gim,
 	    	    escape: /\<\@\-(.+?)\@\>/gim
-	    	};resources/lib/bootstrap/js/bootstrap.min.js
+	    	};
     	</script>
 	</head>
 
@@ -40,15 +63,9 @@
 		<tiles:insertAttribute name="header" />
 		<tiles:insertAttribute name="menu" />
 	
-		<div class="body-content">
+		<div class="container">
 			<tiles:insertAttribute name="content" />
 			<tiles:insertAttribute name="footer" />
 		</div>
-	  	
-	  	<!-- Models -->
-	  	<script src="resources/js/models/vehicule.js"></script>
-	  	
-	  	<!-- Views -->
-	  	<script src="resources/js/views/vehiculeViews.js"></script>
 	</body>
 </html>
