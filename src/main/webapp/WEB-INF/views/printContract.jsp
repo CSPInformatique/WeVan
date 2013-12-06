@@ -349,15 +349,15 @@
           <tbody>
             <tr>
               <td>Montant total :</td>
-              <td>${contract.totalAmount} &euro; TTC</td>
+              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.totalAmount}" /> &euro; TTC</td>
             </tr>
             <tr>
               <td>Franchise :</td>
-              <td>${contract.deductible} &euro; TTC</td>
+              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deductible}" /> &euro; TTC</td>
             </tr>
             <tr>
               <td>Dépôt de garantie :</td>
-              <td>${contract.deposit} &euro;</td>
+              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deposit}" /> &euro;</td>
             </tr>
           </tbody>
         </table>
@@ -389,7 +389,7 @@
         </div>
 
         <div class="signature">
-          <div class="title">A Montrouge, le <fmt:formatDate pattern="dd/MM/yyyy" value="${date}" /></div>
+          <div class="title">A ${contract.branch.city}, le <fmt:formatDate pattern="dd/MM/yyyy" value="${date}" /></div>
           <div class="instructions">(Signature précédée de la mention « lu et approuvé »)</div>
         </div>
         <div class="clearfix"></div>
