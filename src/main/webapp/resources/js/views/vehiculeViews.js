@@ -86,11 +86,6 @@ window.VehiculeListView = Backbone.View.extend({
         $(".edit button").click(function(){
         	vehiculeListView.editVehicule($(this).attr("data-id"));
         });
-
-        $("table").floatThead({
-        	scrollingTop: 50,
-        	useAbsolutePositioning: false
-        });
         
         return this;
     },

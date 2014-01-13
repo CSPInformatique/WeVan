@@ -19,7 +19,6 @@
 	   	<link href="resources/lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	    <link href="resources/lib/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet">
 	    <link href="resources/lib/select2/css/select2.css" rel="stylesheet">
-	    
 	
 	    <!-- Custom styles for this template -->
 	    <link href="resources/css/wevan.css" rel="stylesheet">

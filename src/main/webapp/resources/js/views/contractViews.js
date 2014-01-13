@@ -178,11 +178,6 @@ window.ContractListView = Backbone.View.extend({
         	dateInput.html(moment(parseInt(dateInput.html())).format("YYYY-MM-DD HH:mm"));
         });
         
-        $("table").floatThead({
-        	scrollingTop: 50,
-        	useAbsolutePositioning: false
-        });
-        
         return this;
     },
     
