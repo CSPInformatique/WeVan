@@ -205,7 +205,7 @@ window.ContractListView = Backbone.View.extend({
     	}else{
     		branch = user.toJSON().branch;
     	}
-		
+
 		this.collection.create(
 			{	id: $('.editContract input.id').val(),
 				branch : branch,
@@ -223,8 +223,9 @@ window.ContractListView = Backbone.View.extend({
 				totalAmount : $(".editContract input.totalAmount").val(),
 				vehicule : {id : $(".editContract .vehicule select").select2("val")},
 				deductible : $(".editContract input.deductible").val(),
-				deposit : $(".editContract input.deposit").val(),
-				additionalDrivers : additionalDrivers
+				deposit : $(".editContract .deposit input").val(),
+				additionalDrivers : additionalDrivers,
+                options: $(".editContract .options textarea").val()
 			},
 			{	async : false,
 				success : function(resp){

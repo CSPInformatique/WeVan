@@ -1,5 +1,7 @@
 package com.cspinformatique.wevan.entity;
 
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -11,10 +13,18 @@ public class Branch {
 	private String name;
 	private String addressNumber;
 	private String addressStreet;
+	private String companyName;
+	private String companyType;
+	private String euVatNumber;
+	private String headOffice;
 	private String postalCode;
 	private String city;
 	private String country;
 	private String phone;
+	private String registration;
+	private Date registrationDate;
+	private String registrationLocation;
+	private String siret;
 	
 	public Branch(){
 		
@@ -25,19 +35,35 @@ public class Branch {
 		String name, 
 		String addressNumber,
 		String addressStreet, 
+		String companyName,
+		String companyType,
+		String euVatNumber,
+		String headOffice,
 		String postalCode, 
 		String city,
 		String country, 
-		String phone
+		String phone,
+		String registration,
+		Date registrationDate,
+		String registrationLocation,
+		String siret
 	){
 		this.id = id;
 		this.name = name;
 		this.addressNumber = addressNumber;
 		this.addressStreet = addressStreet;
+		this.companyName = companyName;
+		this.companyType = companyType;
+		this.headOffice = headOffice;
+		this.euVatNumber = euVatNumber;
 		this.postalCode = postalCode;
 		this.city = city;
 		this.country = country;
 		this.phone = phone;
+		this.registration = registration;
+		this.registrationDate = registrationDate;
+		this.registrationLocation = registrationLocation;
+		this.siret = siret;
 	}
 
 	@Id
@@ -74,6 +100,38 @@ public class Branch {
 		this.addressStreet = addressStreet;
 	}
 
+	public String getCompanyName() {
+		return companyName;
+	}
+
+	public void setCompanyName(String companyName) {
+		this.companyName = companyName;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
+	}
+
+	public String getEuVatNumber() {
+		return euVatNumber;
+	}
+
+	public void setEuVatNumber(String euVatNumber) {
+		this.euVatNumber = euVatNumber;
+	}
+
+	public String getHeadOffice() {
+		return headOffice;
+	}
+
+	public void setHeadOffice(String headOffice) {
+		this.headOffice = headOffice;
+	}
+
 	public String getPostalCode() {
 		return postalCode;
 	}
@@ -104,5 +162,37 @@ public class Branch {
 
 	public void setPhone(String phone) {
 		this.phone = phone;
+	}
+
+	public String getRegistration() {
+		return registration;
+	}
+
+	public void setRegistration(String registration) {
+		this.registration = registration;
+	}
+
+	public Date getRegistrationDate() {
+		return registrationDate;
+	}
+
+	public void setRegistrationDate(Date registrationDate) {
+		this.registrationDate = registrationDate;
+	}
+
+	public String getRegistrationLocation() {
+		return registrationLocation;
+	}
+
+	public void setRegistrationLocation(String registrationLocation) {
+		this.registrationLocation = registrationLocation;
+	}
+
+	public String getSiret() {
+		return siret;
+	}
+
+	public void setSiret(String siret) {
+		this.siret = siret;
 	}
 }

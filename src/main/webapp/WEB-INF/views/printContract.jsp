@@ -1,5 +1,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %> 
+
+<% pageContext.setAttribute("newLineChar", "\n"); %>
 
 <!DOCTYPE html>
 <html>
@@ -9,11 +12,12 @@
     
     <link href="<c:url value='/resources/lib/bootstrap/css/bootstrap.css' />" rel="stylesheet">
 
-    <style type="text/css">
+    <style type="text/css">      
       body{
         color: #3E3E3E;
         font-family: Amaranth;
         font-size: 10pt;
+        font-weight: bold;
       }
 
       table{
@@ -39,10 +43,15 @@
         padding-bottom: 20px;
       }
 
+      .header .contactInfo.agency .name{
+        font-size: 12pt; 
+        font-weight: bold;
+      }
+
       .header .leftSection{
         float: left;
         font-size: 14pt;
-        width: 300px;
+        width: 400px;
       }
 
       .header .rightSection{
@@ -53,20 +62,22 @@
         margin-top: 60px;
         width: 240px;
       }
+      
 
       .header .title{
-        font-size: 19pt;
+        font-size: 18pt;
       }
 
       .header .title .capital{
         font-size: 24pt;
       }
 
-      .driversInfo, .locationInfo, .vehicule, .invoice{
+      .driversInfo, .locationInfo, .options, .invoice{
         border:solid 1px #2B4A77;
-        -moz-border-radius-topright: 15px;
-        -webkit-border-radius-topright: 15px;
-        border-radius-topright: 15px;
+        -webkit-border-top-right-radius: 30px;
+        -khtml-border-radius-topright: 30px;  
+        -moz-border-radius-topright: 30px;
+        border-top-right-radius: 30px;
         margin-top: 20px;
         padding: 5px;
       }
@@ -75,13 +86,13 @@
         font-size: 10pt;
       }
 
-      .driversInfo > div{
+      .driversInfo > div, .locationInfo > div{
         padding-left: 10px;
         padding-right: 10px;
         width: 353px;
       }
 
-      .driversInfo .leftSection{
+      .driversInfo .leftSection, .locationInfo .dates{
         border-right: solid 1px #2B4A77;
         float: left;
       }
@@ -94,7 +105,7 @@
         font-weight: bold;
       }
 
-      .driversInfo .rightSection{
+      .driversInfo .rightSection, .locationInfo .vehicule{
         float: right;
       }
 
@@ -108,48 +119,89 @@
 
       .driversInfo .rightSection .subtitle{
         text-align: right;
+        margin-bottom: 10px;        
       }
-
+      
       .driversInfo .rightSection tbody{
         font-size: 9pt;
         font-weight: bold;
       }
 
-      .driversInfo .title, .locationInfo .title, .vehicule .title, .invoice .title{
+      .driversInfo .title, .locationInfo .title, .vehicule .title, .options .title, .invoice .title{
         color: #548ED4;
         font-size: 12pt;
         font-weight: bold;
+        margin-bottom: 10px;
       }
 
       .driversInfo .subtitle{
         font-size: 11pt;
         font-weight: bold;
       }
+      
+      .legal{
+        font-size: 8pt;
+        font-weight: bold;
+        margin-left: 5px;
+        margin-top: 10px;
+        margin-right: 5px;
+        text-align: center;
+      }
 
-      .locationInfo{
+      .dates{
         font-size: 10pt;
       }
 
-      .locationInfo .subtitle{
+      .dates .subtitle{
         font-size: 11pt;
         font-weight: bold;
         margin-bottom: 10px;
       }
+      
+      .dates, .vehicule{
+        height: 110px;
+      }
 
-      .vehicule, .invoice{
+      .dates table .from, .dates table .to{
+        width: 80px;
+      }
+
+      .dates table .date{
+        width: 80px;
+        text-align: right;
+      }
+
+      .dates table .at{
+        width: 40px;
+        text-align: center;
+      }
+
+      .dates table .tile{
+        text-align: center;
+      }
+
+      .options, .invoice {
         width: 350px;
       }
 
-      .vehicule{
+      .options{
         float:left;
       }
 
-      .invoice{
+      .invoice, .vehicule{
         float: right;
+      }
+      
+      .invoice, .options{
+        height: 150px;
+      }
+      
+      .invoice, .options .content{
+        margin-left: 10px;
       }
 
       .conditions{
-        font-size: 11pt;
+        font-size: 10pt;
         list-style-position: inside;
         list-style-image: url("<c:url value='/resources/img/contract/arrow.png' />");
         margin-top: 20px;
@@ -169,6 +221,7 @@
 
       .endorsement ul{
         font-size: 8pt;
+        font-weight: normal;
         margin: 0px;
         padding: 0px;
         text-align: justify;
@@ -179,8 +232,8 @@
       }
 
       .endorsement .statement, .endorsement .signature{
-        padding-left: 7px;
-        padding-right: 25px;
+        padding-left: 15px;
+        padding-right: 15px;
         width: 360px;
       }
 
@@ -192,12 +245,13 @@
       }
 
       .endorsement .statement .title{
-        font-size: 9pt;
+        font-size: 10pt;
         font-weight: bold;
       }
 
-      .endorsement .statement .bold{
-        font-weight: bold;
+      .endorsement .statement .bolder{
+        font-size: 9pt;
+        font-weight: bolder;
       }
 
       .endorsement .signature{
@@ -236,6 +290,7 @@
           <div> <!-- Agence --> 
             <div class="pull-left">Votre agence</div>
             <div class="contactInfo agency">
+              <div class="name">${contract.branch.name}</div>
               <div>${contract.branch.phone}</div>
               <div>${contract.branch.addressNumber}, ${contract.branch.addressStreet}</div>
               <div>${contract.branch.postalCode} ${contract.branch.city}, ${contract.branch.country}</div>
@@ -245,9 +300,8 @@
           <div> <!-- Assistance --> 
             <div class="pull-left">Votre assistance</div>
             <div class="contactInfo">
+              <div>AXA assistance</div>
               <div>+33 (0) 1 55 92 14 54</div>
-              <div>N&ordm; d'adhésion :</div>
-              <div>FLT2000058 - 500375302</div>
             </div>
           </div> <!-- Assistance --> 
         </div>
@@ -290,12 +344,12 @@
                 </tr>
               </thead>
               <tbody>
-              	<c:forEach items="${contract.additionalDrivers}" var="driver">
-	                <tr>
-	                  <td class="name">${driver.lastName} ${driver.firstName}</td>
-	                  <td class="license">${driver.driverLicense}</td>
-	                </tr>
-              	</c:forEach>
+                <c:forEach items="${contract.additionalDrivers}" var="driver">
+                  <tr>
+                    <td class="name">${driver.lastName} ${driver.firstName}</td>
+                    <td class="license">${driver.driverLicense}</td>
+                  </tr>
+                </c:forEach>
               </tbody>
             </table>
           </div>
@@ -305,43 +359,60 @@
       </div> <!-- Drivers info -->
 
       <div class="locationInfo"> <!-- Location -->
-        <div class="title">La location</div>
-        <div class="subtitle">
-          <span>Location du </span>
-          <span><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></span>
-          <span>à</span>
-          <span><fmt:formatDate pattern="HH:mm" value="${contract.startDate}" /></span>
-          <span>au</span>
-          <span><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.endDate}" /></span>
-          <span>à</span>
-          <span><fmt:formatDate pattern="HH:mm" value="${contract.endDate}" /></span>
-        </div>
-        <div>
-          <span>Forfait kilométrique :</span>
-          <span>${contract.kilometers}</span>
-          <span>km</span>
-        </div>
-      </div>  <!-- Location -->
+        <div class="dates"> <!-- Location Dates -->
+          <div class="title">La location</div>
+          <div class="subtitle">
+            <table>
+              <tr>
+                <td class="text-right from">Location du</td>
+                <td class="date"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></td>
+                <td class="at">à</td>
+                <td class="time"><fmt:formatDate pattern="HH:mm" value="${contract.startDate}" /></td>
+              </tr>
+              <tr>
+                <td class="text-right to">au</td>
+                <td class="date"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.endDate}" /></td>
+                <td class="at">à</td>
+                <td class="time"><fmt:formatDate pattern="HH:mm" value="${contract.endDate}" /></td>
+              </tr>
+            </table>
+          </div>
+          <div>
+            <span>Forfait kilométrique (km) :</span>
+            <span>${contract.kilometers}</span>
+            <span>km</span>
+          </div>
+        </div> <!-- Location Dates -->
 
-      <div class="vehicule"> <!-- Vehicule -->
-        <div class="title">Le véhicule</div>
-        <table>
-          <tbody>
-            <tr>
-              <td>Appellation We-Van :</td>
-              <td>${contract.vehicule.name} ${contract.vehicule.number}</td>
-            </tr>
-            <tr>
-              <td>Modèle :</td>
-              <td>${contract.vehicule.model}</td>
-            </tr>
-            <tr>
-              <td>Immatriculation :</td>
-              <td>${contract.vehicule.registration}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div> <!-- Vehicule -->
+        <div class="vehicule"> <!-- Vehicule -->
+          <div class="title">&nbsp;</div>
+          <table>
+            <tbody>
+              <tr>
+                <td>Le véhicule :</td>
+                <td>${contract.vehicule.name} ${contract.vehicule.number}</td>
+              </tr>
+              <tr>
+                <td>Modèle :</td>
+                <td>${contract.vehicule.model}</td>
+              </tr>
+              <tr>
+                <td>Immatriculation :</td>
+                <td>${contract.vehicule.registration}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div> <!-- Vehicule -->
+        
+        <div class="clearfix"></div>
+      </div> <!-- Location -->
+
+      <div class="options"> <!-- Options -->
+        <div class="title">Les options</div>
+        <div class="content">
+          ${fn:replace(contract.options, newLineChar, "<br/>")}
+        </div>
+      </div>
 
       <div class="invoice"> <!-- Invoice -->
         <div class="title">La facturation</div>
@@ -381,9 +452,9 @@
           <div class="title">Par l'apposition de sa signature, le locataire :</div>
           <div>
             <ul>
-              <li><span class="bold">Certifie</span> que les informations mentionnées ci-dessus sont exactes.</li>
-              <li><span class="bold">Autorise</span> le loueur à recouvrer tout ou partie du montant de la franchise par débit de la caution.</li>
-              <li><span class="bold">Reconnait</span> avoir pris connaissance des conditions stipulées ci-dessus ainsi que des conditions générales de location consultables en agence et sur <a href="http://www.we-van.com">www.we-van.com</a> , et de s'y conformer en tout point. Il reconnait également avoir pris connaissance et possession du document « État du Véhicule » joint à ce contrat.</li>
+              <li><span class="bolder">Certifie</span> que les informations mentionnées ci-dessus sont exactes.</li>
+              <li><span class="bolder">Autorise</span> le loueur à recouvrer tout ou partie du montant de la franchise par débit de la caution.</li>
+              <li><span class="bolder">Reconnait</span> avoir pris connaissance des conditions stipulées ci-dessus ainsi que des conditions générales de location consultables en agence et sur <a href="http://www.we-van.com">www.we-van.com</a> , et de s'y conformer en tout point. Il reconnait également avoir pris connaissance et possession du document « État du Véhicule » joint à ce contrat.</li>
             </ul>
           </div>
         </div>
@@ -395,6 +466,10 @@
         <div class="clearfix"></div>
         <div class="spacer">&nbsp;</div>
       </div> <!-- Endorsement -->
+      
+      <div class="legal"> <!-- Legal notice -->
+        ${contract.branch.companyType} immatriculée au ${contract.branch.registrationLocation} le <fmt:formatDate pattern="dd/MM/yyyy" value="${contract.branch.registrationDate}" /> sous le n°${contract.branch.registration} (SIRET : ${contract.branch.siret}) et dont le siège social se situe au ${contract.branch.headOffice}
+      </div> <!-- Legal notice -->
     </div> <!-- Content -->
   </body>
 </html>
