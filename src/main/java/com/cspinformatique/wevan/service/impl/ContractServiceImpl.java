@@ -10,7 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
-import com.cspinformatique.wevan.entity.Driver;
 import com.cspinformatique.wevan.entity.Contract.Status;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.ContractService;
@@ -63,6 +62,7 @@ public class ContractServiceImpl implements ContractService {
 								null, 
 								0d, 
 								0d,
+								null,
 								null
 							);
 		

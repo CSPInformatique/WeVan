@@ -35,6 +35,7 @@ public class Contract {
 	private double deductible;
 	private double deposit;
 	private List<Driver> additionalDrivers;
+	private String options;
 	
 	public Contract(){
 		
@@ -52,7 +53,8 @@ public class Contract {
 		Vehicule vehicule, 
 		double deductible, 
 		double deposit,
-		List<Driver> additionalDrivers
+		List<Driver> additionalDrivers,
+		String options
 	) {
 		this.id = id;
 		this.branch = branch;
@@ -66,6 +68,7 @@ public class Contract {
 		this.deductible = deductible;
 		this.deposit = deposit;
 		this.additionalDrivers = additionalDrivers;
+		this.options = options;
 	}
 
 	@Id
@@ -176,5 +179,13 @@ public class Contract {
 
 	public void setAdditionalDrivers(List<Driver> additionalDrivers) {
 		this.additionalDrivers = additionalDrivers;
+	}
+
+	public String getOptions() {
+		return options;
+	}
+
+	public void setOptions(String options) {
+		this.options = options;
 	}
 }

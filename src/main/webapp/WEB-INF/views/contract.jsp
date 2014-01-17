@@ -179,9 +179,13 @@
     	<label for="deductible">Franchise</label>
 		<input type="text" class="form-control deductible" placeholder="Franchise" value="<@= contract.deductible @>">
 	</div>
-  	<div class="deductible form-group">
-    	<label for="deductible">Dépôt de garantie</label>
-		<input type="text" class="form-control deposit" placeholder="Dépôt de garantie" value="<@= contract.deposit @>">
+  	<div class="deposit form-group">
+    	<label for="deposit">Dépôt de garantie</label>
+		<input type="text" class="form-control" placeholder="Dépôt de garantie" value="<@= contract.deposit @>">
+	</div>
+  	<div class="options form-group">
+    	<label for="options">Options</label>
+    	<textarea class="form-control" cols="40" rows="8"><@= contract.options @></textarea>
 	</div>
 </script>
 
