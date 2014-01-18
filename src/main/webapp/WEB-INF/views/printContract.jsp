@@ -292,7 +292,12 @@
             <div class="contactInfo agency">
               <div class="name">${contract.branch.name}</div>
               <div>${contract.branch.phone}</div>
-              <div>${contract.branch.addressNumber}, ${contract.branch.addressStreet}</div>
+              <div>
+              <c:if test="${contract.branch.addressNumber != '' }">
+              	<span>${contract.branch.addressNumber},</span>
+              </c:if>
+              	<span>${contract.branch.addressStreet}</span>
+              </div>
               <div>${contract.branch.postalCode} ${contract.branch.city}, ${contract.branch.country}</div>
             </div>
           </div> <!-- Agence --> 
