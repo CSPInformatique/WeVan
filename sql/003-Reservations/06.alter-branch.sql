@@ -12,10 +12,7 @@ INSERT INTO `branch` (`name`) VALUES ('Agence de Rennes');
 INSERT INTO `branch` (`name`) VALUES ('Agence de Clermont-Ferrand');
 INSERT INTO `branch` (`name`) VALUES ('Agence de Toulouse');
 
-ALTER TABLE `user` 
-DROP COLUMN `type`;
-
-ALTER TABLE `user` ADD COLUMN `branch` INT NOT NULL  AFTER `password` , 
+ALTER TABLE `user` ADD COLUMN `branch` INT NOT NULL  AFTER `type` , 
   ADD CONSTRAINT `fk_usr_bra`
   FOREIGN KEY (`branch` )
   REFERENCES `branch` (`id` )
@@ -88,19 +85,3 @@ ADD COLUMN `companyType` VARCHAR(45) NOT NULL DEFAULT 'SARL' AFTER `companyName`
 
 ALTER TABLE `branch` 
 CHANGE COLUMN `companyType` `companyType` VARCHAR(45) NOT NULL ;
-
-UPDATE `branch` SET `addressNumber`='13', `addressStreet`='Impasse de la Flambère', `companyName`='VAN A VIVRE', `euVatNumber`='FR15447521238', `headOffice`='13 Impasse de la Flambère, 31300 Toulouse, France', `postalCode`='31300', `phone`='+33 (0) 5 67 22 51 10', `registration`='RCS Toulouse B 447 521 238', `registrationDate`='2013-09-17' WHERE `id`='4';
-UPDATE `branch` SET `addressStreet`='Denis Papin', `companyName`='AUVER LOC', `euVatNumber`='FR857793052010', `headOffice`='1, rue Denis Papin, 63540 Romagnat, France', `postalCode`='63540', `city`='Romagnat', `phone`='+33 (0) 9 81 01 99 20', `registration`='R.C.S. Clermont-Ferrand B 793 052 010 ', `registrationDate`='2013-05-01', `siret`='79305201000014' WHERE `id`='3';
-UPDATE `branch` SET `id`='2', `addressNumber`='', `addressStreet`='La Soisière du Milieu', `companyName`='VAN-AVENTURE', `euVatNumber`='FR73791275548', `headOffice`='La Soisière du Milieu, 35420 Poilley, France', `postalCode`='35420', `phone`='+33 (0) 2 96 86 53 52', `registration`='R.C.S. Rennes 791 275 548', `registrationDate`='2013-02-19', `siret`='79127554800018' WHERE `id`='2';
-UPDATE `branch` SET `companyName`='WE-VAN SARL', `euVatNumber`='FR92520577040', `headOffice`='33 Avenue Léon Gambetta, 92120 Montrouge, France', `registration`='R.C.S. Nanterre 520 577 040 ', `registrationDate`='2010-03-01', `siret`='52057704000014' WHERE `id`='1';
-
-UPDATE `branch` SET `registration`='447 521 238', `registrationLocation`='RCS Toulouse B' WHERE `id`='4';
-UPDATE `branch` SET `registration`='793 052 010 ', `registrationLocation`='R.C.S. Clermont-Ferrand B' WHERE `id`='3';
-UPDATE `branch` SET `registration`='791 275 548', `registrationLocation`='R.C.S. Rennes' WHERE `id`='2';
-UPDATE `branch` SET `registration`='520 577 040 ', `registrationLocation`='R.C.S. Nanterre' WHERE `id`='1';
-
-ALTER TABLE `branch` 
- CHANGE COLUMN `registrationLocation` `registrationLocation` VARCHAR(45) NOT NULL;
-
-ALTER TABLE `branch` 
- CHANGE COLUMN `companyType` `companyType` VARCHAR(45) NOT NULL;

@@ -383,9 +383,8 @@
             </table>
           </div>
           <div>
-            <span>Forfait kilométrique (km) :</span>
-            <span>${contract.kilometers}</span>
-            <span>km</span>
+            <span>Forfait kilométrique :</span>
+            <span>${contract.kilometersPackage}</span>
           </div>
         </div> <!-- Location Dates -->
 
@@ -415,7 +414,11 @@
       <div class="options"> <!-- Options -->
         <div class="title">Les options</div>
         <div class="content">
-          ${fn:replace(contract.options, newLineChar, "<br/>")}
+          <c:forEach items="${contract.options}" var="option">
+          	<c:if test="${option.active}">
+          	  <div>${option.label} - ${option.amount} €</div>
+          	</c:if>
+          </c:forEach>
         </div>
       </div>
 

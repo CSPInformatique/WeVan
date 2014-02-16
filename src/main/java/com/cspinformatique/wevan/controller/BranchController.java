@@ -3,6 +3,7 @@ package com.cspinformatique.wevan.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,25 +29,58 @@ public class BranchController {
 	@Autowired private VehiculeService vehiculeService;
 	
 	@RequestMapping(produces="application/json", method=RequestMethod.GET)
-	public @ResponseBody List<Branch> getBranchs(){
+	public @ResponseBody List<Branch> findBranchs(){
 		return this.branchService.findAll();
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping("/{branch}/vehicule")
-	public @ResponseBody List<Vehicule> getBranchVehicule(@PathVariable int branch){
-		return this.vehiculeService.getVehiculesByBranch(this.branchService.findOne(branch));
+	public @ResponseBody List<Vehicule> findBranchVehicule(@PathVariable int branch){
+		return this.vehiculeService.findByBranch(this.branchService.findOne(branch));
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value="/{branch}/contract")
-	public @ResponseBody List<Contract> getByBranch(@PathVariable int branch){
-		return this.contractService.findByBranch(branchService.findOne(branch));
+	public @ResponseBody Page<Contract> findBranchContract(
+		@PathVariable int branch
+	){
+		return this.findBranchContract(branch, null, null, null);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value="/{branch}/contract", params={"status"})
-	public @ResponseBody List<Contract> getByBranch(@PathVariable int branch, @RequestParam List<Status> status){
-		return this.contractService.findByBranchAndStatus(branchService.findOne(branch), status);
+	public @ResponseBody Page<Contract> findBranchContract(
+		@PathVariable int branch, 
+		@RequestParam List<Status> status
+	){
+		return this.findBranchContract(branch, status, null, null);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value="/{branch}/contract", params={"page", "results"})
+	public @ResponseBody Page<Contract> findBranchContract(
+		@PathVariable int branch, 
+		@RequestParam Integer page,
+		@RequestParam Integer results
+	){
+		return this.findBranchContract(branch, null, page, results);
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results"})
+	public @ResponseBody Page<Contract> findBranchContract(
+		@PathVariable int branch, 
+		@RequestParam List<Status> status,
+		@RequestParam Integer page,
+		@RequestParam Integer results
+	){
+		if(page == null) page = 0;
+		if(results == null) results = 50;
+		
+		if(status != null){
+			return this.contractService.findByBranchAndStatus(branchService.findOne(branch), status, page, results);
+		}else{
+			return this.contractService.findByBranch(branchService.findOne(branch), page, results);
+		}	
 	}
 }

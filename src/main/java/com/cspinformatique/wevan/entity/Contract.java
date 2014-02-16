@@ -5,9 +5,6 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -15,6 +12,9 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.LazyCollection;
+import org.hibernate.annotations.LazyCollectionOption;
 
 @Entity
 @Table(name="contract")
@@ -24,18 +24,21 @@ public class Contract {
 	}
 	
 	private long id;
+	private Long reservationId;
 	private Branch branch;
+	private Date creationDate;
+	private Date editionDate;
 	private Status status;
 	private Driver driver;
 	private Date startDate;
 	private Date endDate;
-	private int kilometers;
+	private String kilometersPackage;
 	private double totalAmount;
 	private Vehicule vehicule;
 	private double deductible;
 	private double deposit;
 	private List<Driver> additionalDrivers;
-	private String options;
+	private List<Option> options;
 	
 	public Contract(){
 		
@@ -43,26 +46,32 @@ public class Contract {
 
 	public Contract(
 		long id, 
+		Long reservationId,
 		Branch branch, 
+		Date creationDate,
+		Date editionDate,
 		Status status,
 		Driver driver, 
 		Date startDate,
 		Date endDate, 
-		int kilometers, 
+		String kilometersPackage, 
 		double totalAmount,
 		Vehicule vehicule, 
 		double deductible, 
 		double deposit,
 		List<Driver> additionalDrivers,
-		String options
+		List<Option> options
 	) {
 		this.id = id;
+		this.reservationId = reservationId;
 		this.branch = branch;
+		this.creationDate = creationDate;
+		this.editionDate = editionDate;
 		this.status = status;
 		this.driver = driver;
 		this.startDate = startDate;
 		this.endDate = endDate;
-		this.kilometers = kilometers;
+		this.kilometersPackage = kilometersPackage;
 		this.totalAmount = totalAmount;
 		this.vehicule = vehicule;
 		this.deductible = deductible;
@@ -72,13 +81,20 @@ public class Contract {
 	}
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	public long getId() {
 		return id;
 	}
 
 	public void setId(long id) {
 		this.id = id;
+	}
+
+	public Long getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(Long reservationId) {
+		this.reservationId = reservationId;
 	}
 
 	@ManyToOne
@@ -89,6 +105,22 @@ public class Contract {
 
 	public void setBranch(Branch branch) {
 		this.branch = branch;
+	}
+
+	public Date getCreationDate() {
+		return creationDate;
+	}
+
+	public void setCreationDate(Date creationDate) {
+		this.creationDate = creationDate;
+	}
+
+	public Date getEditionDate() {
+		return editionDate;
+	}
+
+	public void setEditionDate(Date editionDate) {
+		this.editionDate = editionDate;
 	}
 
 	public Status getStatus() {
@@ -125,12 +157,12 @@ public class Contract {
 		this.endDate = endDate;
 	}
 
-	public int getKilometers() {
-		return kilometers;
+	public String getKilometersPackage() {
+		return kilometersPackage;
 	}
 
-	public void setKilometers(int kilometers) {
-		this.kilometers = kilometers;
+	public void setKilometersPackage(String kilometersPackage) {
+		this.kilometersPackage = kilometersPackage;
 	}
 
 	public double getTotalAmount() {
@@ -172,7 +204,8 @@ public class Contract {
 	    joinColumns = @JoinColumn( name="contract", referencedColumnName="id"),
 	    inverseJoinColumns = @JoinColumn( name="driver", referencedColumnName="id")
     )
-    @OneToMany(cascade=CascadeType.ALL, fetch=FetchType.EAGER)
+    @OneToMany(cascade=CascadeType.ALL)
+    @LazyCollection(LazyCollectionOption.FALSE)
 	public List<Driver> getAdditionalDrivers() {
 		return additionalDrivers;
 	}
@@ -181,11 +214,13 @@ public class Contract {
 		this.additionalDrivers = additionalDrivers;
 	}
 
-	public String getOptions() {
+	@OneToMany(cascade = CascadeType.ALL, mappedBy="contract")
+    @LazyCollection(LazyCollectionOption.FALSE)
+	public List<Option> getOptions() {
 		return options;
 	}
 
-	public void setOptions(String options) {
+	public void setOptions(List<Option> options) {
 		this.options = options;
 	}
 }

@@ -2,6 +2,8 @@ package com.cspinformatique.wevan.service;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.entity.Contract.Status;
@@ -9,15 +11,13 @@ import com.cspinformatique.wevan.entity.Contract.Status;
 public interface ContractService {
 	public void deleteContract(long id);
 	
-	public List<Contract> findByBranch(Branch branch);
+	public Page<Contract> findByBranch(Branch branch, int page, int results);
 	
-	public List<Contract> findByBranchAndStatus(Branch branch, List<Status> status);
+	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, int page, int results);
 	
 	public Contract findOne(long id);
 	
-	public Long findLastestContract(Branch branch);
-	
-	public Contract generateNewContract(Branch branch);
+	public long generateNewContractId();
 	
 	public Contract saveContract(Contract contract);
 }

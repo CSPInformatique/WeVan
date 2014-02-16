@@ -1,82 +1,120 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <script type="text/javascript">
+	var contractPageView;
+	var user;
+	var router;
+
+	var router = new Backbone.Router({
+		routes: {
+			":branch/:page/:results/": "loadPage",  // #1/1/50
+			":branch/:page/:results/:status": "loadPageWithStatus"  // #1/1/50/IN_PROGRESS&OPEN
+		}
+	});	
+	
+	router.on(
+		"route:loadPageWithStatus", 
+		function(branch, pageNumber, results, status) {
+			loadPage(branch, pageNumber, results, status);
+		}
+	);
+	
+	router.on(
+		"route:loadPage",
+		function(branch, pageNumber, results){
+			loadPage(branch, pageNumber, results, null);
+		}
+	);
+	
+	var buildStatusStringForRouter = function(){		
+		var statusString = "";
+		var statusData = $(".status select").select2("data");
+		
+		if(statusData.length > 0){
+			
+			for(statusIndex in statusData){
+				if(statusString != "") statusString += "&";
+				statusString += statusData[statusIndex].id;
+			}
+		}
+		
+		return statusString;
+	};
+	
+	var getBranchForRouter = function(){
+		if(user.hasRole("ADMIN")){
+			return $("select.branches").val();
+		}else{
+			return user.toJSON().branch.id;
+		}
+	};
+	
+	var loadPage = function(branch, pageNumber, results, status){
+		var page = new ContractPage();
+				
+		// Setting branch
+		if(user.hasRole("ADMIN")){
+			page.branch = branch;
+		}else{
+			page.branch = user.toJSON().branch.id;
+		}
+		
+		// Setting page number.
+		page.page = pageNumber;
+		
+		// Settings page results.
+		page.results = results;
+		
+		// Settings the status.	
+		if(status != null){
+			var statusData = status.split("&");
+			
+			page.status = [];
+			for(statusIndex in statusData){
+				page.status.push(statusData[statusIndex]);
+			}
+		}
+			
+		// Loading contrat page view.
+		contractPageView =	new ContractPageView({model : page});
+	};
+	
 	$(document).ready(function(){
 		$(".nav li.contract").addClass("active");
 		
+		// Initializing the router.
+		Backbone.history.start();
+				
 		$(".filters select").select2({width: 'resolve' });
 		
 		// Retreives current user.
-		var user = new User();
-		
+		user = new User();
 		user.fetch({async : false});
 		
 		// If the user is an admin. load all branch list.
 		if(user.hasRole("ADMIN")){
-			var branchesComboBoxView = new BranchesComboBoxView({collection : new BranchList()});
-			
-			branchesComboBoxView.collection.fetch({success : function(){
-				var contractList = new ContractList();
-				contractList.branch = $("select.branches").select2("val");
-				
-				var statusData = $(".status select").val();
-				if(statusData.length > 0){
-					contractList.status = [];
-					for(statusIndex in statusData){
-						contractList.status.push(statusData[statusIndex]);
-					}
-				}
-				
-				var contractListView =	new ContractListView({collection : contractList});
-
-				$("select.branches").on("change", function(e){
-					contractListView.collection.branch = e.val;
-					contractListView.collection.fetch();
-				});
-
-				$(".status select").on("change", function(e){
-					var statusData = $(".status select").select2("data");
-					if(statusData.length > 0){
-						contractListView.collection.status = [];
-						for(statusIndex in statusData){
-							contractListView.collection.status.push(statusData[statusIndex].id);
-						}
-					}else{
-						contractListView.collection.status = null;
-					}
-					contractListView.collection.fetch();
-				});
-			}});
+			var branchesComboBoxView = new BranchesComboBoxView({collection : new BranchList()}).collection.fetch({async: false});
 		}else{
 			// Hide combox box container.
 			$(".branches").hide();
-
-			// If the user not an admin, load all contract for his branch.
-			var contractList = new ContractList();
-			contractList.branch = user.toJSON().branch.id;
-			
-			var statusData = $(".status select").select2("val");
-			if(statusData.length > 0){
-				contractList.status = [];
-				for(statusIndex in statusData){
-					contractList.status.push(statusData[statusIndex]);
-				}
-			}
-			
-			var contractListView = new ContractListView({ collection : contractList});	
-			
-			$(".status select").on("change", function(e){
-				var statusData = $(".status select").select2("data");
-				if(statusData.length > 0){
-					contractListView.collection.status = [];
-					for(statusIndex in statusData){
-						contractListView.collection.status.push(statusData[statusIndex].id);
-					}
-				}else{
-					contractListView.collection.status = null;
-				}
-				contractListView.collection.fetch();
-			});
+		}
+		
+		$(".status select, select.branches").on("change", function(e){
+			router.navigate(
+				getBranchForRouter() + "/0/" + 
+					contractPageView.model.results + "/" +
+					buildStatusStringForRouter(), 
+				{trigger: true}
+			);
+		});
+		
+		if(location.hash == ""){
+			router.navigate(
+				getBranchForRouter() + "/0/50/OPEN&IN_PROGRESS", 
+				{trigger: true}
+			);
+		}else{
+			router.navigate(location.hash, true);
 		}
 	});
 </script>
@@ -89,7 +127,16 @@
 	</select>
 </script>
 
-<script type="text/template" id="contractList-template">
+<script type="text/template" id="contractPage-template">
+	<ul class="pager">
+<@	if(!page.firstPage){	@>
+		<li class="previous"><a href="#">&larr; Précédent</a></li>
+<@	}	@>
+		<li>Page <@= page.number + 1 @>
+<@	if(!page.lastPage){	@>
+		<li class="next"><a href="#">Suivant &rarr;</a></li>
+<@	}	@>
+	</ul>
 	<div class="table-responsive">
 		<table class="table table-hover">
 			<thead>
@@ -103,15 +150,22 @@
 					<th>Statut</th>
 				</tr>
 			</thead>
+			
 			<tbody>
-				<@ _.each(contractList, function(contract) { @>	
+				<@ _.each(page.content, function(contract) { @>	
 					<tr data-contract-id="<@= contract.id @>">
 						<td class="id"><@= contract.id @></td>
 						<td class="lastName"><@= contract.driver.lastName @></td>
 						<td class="firstName"><@= contract.driver.firstName @></td>
 						<td class="startDate"><@= contract.startDate @></td>
 						<td class="endDate"><@= contract.endDate @></td>
-						<td class="vehicule"><@= contract.vehicule.name @> <@= contract.vehicule.number @></td>
+						<td class="vehicule">
+							<@	if(contract.vehicule){	@>
+								<@= contract.vehicule.name @> <@= contract.vehicule.number @>
+							<@	}else{	@>
+								N/A
+							<@	}	@>
+						</td>
 						<td class="status">
 <@	if(contract.status == "OPEN"){	@>
 							Ouvert
@@ -127,7 +181,16 @@
 				<@}); @>
 			</tbody>
 		</table>
+	</ul>
 	</div>
+	<ul class="pager">
+<@	if(!page.firstPage){	@>
+		<li class="previous"><a>&larr; Précédent</a></li>
+<@	}	@>
+		<li>Page <@= page.number + 1 @>
+<@	if(!page.lastPage){	@>
+		<li class="next"><a>Suivant &rarr;</a></li>
+<@	}	@>
 </script>
 <script type="text/template" id="newContract-template">
 	<input class="id" type="hidden" value="<@= contract.id @>" />
@@ -245,8 +308,8 @@
 		<div class="status">
 			<h4>Statut</h4>
 			<select multiple="multiple">
-				<option value="OPEN" selected="selected">Ouvert</option>
-				<option value="IN_PROGRESS" selected="selected">En cours</option>
+				<option value="OPEN">Ouvert</option>
+				<option value="IN_PROGRESS">En cours</option>
 				<option value="COMPLETED">Terminé</option>
 				<option value="CANCELLED">Annulé</option>
 			</select>
@@ -256,8 +319,12 @@
 	</div>
 </div>
 
-<div class="row contractList">		
-	<div class="col-xs-12" id="contractList-container"></div>
+<div class="row">
+	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
+</div>
+
+<div class="row contractPage">		
+	<div class="col-xs-12" id="contractPage-container"></div>
 </div>
 
 <div class="row">

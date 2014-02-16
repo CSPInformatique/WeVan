@@ -21,9 +21,10 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @PropertySource("classpath:persistence/hibernate.properties")
 @EnableJpaRepositories(basePackages="com.cspinformatique.wevan.repository")
 public class PersistenceConfig {
-	private static final String PROPERTY_NAME_HIBERNATE_DIALECT = "hibernate.dialect";
-    private static final String PROPERTY_NAME_HIBERNATE_SHOW_SQL = "hibernate.showSql";
-    private static final String PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN = "hibernate.packagesToScan";  
+	private static final String HIBERNATE_DIALECT = "hibernate.dialect";
+	private static final String HIBERNATE_GLOBALLY_QUOTED_IDENTIFIERS = "hibernate.globally_quoted_identifiers";
+    private static final String HIBERNATE_SHOW_SQL = "hibernate.showSql";
+    private static final String ENTITYMANAGER_PACKAGES_TO_SCAN = "hibernate.packagesToScan";  
     
 	@Autowired private DataSource datasource;
 	
@@ -34,7 +35,7 @@ public class PersistenceConfig {
 		LocalContainerEntityManagerFactoryBean entityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
 		entityManagerFactoryBean.setDataSource(datasource);
 		entityManagerFactoryBean.setPersistenceProviderClass(HibernatePersistence.class);
-		entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(PROPERTY_NAME_ENTITYMANAGER_PACKAGES_TO_SCAN));
+		entityManagerFactoryBean.setPackagesToScan(env.getRequiredProperty(ENTITYMANAGER_PACKAGES_TO_SCAN));
 		entityManagerFactoryBean.setJpaProperties(hibProperties());
 
 		return entityManagerFactoryBean;
@@ -42,8 +43,9 @@ public class PersistenceConfig {
     	
     private Properties hibProperties() {
 		Properties properties = new Properties();
-		properties.put(PROPERTY_NAME_HIBERNATE_DIALECT, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_DIALECT));
-		properties.put(PROPERTY_NAME_HIBERNATE_SHOW_SQL, env.getRequiredProperty(PROPERTY_NAME_HIBERNATE_SHOW_SQL));
+		properties.put(HIBERNATE_DIALECT, env.getRequiredProperty(HIBERNATE_DIALECT));
+		properties.put(HIBERNATE_GLOBALLY_QUOTED_IDENTIFIERS, env.getRequiredProperty(HIBERNATE_GLOBALLY_QUOTED_IDENTIFIERS));
+		properties.put(HIBERNATE_SHOW_SQL, env.getRequiredProperty(HIBERNATE_SHOW_SQL));
 		return properties;	
 	}
     

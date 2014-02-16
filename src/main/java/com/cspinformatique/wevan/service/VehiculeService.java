@@ -6,13 +6,15 @@ import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Vehicule;
 
 public interface VehiculeService {
-	public void deleteVehicule(int id);
+	public void delete(int id);
 	
-	public Vehicule getVehicule(int id);
+	public Vehicule findOne(int id);
 	
-	public List<Vehicule> getVehicules();
+	public List<Vehicule> findAll();
 	
-	public List<Vehicule> getVehiculesByBranch(Branch branch);
+	public List<Vehicule> findByBranch(Branch branch);
 	
-	public void saveVehicule(Vehicule vehicule);	
+	public Vehicule findByRegistration(String registration);
+	
+	public void save(Vehicule vehicule);	
 }

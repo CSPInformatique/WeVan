@@ -15,27 +15,32 @@ public class VehiculeServiceImpl implements VehiculeService {
 	@Autowired private VehiculeRepository vehiculeRepository;
 	
 	@Override
-	public void deleteVehicule(int id) {
+	public void delete(int id) {
 		this.vehiculeRepository.delete(id);
 	}
 	
 	@Override
-	public Vehicule getVehicule(int id){
+	public Vehicule findOne(int id){
 		return this.vehiculeRepository.findOne(id);
 	}
 
 	@Override
-	public List<Vehicule> getVehicules() {
+	public List<Vehicule> findAll() {
 		return this.vehiculeRepository.findAll();
 	}
 
 	@Override
-	public List<Vehicule> getVehiculesByBranch(Branch branch) {
+	public List<Vehicule> findByBranch(Branch branch) {
 		return this.vehiculeRepository.findByBranch(branch);
+	}
+	
+	@Override
+	public Vehicule findByRegistration(String registration){
+		return this.vehiculeRepository.findByRegistration(registration);
 	}
 
 	@Override
-	public void saveVehicule(Vehicule vehicule) {
+	public void save(Vehicule vehicule) {
 		this.vehiculeRepository.save(vehicule);
 	}
 

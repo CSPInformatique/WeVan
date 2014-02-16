@@ -2,19 +2,28 @@ package com.cspinformatique.wevan.repository;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.entity.Contract.Status;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
-	 @Query("SELECT MAX(c.id) FROM Contract c WHERE c.branch = :branch")
-	 public Long findLatestContractId(@Param("branch") Branch branch);
+	@Query(
+		"SELECT " 
+		+ "	contract "
+		+ "FROM "
+		+ "	Contract contract "
+		+ "WHERE "
+		+ "	editionDate = ( SELECT MAX(editionDate) FROM Contract )")
+	public List<Contract> findLastContractModified();
 	 
-	 public List<Contract> findByBranchOrderByIdDesc(Branch branch);
+	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
 	 
-	 public List<Contract> findByBranchAndStatusInOrderByIdDesc(Branch branch, List<Status> status);
+	public Page<Contract> findByBranchAndStatusIn(Branch branch, List<Status> status, Pageable pageable);
+	
+	public Contract findByReservationId(long reservationId);
 }

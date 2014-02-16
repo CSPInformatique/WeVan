@@ -23,7 +23,6 @@ import com.cspinformatique.wevan.service.ContractService;
 public class ContractController {
 	@Autowired private ContractService contractService;
 	
-
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(method=RequestMethod.DELETE, produces="application/json", value="/{id}")
 	public @ResponseBody long deleteContract(@PathVariable long id){
@@ -45,9 +44,9 @@ public class ContractController {
 		return "contract/print";
 	}
 	
-	@ResponseStatus(HttpStatus.OK)
+	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(method={RequestMethod.POST, RequestMethod.PUT}, produces="application/json", value={"", "/{id}"})
-	public @ResponseBody Contract saveContract(@RequestBody Contract contract){
-		return this.contractService.saveContract(contract);
+	public void saveContract(@RequestBody Contract contract){
+		this.contractService.saveContract(contract);
 	}
 }

@@ -14,4 +14,6 @@ public interface VehiculeRepository extends JpaRepository<Vehicule, Integer> {
 	
 	@Query("SELECT v FROM Vehicule v WHERE v.branch = ?1 ORDER BY v.branch ASC, v.name ASC, v.number ASC, v.model ASC")
 	public List<Vehicule> findByBranch(Branch branch);
+	
+	public Vehicule findByRegistration(String registration);
 }

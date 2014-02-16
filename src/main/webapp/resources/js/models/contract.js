@@ -7,7 +7,7 @@ window.Contract = Backbone.Model.extend({
 	},
 });
 
-window.ContractList = MultiSortCollection.extend({
+window.ContractPage = Backbone.Model.extend({
 	model: Contract,
 	url: function(){
 		var base = ctx + "/contract";
@@ -16,15 +16,12 @@ window.ContractList = MultiSortCollection.extend({
 		}else{
 			var url = ctx + "/branch/" + this.branch + "/contract.json";
 			
+			url += "?page=" + this.page;
+			url += "&results=" + this.results;
+
 			if(this.status != null && this.status.length > 0){
-				
 				for(statusIndex in this.status){
-					if(statusIndex == 0){
-						url += "?";
-					}else{
-						url += "&";
-					}
-					url += "status=" + this.status[statusIndex];
+					url += "&status=" + this.status[statusIndex];
 				}
 			}
 			

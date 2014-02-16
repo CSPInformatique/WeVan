@@ -22,5 +22,9 @@ public class BranchServiceImpl implements BranchService {
 	public Branch findOne(int id){
 		return this.branchRepository.findOne(id);
 	}
-
+	
+	@Override
+	public Branch findOne(String name){
+		return this.branchRepository.findByName(name);
+	}
 }

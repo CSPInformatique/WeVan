@@ -5,5 +5,3 @@ ALTER TABLE `user` CHANGE COLUMN `branch` `branch` INT(11) NOT NULL  ,
   REFERENCES `branch` (`id` )
   ON DELETE NO ACTION
   ON UPDATE NO ACTION;
-
-ALTER TABLE `user` DROP COLUMN `type` ;

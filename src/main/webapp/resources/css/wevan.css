@@ -17,7 +17,7 @@ body{
 	width:200px;
 }
 
-.contractList tbody tr:HOVER{
+.contractPage tbody tr:HOVER{
 	cursor: pointer;
 }
 

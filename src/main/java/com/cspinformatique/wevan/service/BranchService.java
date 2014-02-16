@@ -8,4 +8,6 @@ public interface BranchService {
 	public List<Branch> findAll();
 	
 	public Branch findOne(int id);
+	
+	public Branch findOne(String name);
 }

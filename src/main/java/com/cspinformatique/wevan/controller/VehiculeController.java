@@ -24,7 +24,7 @@ public class VehiculeController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(method=RequestMethod.DELETE, produces="application/json", value="/{id}")
 	public @ResponseBody Integer deleteVehicule(@PathVariable int id){
-		this.vehiculeService.deleteVehicule(id);
+		this.vehiculeService.delete(id);
 		
 		return id;
 	}
@@ -32,7 +32,7 @@ public class VehiculeController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(method=RequestMethod.GET, produces="application/json", value="/{id}")
 	public @ResponseBody Vehicule getVehicule(@PathVariable int id){
-		return this.vehiculeService.getVehicule(id);
+		return this.vehiculeService.findOne(id);
 	}
 	
 	@RequestMapping(method=RequestMethod.GET, produces="text/html")
@@ -43,13 +43,13 @@ public class VehiculeController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(produces="application/json", method=RequestMethod.GET)
 	public @ResponseBody List<Vehicule> getVehicules(){
-		return this.vehiculeService.getVehicules();
+		return this.vehiculeService.findAll();
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(method={RequestMethod.POST, RequestMethod.PUT}, produces="application/json", value={"", "/{id}"})
 	public @ResponseBody Vehicule saveVehicule(@RequestBody Vehicule vehicule){
-		this.vehiculeService.saveVehicule(vehicule);
+		this.vehiculeService.save(vehicule);
 		
 		return vehicule;
 	}

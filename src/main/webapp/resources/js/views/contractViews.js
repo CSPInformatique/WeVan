@@ -1,4 +1,4 @@
-window.ContractListView = Backbone.View.extend({
+window.ContractPageView = Backbone.View.extend({
 	addAdditionalDriver : function(driver){
 		$(".editContract .none").hide();
 		
@@ -22,33 +22,49 @@ window.ContractListView = Backbone.View.extend({
 	},
 	
 	deleteContract: function(contractId){
-		this.collection.get(contractId).destroy({
+		new Contract(this.getContractFromContent(contractId)).destroy({
 			wait : true
 		});
 	},
 	
 	editContract: function(contractId){
-		this.openContract(this.collection.get(contractId).toJSON());
+		this.openContract(this.getContractFromContent(contractId));
 	},
 	
-	el : $('#contractList-container'),
+	el : $('#contractPage-container'),
 	
     events : {
     	'click .delete button' : 'deleteContract',
     },
+
+    getContractFromContent : function(contractId){
+        contractId = parseInt(contractId);
+        var contract;
+
+        var content = this.model.get("content");
+
+        for(contractIndex in content){
+            var currentContract = content[contractIndex];
+            if(contractId == currentContract.id){
+                contract = currentContract;
+            }
+        }
+
+        return contract;
+    },
     
     initialize : function() {
-    	this.collection.fetch();
+    	this.model.fetch();
     	
-        this.template = _.template($('#contractList-template').html());
+        this.template = _.template($('#contractPage-template').html());
 
         /*--- binding ---*/
         _.bindAll(this, 'render');
         _.bindAll(this, 'openNewContract');
         _.bindAll(this, 'saveContract');
-        this.collection.bind('change', this.render);
-        this.collection.bind('add', this.render);
-        this.collection.bind('remove', this.render);
+        this.model.bind('change', this.render);
+        this.model.bind('add', this.render);
+        this.model.bind('remove', this.render);
         /*---------------*/
         
         $(".new button").click(this.openNewContract);
@@ -95,9 +111,9 @@ window.ContractListView = Backbone.View.extend({
     	$("button.save").prop('disabled', false);
     	$("button.close").prop('disabled', false);
     	
-    	var contractListView = this;
+    	var contractPageView = this;
     	$(".editContract button.addDriver").click(function(){
-    		contractListView.addAdditionalDriver({
+    		contractPageView.addAdditionalDriver({
     			id: 0,
     			firstName:"", 
     			lastName: "", 
@@ -115,27 +131,34 @@ window.ContractListView = Backbone.View.extend({
     	
     	$('.contractActions.modal').modal({backdrop : 'static'});
     	
-    	var contractListView = this;
+    	var contractPageView = this;
     	
     	$(".contractActions button.print").click(function(){
     		window.open(ctx + "/contract/" + $(this).attr("data-contract-id"));
     	});
     	
     	$(".contractActions button[data-status]").click(function(){
-    		var contract = contractListView.collection.get($(this).attr("data-contract-id"));
-    		contract.set("status", $(this).attr("data-status"));
-    		contract.save();
+    		contract.status = $(this).attr("data-status");
+
+            new Contract(contract).save({}, {
+                success : function(){
+                    contractPageView.refresh();
+                }
+            });
+
+           
+
         	$('.contractActions.modal').modal("hide");
     	});
     	
         $(".contractActions button.edit").click(function(){
         	$('.contractActions.modal').modal("hide");
-        	contractListView.editContract($(this).attr("data-contract-id"));
+        	contractPageView.editContract($(this).attr("data-contract-id"));
         });
         
         $(".contractActions button.delete").click(function(){
         	$('.contractActions.modal').modal("hide");
-        	contractListView.deleteContract($(this).attr("data-contract-id"));
+        	contractPageView.deleteContract($(this).attr("data-contract-id"));
         });
     },
     
@@ -160,23 +183,55 @@ window.ContractListView = Backbone.View.extend({
     		additionalDrivers : []
 		});
     },
+
+    refresh : function(){
+        this.model.fetch();
+        this.render();
+    },
     	
     render : function(){ 
-    	var contractList = this.collection.toJSON();
+    	var page = this.model.toJSON();
     	
-    	var renderedContent = this.template({contractList : contractList});
-        $($('#contractList-container')).html(renderedContent);
+    	var renderedContent = this.template({page : page});
+        $($('#contractPage-container')).html(renderedContent);
         
-        var contractListView = this;
+        var contractPageView = this;
         
         $("table tbody tr").click(function(){
-        	contractListView.openContractActions(contractListView.collection.get($(this).attr("data-contract-id")).toJSON());
+        	contractPageView.openContractActions(contractPageView.getContractFromContent($(this).attr("data-contract-id")));
         });
         
         $("table .startDate, table .endDate").each(function(index, element){
         	var dateInput = $(element);
         	dateInput.html(moment(parseInt(dateInput.html())).format("YYYY-MM-DD HH:mm"));
         });
+
+        var $statusSelect = $(".status select");
+        $statusSelect.select2("val", null);
+        for(statusIndex in this.model.status){
+            var newData = $statusSelect.select2("val");
+            newData.push(this.model.status[statusIndex]);
+
+            $statusSelect.select2("val", newData);
+        }
+
+        $(".pager .previous a").attr(
+            "href", 
+            "#" + getBranchForRouter() + "/" + 
+                (parseInt(contractPageView.model.page) - 1) + "/" + 
+                contractPageView.model.results + "/" +
+                buildStatusStringForRouter(), 
+            {trigger: true}
+        );
+
+        $(".pager .next a").attr(
+            "href", 
+            "#" + getBranchForRouter() + "/" + 
+                (parseInt(contractPageView.model.page) + 1) + "/" + 
+                contractPageView.model.results + "/" +
+                buildStatusStringForRouter(), 
+            {trigger: true}
+        );
         
         return this;
     },
@@ -185,7 +240,7 @@ window.ContractListView = Backbone.View.extend({
     	$("button.save").prop('disabled', true);
     	$("button.close").prop('disabled', true);
     	
-		var collection = this.collection;
+		var model = this.model.content;
 		
 		var additionalDrivers = [];
 		$(".additionalDrivers .driver").each(function(index, element){
@@ -206,7 +261,7 @@ window.ContractListView = Backbone.View.extend({
     		branch = user.toJSON().branch;
     	}
 
-		this.collection.create(
+		var contract = new Contract(
 			{	id: $('.editContract input.id').val(),
 				branch : branch,
 				driver : {
@@ -226,14 +281,16 @@ window.ContractListView = Backbone.View.extend({
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,
                 options: $(".editContract .options textarea").val()
-			},
-			{	async : false,
-				success : function(resp){
-			        collection.fetch();
-			        
-			        $('.modal').modal('hide');
-			    }
-			}	
-		);		
+			}
+		);
+
+        contract.save({}, { 
+            async : false,
+            success : function(resp){
+                model.fetch();
+                
+                $('.modal').modal('hide');
+            }
+        } );
 	},
 });
