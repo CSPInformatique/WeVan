@@ -18,6 +18,10 @@
 	<definition name="contract" extends="menuTemplate">
 		<put-attribute name="content" value="/WEB-INF/views/contract.jsp" />
 	</definition>
+
+	<definition name="error/oups" extends="menuTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/error/oups.jsp" />
+	</definition>
 	
 	<definition name="contract/print" template="/WEB-INF/views/printContract.jsp" />
 		

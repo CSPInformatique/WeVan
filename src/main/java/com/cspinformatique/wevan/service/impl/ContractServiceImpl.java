@@ -47,7 +47,11 @@ public class ContractServiceImpl implements ContractService {
 	
 	@PostConstruct
 	public void init(){
-		this.fetchContracts();
+		try{
+			this.fetchContracts();
+		}catch(Exception ex){
+			logger.error("Unable to retreive contracts from we-van.com", ex);
+		}
 	}
 	
 	@Override
@@ -201,7 +205,7 @@ public class ContractServiceImpl implements ContractService {
 					this.optionService.generateOption(
 						contractId,
 						backendContract.getPayment().isChildSeat(),
-						"Siège enfant",
+						"SiÃ¨ge enfant",
 						backendContract.getPayment().getChildSeatCost()
 					)
 				);
