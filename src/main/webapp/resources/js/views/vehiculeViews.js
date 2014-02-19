@@ -57,7 +57,7 @@ window.VehiculeListView = Backbone.View.extend({
     		})
     	);
     	
-    	$('.modal').modal({backdrop : 'static'});
+    	$('.modal.vehicule').modal({backdrop : 'static'});
     	
     	$("button.save").prop('disabled', false);
     	$("button.close").prop('disabled', false);

@@ -61,7 +61,7 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Override
 	public Page<Contract> findByBranch(Branch branch, int page, int results){
-		return this.contractRepository.findByBranch(
+		return this.contractRepository.findByBranchOrderByCreationDateDesc(
 			branch, 
 			new PageRequest(page, results, new Sort(Direction.DESC, "id"))
 		);
@@ -69,7 +69,7 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Override
 	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, int page, int results){
-		return this.contractRepository.findByBranchAndStatusIn(
+		return this.contractRepository.findByBranchAndStatusInOrderByCreationDateDesc(
 			branch, 
 			status, 
 //			new PageRequest(page, results, new Sort(Direction.DESC, "id"))
@@ -106,6 +106,7 @@ public class ContractServiceImpl implements ContractService {
 		return contractId;
 	}
 	
+	@Override
 	public void fetchContracts(){
 		// Retreiving last contract inserted.
 		Contract latestContract = this.findLastContractModified();
@@ -120,7 +121,7 @@ public class ContractServiceImpl implements ContractService {
 		Long[] reservationIds = new RestTemplate().exchange(
 			"http://www.we-van.com/api/?t=" + timestamp, 
 			HttpMethod.GET, 
-			new HttpEntity<Long[]>( 
+			new HttpEntity<Long[]>(
 				new Long[0],
 				RestUtil.createBasicAuthHeader(
 					"wevan-api", 
@@ -165,86 +166,105 @@ public class ContractServiceImpl implements ContractService {
 				
 				logger.info("Generating contract " + contractId + " from reservation " + reservationId);
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						!String.valueOf(backendContract.getPayment().getAdditionalDrivers()).equals("0"), 
-						"Conducteur(s) additionnel(s)", 
-						backendContract.getPayment().getAdditionalDriversCost()
-					)
-				);
+				//backendContract.getPayment().getAdditionalDrivers().
+				if(backendContract.getPayment().getAdditionalDrivers() > 0){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true, 
+							"Conducteur(s) additionnel(s)", 
+							backendContract.getPayment().getAdditionalDriversCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isBeddingPack(),
-						"Lits",
-						backendContract.getPayment().getBeddingPackCost()
-					)
-				);
+				if(backendContract.getPayment().isBeddingPack()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Lits",
+							backendContract.getPayment().getBeddingPackCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isCancelOption(),
-						"Assurance annulation",
-						0d
-					)
-				);
+				if(backendContract.getPayment().isCancelOption()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Assurance annulation",
+							0d
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isCarRack(),
-						"Porte-bagages",
-						backendContract.getPayment().getCarRackCost()
-					)
-				);
+				if(backendContract.getPayment().isCarRack()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Porte-bagages",
+							backendContract.getPayment().getCarRackCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isChildSeat(),
-						"Siège enfant",
-						backendContract.getPayment().getChildSeatCost()
-					)
-				);
+				if(backendContract.getPayment().isChildSeat()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Siège enfant",
+							backendContract.getPayment().getChildSeatCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isCleaningPackage(),
-						"Nettoyage",
-						backendContract.getPayment().getCleaningPackageCost()
-					)
-				);
+				if(backendContract.getPayment().isCleaningPackage()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Nettoyage",
+							backendContract.getPayment().getCleaningPackageCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isGps(),
-						"GPS",
-						backendContract.getPayment().getGpsCost()
-					)
-				);
+				if(backendContract.getPayment().isGps()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"GPS",
+							backendContract.getPayment().getGpsCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isWinterTires(),
-						"Pneus d'hiver",
-						backendContract.getPayment().getWinterTiresCost()
-					)
-				);
+				if(backendContract.getPayment().isWinterTires()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							backendContract.getPayment().isWinterTires(),
+							"Pneus d'hiver",
+							backendContract.getPayment().getWinterTiresCost()
+						)
+					);
+				}
 				
-				options.add(
-					this.optionService.generateOption(
-						contractId,
-						backendContract.getPayment().isYoungDriver(),
-						"Jeune conducteur",
-						backendContract.getPayment().getYoungDriverCost()
-					)
-				);
+				if(backendContract.getPayment().isYoungDriver()){
+					options.add(
+						this.optionService.generateOption(
+							contractId,
+							true,
+							"Jeune conducteur",
+							backendContract.getPayment().getYoungDriverCost()
+						)
+					);
+				}
 		
 				Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
 				

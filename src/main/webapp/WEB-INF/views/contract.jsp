@@ -194,6 +194,8 @@
 </script>
 <script type="text/template" id="newContract-template">
 	<input class="id" type="hidden" value="<@= contract.id @>" />
+	<input class="creationDate" type="hidden" value="<@= contract.creationDate @>" />
+	<input class="editionDate" type="hidden" value="<@= contract.editionDate @>" />
 	<div class="driver form-group">
     	<label for="driver">Conducteur Principal</label>
 		<input type="text" class="form-control corporateName" placeholder="Société" value="<@= contract.driver.corporateName @>">
@@ -238,17 +240,21 @@
 			</select>
 		</div>
 	</div>
+	
   	<div class="deductible form-group">
     	<label for="deductible">Franchise</label>
 		<input type="text" class="form-control deductible" placeholder="Franchise" value="<@= contract.deductible @>">
 	</div>
+	
   	<div class="deposit form-group">
     	<label for="deposit">Dépôt de garantie</label>
 		<input type="text" class="form-control" placeholder="Dépôt de garantie" value="<@= contract.deposit @>">
 	</div>
-  	<div class="options form-group">
-    	<label for="options">Options</label>
-    	<textarea class="form-control" cols="40" rows="8"><@= contract.options @></textarea>
+		
+	<div class="options form-group">
+		<label for="options">Options</label>		
+		<button class="btn btn-primary btn-xs addOption">Ajouter</button>
+		<div class="none form-inline">Aucun</div>
 	</div>
 </script>
 
@@ -262,6 +268,20 @@
 		</div>
 		<div class="form-group">
 			<input type="text" class="form-control driverLicense" placeholder="Permis de conduire" value="<@= driver.driverLicense @>" />
+		</div>
+		<div class="form-group">
+			<button class="remove btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></button>
+		</div>
+	</div>
+</script>
+
+<script type="text/template" id="option-template">
+	<div class="option form-inline" data-option-id="<@= option.id @>">
+		<div class="form-group">
+			<input type="text" class="form-control optionLabel" placeholder="Description" value="<@= option.label @>" />
+		</div>
+		<div class="form-group">
+			<input type="text" class="form-control amount" placeholder="Montant" value="<@= option.amount @>" />
 		</div>
 		<div class="form-group">
 			<button class="remove btn btn-danger btn-sm"><span class="glyphicon glyphicon-remove"></span></button>

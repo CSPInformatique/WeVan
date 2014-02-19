@@ -17,6 +17,24 @@ window.ContractPageView = Backbone.View.extend({
 		});
 	},
 	
+    addOption : function(option){
+        $(".editContract .none").hide();
+        
+        $(".editContract .options").append(
+            _.template($('#option-template').html())({
+                option : option
+            })
+        );
+        
+        $(".editContract .options button.remove").last().click(function(){
+            $(this).closest(".form-inline").remove();
+            
+            if($(".editContract .options button.remove").size() == 0){
+                $(".editContract .none").show();
+            }
+        });
+    },
+
 	closeModal: function(){
 		$('.modal').modal('hide');
 	},
@@ -95,6 +113,10 @@ window.ContractPageView = Backbone.View.extend({
     	for(var driverIndex in contract.additionalDrivers){    		
     		this.addAdditionalDriver(contract.additionalDrivers[driverIndex]);
     	}
+        
+        for(var optionIndex in contract.options){         
+            this.addOption(contract.options[optionIndex]);
+        }
     	
     	$(".editContract .startDate input, .editContract .endDate input").each(function(index, element){
     		var dateInput = $(element);
@@ -112,14 +134,22 @@ window.ContractPageView = Backbone.View.extend({
     	$("button.close").prop('disabled', false);
     	
     	var contractPageView = this;
-    	$(".editContract button.addDriver").click(function(){
-    		contractPageView.addAdditionalDriver({
-    			id: 0,
-    			firstName:"", 
-    			lastName: "", 
-    			driverLicense : ""
-    		});
-    	});
+        $(".editContract button.addDriver").click(function(){
+            contractPageView.addAdditionalDriver({
+                id: 0,
+                firstName:"", 
+                lastName: "", 
+                driverLicense : ""
+            });
+        });
+
+        $(".editContract button.addOption").click(function(){
+            contractPageView.addOption({
+                id : 0,
+                label: "",
+                amount: ""
+            });
+        });
     },
     
     openContractActions: function(contract){
@@ -240,18 +270,31 @@ window.ContractPageView = Backbone.View.extend({
     	$("button.save").prop('disabled', true);
     	$("button.close").prop('disabled', true);
     	
-		var model = this.model.content;
+		var model = this.model;
+
+        var contractId =  $('.editContract input.id').val();
 		
 		var additionalDrivers = [];
 		$(".additionalDrivers .driver").each(function(index, element){
 			additionalDrivers.push({
-				id : $(this).attr("data-driver-id"),
+				id : contractId,
 				firstName : $(this).find("input.firstName").val(),
 				lastName : $(this).find("input.lastName").val(),
 				corporateName : "",
 				driverLicense : $(this).find("input.driverLicense").val()
 			});
 		});
+
+        var options = [];
+        $(".options .option").each(function(index, element){
+            options.push({
+                id : $(this).attr("data-option-id"),
+                contract : contractId,
+                label : $(this).find("input.optionLabel").val(),
+                active : true,
+                amount : $(this).find("input.amount").val()
+            });
+        });
 		
     	var branchesSelect = $(".branches select");
     	var branch = null;
@@ -262,7 +305,9 @@ window.ContractPageView = Backbone.View.extend({
     	}
 
 		var contract = new Contract(
-			{	id: $('.editContract input.id').val(),
+			{	id: contractId,
+                creationDate : +moment(parseInt($(".editContract input.creationDate").val())),
+                editionDate : +moment(parseInt($(".editContract input.editionDate").val())),
 				branch : branch,
 				driver : {
 					id : $(".editContract .driver input.id").val(),
@@ -274,13 +319,13 @@ window.ContractPageView = Backbone.View.extend({
 				startDate : +moment($(".editContract input.startDate").val(), "YYYY-MM-DD HH:mm"),
 				endDate : +moment($(".editContract input.endDate").val(), "YYYY-MM-DD HH:mm"),
 				status : "OPEN",
-				kilometers : $(".editContract input.kilometers").val(),
+				kilometersPackage : $(".editContract input.kilometers").val(),
 				totalAmount : $(".editContract input.totalAmount").val(),
 				vehicule : {id : $(".editContract .vehicule select").select2("val")},
 				deductible : $(".editContract input.deductible").val(),
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,
-                options: $(".editContract .options textarea").val()
+                options: options
 			}
 		);
 

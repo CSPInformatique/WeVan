@@ -21,9 +21,9 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 		+ "	editionDate = ( SELECT MAX(editionDate) FROM Contract )")
 	public List<Contract> findLastContractModified();
 	 
-	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
+	public Page<Contract> findByBranchOrderByCreationDateDesc(Branch branch, Pageable pageable);
 	 
-	public Page<Contract> findByBranchAndStatusIn(Branch branch, List<Status> status, Pageable pageable);
+	public Page<Contract> findByBranchAndStatusInOrderByCreationDateDesc(Branch branch, List<Status> status, Pageable pageable);
 	
 	public Contract findByReservationId(long reservationId);
 }

@@ -3,9 +3,9 @@
 
 <div class="text-center">
 	<p>
-		<img src="<c:url value="resources/img/error/oups.jpg" />">
+		<img src="<c:url value="/resources/img/error/oups.jpg" />">
 	</p>
 	<p>
-		Nous sommes désolé ! Une erreur technique vient de se produire. Une alerte au support technique à été envoyé.
+		Nous sommes désolé ! Une erreur technique vient de se produire. Une alerte a été envoyé au support technique.
 	</p>
 </div>

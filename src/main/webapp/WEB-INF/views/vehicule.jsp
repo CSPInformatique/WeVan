@@ -127,7 +127,7 @@
 	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
 </div>
 
-<div class="modal fade">
+<div class="modal fade vehicule">
   <div class="modal-dialog">
     <div class="modal-content">
       <form role="form">

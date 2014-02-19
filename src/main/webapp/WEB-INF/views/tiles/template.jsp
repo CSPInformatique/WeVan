@@ -31,6 +31,9 @@
 	    <script src="<c:url value="/resources/js/libs/multi-sort.collection.js" />"></script>
 	    <script src="<c:url value="/resources/lib/select2/js/select2.min.js" />"></script>
 	    
+	    <!-- Error module -->
+	    <script src="<c:url value="/resources/lib/csp-error/csp-error.js" />"></script>
+	    
 	  	<!-- Models -->
 	  	<script src="<c:url value="/resources/js/models/branch.js" />"></script>
 	  	<script src="<c:url value="/resources/js/models/contract.js" />"></script>
@@ -63,6 +66,25 @@
 		<div class="container">
 			<tiles:insertAttribute name="content" />
 			<tiles:insertAttribute name="footer" />
+			
+			<!-- Modal -->
+			<div class="modal fade generic-error" tabindex="-1" role="dialog" aria-hidden="true">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-body text-center">
+							<p>
+								<img src="<c:url value="/resources/img/error/oups.jpg" />">
+							</p>
+							<p class="clientError">
+								Nous sommes désolé ! Une erreur technique vient de se produire. Une alerte a été envoyé au support technique.
+							</p>
+							<p class="serverUnreachable">
+								Nous sommes désolé ! Impossible de rejoindre le serveur, veuillez contacter le support technique.
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

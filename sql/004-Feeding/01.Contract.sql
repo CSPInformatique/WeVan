@@ -20,7 +20,6 @@ ADD CONSTRAINT `fk_option_contract`
 
 ALTER TABLE `wevan-test`.`option` 
 ADD COLUMN `id` INT NOT NULL AUTO_INCREMENT FIRST,
-ADD COLUMN `optioncol` VARCHAR(45) NULL AFTER `amount`,
 DROP PRIMARY KEY,
 ADD PRIMARY KEY (`id`);
 

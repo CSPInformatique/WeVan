@@ -15,6 +15,8 @@ public interface ContractService {
 	
 	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, int page, int results);
 	
+	public void fetchContracts();
+	
 	public Contract findOne(long id);
 	
 	public long generateNewContractId();
