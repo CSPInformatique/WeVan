@@ -144,7 +144,6 @@
 					<th>#</th>
 					<th>Raison sociale</th>
 					<th>Nom</th>
-					<th>Prénom</th>
 					<th>Création</th>
 					<th>Début</th>
 					<th>Fin</th>
@@ -160,7 +159,6 @@
 						<td class="id"><@= contract.id @></td>
 						<td class="corporateName"><@= contract.driver.corporateName @></td>
 						<td class="lastName"><@= contract.driver.lastName @></td>
-						<td class="firstName"><@= contract.driver.firstName @></td>
 						<td class="creationDate"><@= contract.creationDate @></th>
 						<td class="startDate"><@= contract.startDate @></td>
 						<td class="endDate"><@= contract.endDate @></td>
