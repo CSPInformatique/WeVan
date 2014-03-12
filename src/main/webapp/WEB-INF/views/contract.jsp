@@ -142,11 +142,14 @@
 			<thead>
 				<tr class="active">
 					<th>#</th>
+					<th>Raison sociale</th>
 					<th>Nom</th>
 					<th>Prénom</th>
+					<th>Création</th>
 					<th>Début</th>
 					<th>Fin</th>
 					<th>Véhicule</th>
+					<th>Immatriculation</th>
 					<th>Statut</th>
 				</tr>
 			</thead>
@@ -155,26 +158,30 @@
 				<@ _.each(page.content, function(contract) { @>	
 					<tr data-contract-id="<@= contract.id @>">
 						<td class="id"><@= contract.id @></td>
+						<td class="corporateName"><@= contract.driver.corporateName @></td>
 						<td class="lastName"><@= contract.driver.lastName @></td>
 						<td class="firstName"><@= contract.driver.firstName @></td>
+						<td class="creationDate"><@= contract.creationDate @></th>
 						<td class="startDate"><@= contract.startDate @></td>
 						<td class="endDate"><@= contract.endDate @></td>
-						<td class="vehicule">
-							<@	if(contract.vehicule){	@>
+						<@	if(contract.vehicule){	@>
+							<td class="vehicule">
 								<@= contract.vehicule.name @> <@= contract.vehicule.number @>
-							<@	}else{	@>
-								N/A
-							<@	}	@>
-						</td>
+							</td>
+							<td class="registration">
+								<@= contract.vehicule.registration @>
+							</td>
+						<@	}else{	@>
+							<td class="vehicule">N/A</td>
+							<td class="registration">N/A</td>
+						<@	}	@>
 						<td class="status">
-<@	if(contract.status == "OPEN"){	@>
-							Ouvert
-<@	}else if(contract.status == "IN_PROGRESS"){	@>
-							En cours
-<@	}else if(contract.status == "COMPLETED"){	@>
+<@	if(contract.startDate > +moment()){	@>
+							En attente
+<@	}else if(contract.endDate < +moment()){	@>
 							Terminé
-<@	}else if(contract.status == "CANCELLED"){	@>
-							Annulé
+<@	}else{	@>
+							En cours
 <@	}	@>
 						</td>
 					</tr>
@@ -218,7 +225,11 @@
 	</div>
   	<div class="kilometers form-group">
     	<label for="kilometers">Kilomètres</label>
-		<input type="text" class="form-control kilometers" placeholder="Kilomètres" value="<@= contract.kilometers @>">
+		<input type="text" class="form-control kilometers" placeholder="Kilomètres" value="<@= contract.kilometersPackage @>">
+	</div>
+  	<div class="amountAlreadyPaid form-group">
+    	<label for="totalAmount">Somme déjà versée</label>
+		<input type="text" class="form-control amountAlreadyPaid" placeholder="Somme déjà versée" value="<@= contract.amountAlreadyPaid @>">
 	</div>
   	<div class="totalAmount form-group">
     	<label for="totalAmount">Montant Total</label>
@@ -255,6 +266,16 @@
 		<label for="options">Options</label>		
 		<button class="btn btn-primary btn-xs addOption">Ajouter</button>
 		<div class="none form-inline">Aucun</div>
+	</div>
+	
+	<div class="showOptionsPrices form-group">
+		<label for="showOptionsPrices">Afficher prix des options :&nbsp;</label>
+		<input 
+			type="checkbox"
+<@	if(contract.showOptionsPrices){	@>
+			checked="checked"
+<@	}	@>
+		 />
 	</div>
 </script>
 
@@ -295,23 +316,9 @@
 		<h2 class="modal-title">Contract <@= contract.id @></h2>
 	</div>
 	<div class="modal-body">
-		<h4>Actions</h4>
-		<div><button data-contract-id="<@= contract.id @>" class="print btn btn-success">Imprimer le contrat</button></div>
-<@	if(contract.status == "OPEN"){	@>
-		<div><button data-contract-id="<@= contract.id @>" data-status="IN_PROGRESS" class="btn btn-primary">Démarrer le contrat</button></div>
-<@	}
-	if(contract.status == "IN_PROGRESS"){	@>
-		<div><button data-contract-id="<@= contract.id @>" data-status="COMPLETED" class="btn btn-primary">Terminer le contrat</button></div>
-<@	}
-	if(contract.status != "CANCELLED"){	@>
-		<div><button data-contract-id="<@= contract.id @>" data-status="CANCELLED" class="btn btn-danger">Annuler le contrat</button></div>
-<@	}
-	if(contract.status != "OPEN"){	@>
-		<div><button data-contract-id="<@= contract.id @>" data-status="OPEN" class="btn-warning">Réinitialiser le contrat</button></div>
-<@	}	@>
 		<h4>Options</h4>
+		<div><button data-contract-id="<@= contract.id @>" class="print btn btn-success">Imprimer le contrat</button></div>
 		<div><button data-contract-id="<@= contract.id @>" class="edit btn btn-default">Editer le contrat</button></div>
-		<div><button data-contract-id="<@= contract.id @>" class="delete btn btn-danger">Supprimer le contrat</button></div>
 	</div>
 	<div class="modal-footer">
 		<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
@@ -328,10 +335,9 @@
 		<div class="status">
 			<h4>Statut</h4>
 			<select multiple="multiple">
-				<option value="OPEN">Ouvert</option>
+				<option value="OPEN">En attente</option>
 				<option value="IN_PROGRESS">En cours</option>
 				<option value="COMPLETED">Terminé</option>
-				<option value="CANCELLED">Annulé</option>
 			</select>
 		</div>
 		

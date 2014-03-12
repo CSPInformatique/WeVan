@@ -14,10 +14,9 @@
 
     <style type="text/css">      
       body{
-        color: #3E3E3E;
+        color: gray;
         font-family: Amaranth;
         font-size: 10pt;
-        font-weight: bold;
       }
 
       table{
@@ -30,9 +29,26 @@
         margin-right: auto;
         width: 720px;
       }
+      
+      .value{
+      	color : black;
+      	font-weight: bold;
+      }
 
       .spacer{
         height: 5px;
+      }
+      
+      .header, .title, .legal{
+     	color: #00A1CB
+      }
+      
+      .subtitle{
+      	font-style: italic;
+      }      
+      
+      .header .logo{
+      	width: 200px;
       }
 
       .header .contactInfo{
@@ -51,18 +67,24 @@
       .header .leftSection{
         float: left;
         font-size: 14pt;
+        font-weight: bold;
         width: 400px;
+      }
+      
+      .header .contractId{
+      	color : black;
       }
 
       .header .rightSection{
         font-size: 9pt;
-        font-style: italic;
-        font-weight: bold;
         float: right;
         margin-top: 60px;
         width: 240px;
-      }
-      
+      }     
+
+      .header .rightSection .yourAgency{
+        margin-top: 2px;
+      }      
 
       .header .title{
         font-size: 18pt;
@@ -119,7 +141,7 @@
 
       .driversInfo .rightSection .subtitle{
         text-align: right;
-        margin-bottom: 10px;        
+        margin-bottom: 10px;
       }
       
       .driversInfo .rightSection tbody{
@@ -128,7 +150,7 @@
       }
 
       .driversInfo .title, .locationInfo .title, .vehicule .title, .options .title, .invoice .title{
-        color: #548ED4;
+        color: #00A1CB;
         font-size: 12pt;
         font-weight: bold;
         margin-bottom: 10px;
@@ -141,7 +163,6 @@
       
       .legal{
         font-size: 8pt;
-        font-weight: bold;
         margin-left: 5px;
         margin-top: 10px;
         margin-right: 5px;
@@ -152,9 +173,8 @@
         font-size: 10pt;
       }
 
-      .dates .subtitle{
+      .dates > .content{
         font-size: 11pt;
-        font-weight: bold;
         margin-bottom: 10px;
       }
       
@@ -162,18 +182,22 @@
         height: 110px;
       }
 
-      .dates table .from, .dates table .to{
+      .dates table .from,
+      .dates table .to{
         width: 80px;
+      }
+      
+      .dates table .to{
+      	padding-right: 10px;
       }
 
       .dates table .date{
-        width: 80px;
-        text-align: right;
+        width: 140px;
+        text-align: center;
       }
 
       .dates table .at{
-        width: 40px;
-        text-align: center;
+        width: 50px;
       }
 
       .dates table .tile{
@@ -182,6 +206,7 @@
 
       .options, .invoice {
         width: 350px;
+        padding-left: 10px;
       }
 
       .options{
@@ -203,7 +228,7 @@
       .conditions{
         font-size: 10pt;
         list-style-position: inside;
-        list-style-image: url("<c:url value='/resources/img/contract/arrow.png' />");
+        list-style-image: url("<c:url value='/resources/img/contract/V-s.png' />");
         margin-top: 20px;
         margin-bottom: 20px;
         text-align: center;
@@ -244,7 +269,9 @@
         border-right:solid 1px #2B4A77;
       }
 
-      .endorsement .statement .title{
+      .endorsement .statement .title,
+      .endorsement .signature .title{
+      	color: gray;
         font-size: 10pt;
         font-weight: bold;
       }
@@ -265,7 +292,6 @@
       }
 
       .endorsement .signature .instructions{
-        margin-top: 125px;
         font-size: 8pt;
       }
     </style>
@@ -276,21 +302,21 @@
       <div class="header"> <!-- Header -->
         <div class="leftSection"> <!-- Left section -->
           <div>
-            <img src="<c:url value='/resources/img/contract/wevan.png' />">
+            <img class="logo" src="<c:url value='/resources/img/contract/logo-wevan-transp-medium-cropped.png' />">
           </div>
           <div class="title">
             <span class="capital">C</span><span>ONTRAT DE </span><span class="capital">L</span><span>OCATION</span>
           </div>
           <div>
             <span>N&ordm;</span>
-            <span>${contract.id}</span>
+            <span class="contractId">${contract.id}</span>
           </div>
         </div> <!-- Left section -->
         <div class="rightSection"><!-- Right section -->
           <div> <!-- Agence --> 
-            <div class="pull-left">Votre agence</div>
+            <div class="pull-left yourAgency"><em>Votre agence</em></div>
             <div class="contactInfo agency">
-              <div class="name">${contract.branch.name}</div>
+              <div class="name title">${contract.branch.name}</div>
               <div>${contract.branch.phone}</div>
               <div>
               <c:if test="${contract.branch.addressNumber != '' }">
@@ -303,7 +329,7 @@
           </div> <!-- Agence --> 
 
           <div> <!-- Assistance --> 
-            <div class="pull-left">Votre assistance</div>
+            <div class="pull-left"><em>Votre assistance</em></div>
             <div class="contactInfo">
               <div>AXA assistance</div>
               <div>+33 (0) 1 55 92 14 54</div>
@@ -315,23 +341,23 @@
 
       <div class="driversInfo"> <!-- Drivers info -->
         <div class="spacer">&nbsp;</div>
+        <div class="title">Le locataire &amp; les conducteurs</div>
         <div class="leftSection">
-          <div class="title">Le locataire &amp; les conducteurs</div>
           <div class="subtitle">Locataire (et premier conducteur)</div>
           <div>
             <table>
               <tbody>
                 <tr>
                   <td>Raison sociale :</td>
-                  <td class="input">${contract.driver.corporateName}</td>
+                  <td class="input value">${contract.driver.corporateName}</td>
                 </tr>
                 <tr>
                   <td>Nom &amp; prénom :</td>
-                  <td class="input">${contract.driver.lastName} ${contract.driver.firstName}</td>
+                  <td class="input value">${contract.driver.lastName} ${contract.driver.firstName}</td>
                 </tr>
                 <tr>
                   <td>Permis de conduire n&ordm; :</td>
-                  <td class="input">${contract.driver.driverLicense}</td>
+                  <td class="input value">${contract.driver.driverLicense}</td>
                 </tr>
               </tbody>
             </table>
@@ -348,7 +374,7 @@
                   <th class="license">Permis de conduire n&ordm;</th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody class="value">
                 <c:forEach items="${contract.additionalDrivers}" var="driver">
                   <tr>
                     <td class="name">${driver.lastName} ${driver.firstName}</td>
@@ -366,25 +392,25 @@
       <div class="locationInfo"> <!-- Location -->
         <div class="dates"> <!-- Location Dates -->
           <div class="title">La location</div>
-          <div class="subtitle">
+          <div class="content">
             <table>
               <tr>
-                <td class="text-right from">Location du</td>
-                <td class="date"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></td>
+                <td class="from">Location du</td>
+                <td class="date value"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></td>
                 <td class="at">à</td>
-                <td class="time"><fmt:formatDate pattern="HH:mm" value="${contract.startDate}" /></td>
+                <td class="time value"><fmt:formatDate pattern="HH:mm" value="${contract.startDate}" /></td>
               </tr>
               <tr>
                 <td class="text-right to">au</td>
-                <td class="date"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.endDate}" /></td>
+                <td class="date value"><fmt:formatDate pattern="dd/MM/yyyy" value="${contract.endDate}" /></td>
                 <td class="at">à</td>
-                <td class="time"><fmt:formatDate pattern="HH:mm" value="${contract.endDate}" /></td>
+                <td class="time value"><fmt:formatDate pattern="HH:mm" value="${contract.endDate}" /></td>
               </tr>
             </table>
           </div>
           <div>
             <span>Forfait kilométrique :</span>
-            <span>${contract.kilometersPackage}</span>
+            <span class="value">${contract.kilometersPackage}</span>
           </div>
         </div> <!-- Location Dates -->
 
@@ -394,15 +420,15 @@
             <tbody>
               <tr>
                 <td>Le véhicule :</td>
-                <td>${contract.vehicule.name} ${contract.vehicule.number}</td>
+                <td class="value">${contract.vehicule.name} ${contract.vehicule.number}</td>
               </tr>
               <tr>
                 <td>Modèle :</td>
-                <td>${contract.vehicule.model}</td>
+                <td class="value">${contract.vehicule.model}</td>
               </tr>
               <tr>
                 <td>Immatriculation :</td>
-                <td>${contract.vehicule.registration}</td>
+                <td class="value">${contract.vehicule.registration}</td>
               </tr>
             </tbody>
           </table>
@@ -413,10 +439,15 @@
 
       <div class="options"> <!-- Options -->
         <div class="title">Les options</div>
-        <div class="content">
+        <div class="content value">
           <c:forEach items="${contract.options}" var="option">
           	<c:if test="${option.active}">
-          	  <div>${option.label} - ${option.amount} €</div>
+          	  <div>
+          	  	<span>${option.label}</span>
+				<c:if test="${contract.showOptionsPrices}">
+          	  		<span> - ${option.amount} €</span>
+          	  	</c:if>
+          	  </div>
           	</c:if>
           </c:forEach>
         </div>
@@ -426,17 +457,21 @@
         <div class="title">La facturation</div>
         <table>
           <tbody>
+          	<tr>
+          		<td>Somme déjà versée :</td>
+              	<td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.amountAlreadyPaid}" /> &euro; TTC</td>
+          	</td>
             <tr>
               <td>Montant total :</td>
-              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.totalAmount}" /> &euro; TTC</td>
+              <td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.totalAmount}" /> &euro; TTC</td>
             </tr>
             <tr>
               <td>Franchise :</td>
-              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deductible}" /> &euro; TTC</td>
+              <td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deductible}" /> &euro; TTC</td>
             </tr>
             <tr>
               <td>Dépôt de garantie :</td>
-              <td><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deposit}" /> &euro;</td>
+              <td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.deposit}" /> &euro;</td>
             </tr>
           </tbody>
         </table>
@@ -468,7 +503,7 @@
         </div>
 
         <div class="signature">
-          <div class="title">A ${contract.branch.city}, le <fmt:formatDate pattern="dd/MM/yyyy" value="${date}" /></div>
+          <div class="title">A ${contract.branch.city}, le <fmt:formatDate pattern="dd/MM/yyyy" value="${contract.startDate}" /></div>
           <div class="instructions">(Signature précédée de la mention « lu et approuvé »)</div>
         </div>
         <div class="clearfix"></div>

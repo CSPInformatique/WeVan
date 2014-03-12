@@ -20,7 +20,7 @@ import org.hibernate.annotations.LazyCollectionOption;
 @Table(name="contract")
 public class Contract {
 	public enum Status{
-		OPEN, IN_PROGRESS, COMPLETED, CANCELLED
+		OPEN, IN_PROGRESS, COMPLETED
 	}
 	
 	private long id;
@@ -28,17 +28,18 @@ public class Contract {
 	private Branch branch;
 	private Date creationDate;
 	private Date editionDate;
-	private Status status;
 	private Driver driver;
 	private Date startDate;
 	private Date endDate;
 	private String kilometersPackage;
+	private double amountAlreadyPaid;
 	private double totalAmount;
 	private Vehicule vehicule;
 	private double deductible;
 	private double deposit;
 	private List<Driver> additionalDrivers;
 	private List<Option> options;
+	private boolean showOptionsPrices;
 	
 	public Contract(){
 		
@@ -55,29 +56,32 @@ public class Contract {
 		Date startDate,
 		Date endDate, 
 		String kilometersPackage, 
+		double amountAlreadyPaid,
 		double totalAmount,
 		Vehicule vehicule, 
 		double deductible, 
 		double deposit,
 		List<Driver> additionalDrivers,
-		List<Option> options
+		List<Option> options,
+		boolean showOptionsPrices
 	) {
 		this.id = id;
 		this.reservationId = reservationId;
 		this.branch = branch;
 		this.creationDate = creationDate;
 		this.editionDate = editionDate;
-		this.status = status;
 		this.driver = driver;
 		this.startDate = startDate;
 		this.endDate = endDate;
 		this.kilometersPackage = kilometersPackage;
+		this.amountAlreadyPaid = amountAlreadyPaid;
 		this.totalAmount = totalAmount;
 		this.vehicule = vehicule;
 		this.deductible = deductible;
 		this.deposit = deposit;
 		this.additionalDrivers = additionalDrivers;
 		this.options = options;
+		this.showOptionsPrices = showOptionsPrices;
 	}
 
 	@Id
@@ -123,14 +127,6 @@ public class Contract {
 		this.editionDate = editionDate;
 	}
 
-	public Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(Status status) {
-		this.status = status;
-	}
-
 	@JoinColumn(name="driver")
 	@OneToOne(cascade=CascadeType.ALL)
 	public Driver getDriver() {
@@ -163,6 +159,14 @@ public class Contract {
 
 	public void setKilometersPackage(String kilometersPackage) {
 		this.kilometersPackage = kilometersPackage;
+	}
+
+	public double getAmountAlreadyPaid() {
+		return amountAlreadyPaid;
+	}
+
+	public void setAmountAlreadyPaid(double amountAlreadyPaid) {
+		this.amountAlreadyPaid = amountAlreadyPaid;
 	}
 
 	public double getTotalAmount() {
@@ -222,5 +226,13 @@ public class Contract {
 
 	public void setOptions(List<Option> options) {
 		this.options = options;
+	}
+
+	public boolean isShowOptionsPrices() {
+		return showOptionsPrices;
+	}
+
+	public void setShowOptionsPrices(boolean showOptionsPrices) {
+		this.showOptionsPrices = showOptionsPrices;
 	}
 }

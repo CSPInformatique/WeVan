@@ -167,20 +167,6 @@ window.ContractPageView = Backbone.View.extend({
     		window.open(ctx + "/contract/" + $(this).attr("data-contract-id"));
     	});
     	
-    	$(".contractActions button[data-status]").click(function(){
-    		contract.status = $(this).attr("data-status");
-
-            new Contract(contract).save({}, {
-                success : function(){
-                    contractPageView.refresh();
-                }
-            });
-
-           
-
-        	$('.contractActions.modal').modal("hide");
-    	});
-    	
         $(".contractActions button.edit").click(function(){
         	$('.contractActions.modal').modal("hide");
         	contractPageView.editContract($(this).attr("data-contract-id"));
@@ -206,6 +192,7 @@ window.ContractPageView = Backbone.View.extend({
     		startDate : "",
     		endDate : "",
     		kilometers : "",
+            amountAlreadyPaid : "",
     		totalAmount : "",
     		vehicule : null,
     		deductible : "",
@@ -231,7 +218,7 @@ window.ContractPageView = Backbone.View.extend({
         	contractPageView.openContractActions(contractPageView.getContractFromContent($(this).attr("data-contract-id")));
         });
         
-        $("table .startDate, table .endDate").each(function(index, element){
+        $("table .startDate, table .endDate, table .creationDate").each(function(index, element){
         	var dateInput = $(element);
         	dateInput.html(moment(parseInt(dateInput.html())).format("YYYY-MM-DD HH:mm"));
         });
@@ -318,14 +305,15 @@ window.ContractPageView = Backbone.View.extend({
 				},
 				startDate : +moment($(".editContract input.startDate").val(), "YYYY-MM-DD HH:mm"),
 				endDate : +moment($(".editContract input.endDate").val(), "YYYY-MM-DD HH:mm"),
-				status : "OPEN",
 				kilometersPackage : $(".editContract input.kilometers").val(),
+                amountAlreadyPaid : $(".editContract input.amountAlreadyPaid").val(),
 				totalAmount : $(".editContract input.totalAmount").val(),
 				vehicule : {id : $(".editContract .vehicule select").select2("val")},
 				deductible : $(".editContract input.deductible").val(),
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,
-                options: options
+                options: options,
+                showOptionsPrices : $(".showOptionsPrices input").is(":checked")
 			}
 		);
 

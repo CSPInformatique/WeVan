@@ -1,5 +1,6 @@
 package com.cspinformatique.wevan.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -19,7 +20,7 @@ public interface ContractService {
 	
 	public Contract findOne(long id);
 	
-	public long generateNewContractId();
+	public long generateNewContractId(Date contractStartDate);
 	
 	public Contract saveContract(Contract contract);
 }

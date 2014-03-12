@@ -9,6 +9,17 @@ import javax.persistence.Table;
 @Entity
 @Table(name="option")
 public class Option {
+	public static final String LABEL_ADDITIONAL_DRIVER = "Conducteur(s) additionnel(s)";
+	public static final String LABEL_BEDS = "Lits";
+	public static final String LABEL_CANCEL_INSURANCE = "Assurance annulation";
+	public static final String LABEL_CAR_RACK = "Porte-bagages";
+	public static final String LABEL_CHILD_SEAT = "Siège enfant";
+	public static final String LABEL_CLEANING = "Nettoyage";
+	public static final String LABEL_GPS = "GPS";
+	public static final String LABEL_PARTIAL_DEDUCTIBLE = "Rachat Partiel de Franchise";
+	public static final String LABEL_WINTER_TIRES = "Pneus d'hiver";
+	public static final String LABEL_YOUNG_DRIVER = "Jeune conducteur";
+	
 	private long id;
 	private long contract;
 	private boolean active;

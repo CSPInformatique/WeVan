@@ -1,7 +1,5 @@
 package com.cspinformatique.wevan.controller;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -19,7 +17,7 @@ import com.cspinformatique.wevan.service.ContractService;
 
 @Controller
 @Transactional
-@RequestMapping("/contract")
+@RequestMapping({"/", "/contract"})
 public class ContractController {
 	@Autowired private ContractService contractService;
 	
@@ -39,7 +37,6 @@ public class ContractController {
 	@RequestMapping(value="/{contractId}", method=RequestMethod.GET, produces="text/html")
 	public String printContract(@PathVariable long contractId, Model model){
 		model.addAttribute("contract", contractService.findOne(contractId));
-		model.addAttribute("date", new Date());
 		
 		return "contract/print";
 	}

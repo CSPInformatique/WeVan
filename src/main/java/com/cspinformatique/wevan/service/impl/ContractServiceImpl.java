@@ -45,6 +45,8 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Autowired private ContractRepository contractRepository;
 	
+	private boolean contractFetchInProgress = false;
+	
 	@PostConstruct
 	public void init(){
 		try{
@@ -61,7 +63,7 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Override
 	public Page<Contract> findByBranch(Branch branch, int page, int results){
-		return this.contractRepository.findByBranchOrderByCreationDateDesc(
+		return this.contractRepository.findByBranchOrderByStartDateAsc(
 			branch, 
 			new PageRequest(page, results, new Sort(Direction.DESC, "id"))
 		);
@@ -69,12 +71,23 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Override
 	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, int page, int results){
-		return this.contractRepository.findByBranchAndStatusInOrderByCreationDateDesc(
-			branch, 
-			status, 
-//			new PageRequest(page, results, new Sort(Direction.DESC, "id"))
-			new PageRequest(page, results)
-		);
+		PageRequest pageRequest = new PageRequest(page, results);
+		
+		if(status.contains(Status.OPEN) && status.contains(Status.IN_PROGRESS) && status.contains(Status.COMPLETED)){
+			return this.contractRepository.findByBranchOrderByStartDateAsc(branch, pageRequest);
+		}else if(status.contains(Status.OPEN) && status.contains(Status.IN_PROGRESS)){
+			return this.contractRepository.findOpenAndInProgressContracts(branch, pageRequest);
+		}else if(status.contains(Status.OPEN) && status.contains(Status.COMPLETED)){
+			return this.contractRepository.findOpenAndCompletedContracts(branch, pageRequest);
+		}else if(status.contains(Status.OPEN)){
+			return this.contractRepository.findOpenContracts(branch, pageRequest);
+		}else if(status.contains(Status.IN_PROGRESS) && status.contains(Status.COMPLETED)){
+			return this.contractRepository.findInProgressAndCompletedContracts(branch, pageRequest);
+		}else if(status.contains(Status.IN_PROGRESS)){
+			return this.contractRepository.findInProgressContracts(branch, pageRequest);
+		}else{
+			return this.contractRepository.findCompletedContracts(branch, pageRequest);
+		}
 	}
 	
 	@Override
@@ -93,9 +106,9 @@ public class ContractServiceImpl implements ContractService {
 	}
 	
 	@Override
-	public long generateNewContractId(){
+	public long generateNewContractId(Date contractStartDate){
 		Contract contract = this.findLastContractModified();
-		String sysdatePrefix = new SimpleDateFormat("yyMMdd").format(new Date());
+		String sysdatePrefix = new SimpleDateFormat("yyMMdd").format(contractStartDate);
 		
 		long contractId = Long.parseLong(sysdatePrefix + "0001");
 		
@@ -106,206 +119,257 @@ public class ContractServiceImpl implements ContractService {
 		return contractId;
 	}
 	
-	@Override
-	public void fetchContracts(){
-		// Retreiving last contract inserted.
-		Contract latestContract = this.findLastContractModified();
-		
-		long timestamp = 1;
-		if(latestContract != null){
-			timestamp = latestContract.getEditionDate().getTime() / 1000;
+	private double calculateDeductible(List<Option> options){
+		for(Option option : options){
+			if(option.getLabel().equals(Option.LABEL_PARTIAL_DEDUCTIBLE)){
+				return 500;
+			}
 		}
 		
-		logger.info("Retreiving contracts older than " + timestamp);
+		return 2000;
+	}
+	
+	private List<Option> calculateOptions(long contractId, com.cspinformatique.wevan.backend.entity.Contract backendContract){
+		List<Option> options = new ArrayList<Option>();
 		
-		Long[] reservationIds = new RestTemplate().exchange(
-			"http://www.we-van.com/api/?t=" + timestamp, 
-			HttpMethod.GET, 
-			new HttpEntity<Long[]>(
-				new Long[0],
-				RestUtil.createBasicAuthHeader(
-					"wevan-api", 
-					"7D4gLg"
-				) 
-			), 
-			Long[].class
-		).getBody();
+		if(backendContract.getPayment().getPartialDeductible() > 0){
+			options.add(
+				this.optionService.generateOption(
+					contractId, 
+					true, 
+					Option.LABEL_PARTIAL_DEDUCTIBLE, 
+					backendContract.getPayment().getPartialDeductible()
+				)
+			);
+		}
+	
+		if(backendContract.getPayment().getAdditionalDrivers() > 0){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true, 
+					Option.LABEL_ADDITIONAL_DRIVER, 
+					backendContract.getPayment().getAdditionalDriversCost()
+				)
+			);
+		}
 		
-		logger.info(reservationIds.length + " contracts received.");
+		if(backendContract.getPayment().isBeddingPack()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_BEDS,
+					backendContract.getPayment().getBeddingPackCost()
+				)
+			);
+		}
 		
-		com.cspinformatique.wevan.backend.entity.Contract backendContract;
-		DateFormat timeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+		if(backendContract.getPayment().isCancelOption()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_CANCEL_INSURANCE,
+					0d
+				)
+			);
+		}
 		
-		for(long reservationId : reservationIds){
+		if(backendContract.getPayment().isCarRack()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_CAR_RACK,
+					backendContract.getPayment().getCarRackCost()
+				)
+			);
+		}
+		
+		if(backendContract.getPayment().isChildSeat()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_CHILD_SEAT,
+					backendContract.getPayment().getChildSeatCost()
+				)
+			);
+		}
+		
+		if(backendContract.getPayment().isCleaningPackage()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_CLEANING,
+					backendContract.getPayment().getCleaningPackageCost()
+				)
+			);
+		}
+		
+		if(backendContract.getPayment().isGps()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_GPS,
+					backendContract.getPayment().getGpsCost()
+				)
+			);
+		}
+		
+		if(backendContract.getPayment().isWinterTires()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					backendContract.getPayment().isWinterTires(),
+					Option.LABEL_WINTER_TIRES,
+					backendContract.getPayment().getWinterTiresCost()
+				)
+			);
+		}
+		
+		if(backendContract.getPayment().isYoungDriver()){
+			options.add(
+				this.optionService.generateOption(
+					contractId,
+					true,
+					Option.LABEL_YOUNG_DRIVER,
+					backendContract.getPayment().getYoungDriverCost()
+				)
+			);
+		}
+	
+	return options;
+		
+	}
+	
+	@Override
+	public void fetchContracts(){
+		if(!contractFetchInProgress){
 			try{
-				backendContract = new RestTemplate().exchange(
-					"http://www.we-van.com/api/?id=" + reservationId, 
+				contractFetchInProgress = true;
+				
+				// Retreiving last contract inserted.
+				Contract latestContract = this.findLastContractModified();
+				
+				long timestamp = 1;
+				if(latestContract != null){
+					timestamp = latestContract.getEditionDate().getTime() / 1000;
+				}
+				
+				logger.info("Retreiving contracts older than " + timestamp);
+				
+				Long[] reservationIds = new RestTemplate().exchange(
+					"http://www.we-van.com/api/?t=" + timestamp, 
 					HttpMethod.GET, 
-					new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
-						new com.cspinformatique.wevan.backend.entity.Contract(),
+					new HttpEntity<Long[]>(
+						new Long[0],
 						RestUtil.createBasicAuthHeader(
 							"wevan-api", 
 							"7D4gLg"
 						) 
 					), 
-					com.cspinformatique.wevan.backend.entity.Contract.class 
+					Long[].class
 				).getBody();
 				
-				logger.info("Received : " + backendContract);
+				logger.info(reservationIds.length + " contracts received.");
 				
-				List<Option> options = new ArrayList<Option>();
+				com.cspinformatique.wevan.backend.entity.Contract backendContract;
+				DateFormat timeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 				
-				long contractId = 0l;
-				Contract existingContract = this.contractRepository.findByReservationId(reservationId);
-				if(existingContract != null){
-					contractId = existingContract.getId();
-				}else{
-					contractId = this.generateNewContractId();
-				}
-				
-				logger.info("Generating contract " + contractId + " from reservation " + reservationId);
-				
-				//backendContract.getPayment().getAdditionalDrivers().
-				if(backendContract.getPayment().getAdditionalDrivers() > 0){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true, 
-							"Conducteur(s) additionnel(s)", 
-							backendContract.getPayment().getAdditionalDriversCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isBeddingPack()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Lits",
-							backendContract.getPayment().getBeddingPackCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isCancelOption()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Assurance annulation",
-							0d
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isCarRack()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Porte-bagages",
-							backendContract.getPayment().getCarRackCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isChildSeat()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Siège enfant",
-							backendContract.getPayment().getChildSeatCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isCleaningPackage()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Nettoyage",
-							backendContract.getPayment().getCleaningPackageCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isGps()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"GPS",
-							backendContract.getPayment().getGpsCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isWinterTires()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							backendContract.getPayment().isWinterTires(),
-							"Pneus d'hiver",
-							backendContract.getPayment().getWinterTiresCost()
-						)
-					);
-				}
-				
-				if(backendContract.getPayment().isYoungDriver()){
-					options.add(
-						this.optionService.generateOption(
-							contractId,
-							true,
-							"Jeune conducteur",
-							backendContract.getPayment().getYoungDriverCost()
-						)
-					);
-				}
+				for(long reservationId : reservationIds){
+					try{
+						backendContract = new RestTemplate().exchange(
+							"http://www.we-van.com/api/?id=" + reservationId, 
+							HttpMethod.GET, 
+							new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
+								new com.cspinformatique.wevan.backend.entity.Contract(),
+								RestUtil.createBasicAuthHeader(
+									"wevan-api", 
+									"7D4gLg"
+								) 
+							), 
+							com.cspinformatique.wevan.backend.entity.Contract.class 
+						).getBody();
+						
+						logger.info("Received : " + backendContract);
+						
+						long contractId = 0l;
+						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
+						
+						Date contractStartDate =	timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+														backendContract.getCreationDate().substring(13)
+													);
+						
+						if(existingContract != null){
+							contractId = existingContract.getId();
+						}else{
+							contractId = this.generateNewContractId(contractStartDate);
+						}
+						
+						logger.info("Generating contract " + contractId + " from reservation " + reservationId);
+						
+						// Retreiving the branch linked with the reservation.
+						Branch branch = this.branchService.findOne(backendContract.getAgency());
+						
+						if(branch != null){
+							List<Option> options = this.calculateOptions(contractId, backendContract);
 		
-				Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+							Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+							
+							double deductible = this.calculateDeductible(options);
+							double deposit = deductible;
+							
+							Contract contract =	new Contract(
+													contractId, 
+													reservationId,
+													branch, 
+													contractStartDate, 
+													timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+														backendContract.getEditionDate().substring(
+															13
+														)),
+													Contract.Status.OPEN, 
+													new Driver(
+														0, 
+														backendContract.getUser().getCompany(), 
+														backendContract.getUser().getFirstName(), 
+														backendContract.getUser().getLastName(), 
+														""
+													), 
+													dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
+													dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
+													backendContract.getPayment().getKmPackage(), 
+													backendContract.getPayment().getAlreadyPaid(), 
+													backendContract.getPayment().getTotalCost(), 
+													vehicule, 
+													deductible, 
+													deposit, 
+													new ArrayList<Driver>(), 
+													options,
+													false
+												);
+							
+							contractRepository.save(contract);
+						}else{
+							logger.error("Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.");
+						}
+					}catch(Exception ex){
+						logger.error("Error while processing reservation : " + reservationId, ex);
+					}			
+				}
 				
-				Contract contract =	new Contract(
-										contractId, 
-										reservationId,
-										this.branchService.findOne(backendContract.getAgency()), 
-										timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-											backendContract.getCreationDate().substring(
-												13
-											)), 
-										timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-											backendContract.getEditionDate().substring(
-												13
-											)),
-										Contract.Status.OPEN, 
-										new Driver(
-											0, 
-											backendContract.getUser().getCompany(), 
-											backendContract.getUser().getFirstName(), 
-											backendContract.getUser().getLastName(), 
-											""
-										), 
-										dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
-										dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
-										backendContract.getPayment().getKmPackage(), 
-										backendContract.getPayment().getTotalCost(), 
-										vehicule, 
-										backendContract.getPayment().getPartialDeductible(), 
-										backendContract.getPayment().getAlreadyPaid(), 
-										new ArrayList<Driver>(), 
-										options
-									);
-				
-				contractRepository.save(contract);
-			}catch(Exception ex){
-				logger.error("Erreur while processing reservation : " + reservationId, ex);
-			}			
+				logger.info("Contract loading completed");
+			}finally{
+				contractFetchInProgress = false;
+			}
+		}else{
+			logger.info("Contracts are already being fetch from backend.");
 		}
-		
-		logger.info("Contract loading completed");
 	}
 
 	@Override
