@@ -302,7 +302,7 @@ public class ContractServiceImpl implements ContractService {
 						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
 						
 						Date contractStartDate =	timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-														backendContract.getCreationDate().substring(13)
+														backendContract.getEditableInfo().getStartDate().substring(13)
 													);
 						
 						if(existingContract != null){
