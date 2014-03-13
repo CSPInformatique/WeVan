@@ -220,7 +220,7 @@ window.ContractPageView = Backbone.View.extend({
         
         $("table .startDate, table .endDate, table .creationDate").each(function(index, element){
         	var dateInput = $(element);
-        	dateInput.html(moment(parseInt(dateInput.html())).format("YYYY-MM-DD HH:mm"));
+        	dateInput.html(moment(parseInt(dateInput.html())).format("YYYY-MM-DD"));
         });
 
         var $statusSelect = $(".status select");
@@ -250,6 +250,14 @@ window.ContractPageView = Backbone.View.extend({
             {trigger: true}
         );
         
+        adjustTableSize();
+
+        $('.contracts table').floatThead({
+            scrollContainer: function($table){
+                return $table.closest('.contracts');
+            }
+        });
+
         return this;
     },
     

@@ -2,6 +2,15 @@ body{
 	padding-top: 60px;
 }
 
+.contracts{
+	overflow: auto;
+	font-size: 8pt;
+}
+
+.contracts table{
+	min-width: 1120px;
+}
+
 .contracts input.small, 
 .vehicules input.small{
 	width: 50px;

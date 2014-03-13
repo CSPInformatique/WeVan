@@ -26,6 +26,22 @@
 		}
 	);
 	
+	var adjustTableSize = function(){
+		$(".contracts").height($(window).innerHeight() - ($("body").innerHeight() - $(".contracts").innerHeight()));
+		/*var tableHeight = $(window).height();
+		
+		console.log("Window height : " + tableHeight);
+		
+		$(".navbar, .actions, .filters, .pager, footer").each(function(index, element){
+			console.log("Removing " +  $(element).innerHeight() + " from " + element + " .");
+			tableHeight = tableHeight - $(element).innerHeight();
+		});
+		
+		console.log("Setting table height to " + tableHeight);
+		
+		$(".contracts").height(tableHeight);*/
+	};
+	
 	var buildStatusStringForRouter = function(){		
 		var statusString = "";
 		var statusData = $(".status select").select2("data");
@@ -116,6 +132,10 @@
 		}else{
 			router.navigate(location.hash, true);
 		}
+		
+		$(window).resize(function(){
+			adjustTableSize();
+		});
 	});
 </script>
 
@@ -137,7 +157,7 @@
 		<li class="next"><a href="#">Suivant &rarr;</a></li>
 <@	}	@>
 	</ul>
-	<div class="table-responsive">
+	<div class="contracts table-responsive">
 		<table class="table table-hover">
 			<thead>
 				<tr class="active">
@@ -188,14 +208,6 @@
 		</table>
 	</ul>
 	</div>
-	<ul class="pager">
-<@	if(!page.firstPage){	@>
-		<li class="previous"><a>&larr; Précédent</a></li>
-<@	}	@>
-		<li>Page <@= page.number + 1 @>
-<@	if(!page.lastPage){	@>
-		<li class="next"><a>Suivant &rarr;</a></li>
-<@	}	@>
 </script>
 <script type="text/template" id="newContract-template">
 	<input class="id" type="hidden" value="<@= contract.id @>" />
@@ -323,6 +335,7 @@
 	</div>
 </script>
 
+
 <div class="row filters">
 	<div class="col-xs-12">
 		<div class="branches">
@@ -343,16 +356,12 @@
 	</div>
 </div>
 
-<div class="row">
+<div class="row actions">
 	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
 </div>
 
 <div class="row contractPage">		
 	<div class="col-xs-12" id="contractPage-container"></div>
-</div>
-
-<div class="row">
-	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
 </div>
 
 <div class="editContract modal fade">
