@@ -48,7 +48,6 @@ public class ContractServiceImpl implements ContractService {
 	@PostConstruct
 	public void init(){
 		final ContractService contractService = this;
-		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
