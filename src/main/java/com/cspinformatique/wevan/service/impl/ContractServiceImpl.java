@@ -303,9 +303,7 @@ public class ContractServiceImpl implements ContractService {
 						long contractId = 0l;
 						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
 						
-						Date contractStartDate =	timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-														backendContract.getEditableInfo().getStartDate().substring(13)
-													);
+						Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
 						
 						if(existingContract != null){
 							contractId = existingContract.getId();
@@ -330,8 +328,11 @@ public class ContractServiceImpl implements ContractService {
 													contractId, 
 													reservationId,
 													branch, 
-													contractStartDate, 
 													timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+													backendContract.getCreationDate().substring(
+														13
+													)), 
+													timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
 														backendContract.getEditionDate().substring(
 															13
 														)),
