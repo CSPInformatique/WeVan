@@ -47,11 +47,18 @@ public class ContractServiceImpl implements ContractService {
 	
 	@PostConstruct
 	public void init(){
-		try{
-			this.fetchContracts();
-		}catch(Exception ex){
-			logger.error("Unable to retreive contracts from we-van.com", ex);
-		}
+		final ContractService contractService = this;
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				try{
+					contractService.fetchContracts();
+				}catch(Exception ex){
+					logger.error("Unable to retreive contracts from we-van.com", ex);
+				}
+			}
+		}).start();
 	}
 	
 	@Override
