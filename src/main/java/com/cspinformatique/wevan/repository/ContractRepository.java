@@ -20,24 +20,24 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 		+ "	editionDate = ( SELECT MAX(editionDate) FROM Contract )")
 	public List<Contract> findLastContractModified();
 	
-	public Page<Contract> findByBranchOrderByStartDateAsc(Branch branch, Pageable pageable);
+	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND endDate < CURRENT_TIMESTAMP ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND endDate < CURRENT_TIMESTAMP")
 	public Page<Contract> findCompletedContracts(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND startDate < CURRENT_TIMESTAMP AND endDate > CURRENT_TIMESTAMP ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND startDate < CURRENT_TIMESTAMP AND endDate > CURRENT_TIMESTAMP")
 	public Page<Contract> findInProgressContracts(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND ((startDate < CURRENT_TIMESTAMP AND endDate < CURRENT_TIMESTAMP) OR endDate < CURRENT_TIMESTAMP) ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND ((startDate < CURRENT_TIMESTAMP AND endDate < CURRENT_TIMESTAMP) OR endDate < CURRENT_TIMESTAMP)")
 	public Page<Contract> findInProgressAndCompletedContracts(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND startDate > CURRENT_TIMESTAMP ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND startDate > CURRENT_TIMESTAMP")
 	public Page<Contract> findOpenContracts(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND (startDate > CURRENT_TIMESTAMP OR endDate < CURRENT_TIMESTAMP) ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND (startDate > CURRENT_TIMESTAMP OR endDate < CURRENT_TIMESTAMP)")
 	public Page<Contract> findOpenAndCompletedContracts(Branch branch, Pageable pageable);
 	
-	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND (startDate > CURRENT_TIMESTAMP OR endDate > CURRENT_TIMESTAMP) ORDER BY startDate ASC")
+	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND (startDate > CURRENT_TIMESTAMP OR endDate > CURRENT_TIMESTAMP)")
 	public Page<Contract> findOpenAndInProgressContracts(Branch branch, Pageable pageable);
 	
 	public Contract findByReservationId(long reservationId);

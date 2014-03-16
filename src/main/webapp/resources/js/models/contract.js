@@ -24,6 +24,14 @@ window.ContractPage = Backbone.Model.extend({
 					url += "&status=" + this.status[statusIndex];
 				}
 			}
+
+			if(this.sortBy != null){
+				url += "&sortBy=" + this.sortBy;
+			}
+
+			if(this.ascending != null){
+				url += "&ascending=" + this.ascending;
+			}
 			
 			return url;
 		}

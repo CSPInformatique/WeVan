@@ -13,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
@@ -62,19 +60,17 @@ public class ContractServiceImpl implements ContractService {
 	}
 	
 	@Override
-	public Page<Contract> findByBranch(Branch branch, int page, int results){
-		return this.contractRepository.findByBranchOrderByStartDateAsc(
+	public Page<Contract> findByBranch(Branch branch, PageRequest pageRequest){
+		return this.contractRepository.findByBranch(
 			branch, 
-			new PageRequest(page, results, new Sort(Direction.DESC, "id"))
+			pageRequest
 		);
 	}
 	
 	@Override
-	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, int page, int results){
-		PageRequest pageRequest = new PageRequest(page, results);
-		
+	public Page<Contract> findByBranchAndStatus(Branch branch, List<Status> status, PageRequest pageRequest){
 		if(status.contains(Status.OPEN) && status.contains(Status.IN_PROGRESS) && status.contains(Status.COMPLETED)){
-			return this.contractRepository.findByBranchOrderByStartDateAsc(branch, pageRequest);
+			return this.contractRepository.findByBranch(branch, pageRequest);
 		}else if(status.contains(Status.OPEN) && status.contains(Status.IN_PROGRESS)){
 			return this.contractRepository.findOpenAndInProgressContracts(branch, pageRequest);
 		}else if(status.contains(Status.OPEN) && status.contains(Status.COMPLETED)){

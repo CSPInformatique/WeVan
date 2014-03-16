@@ -6,6 +6,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -44,39 +47,26 @@ public class BranchController {
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract")
-	public @ResponseBody Page<Contract> findBranchContract(
-		@PathVariable int branch
-	){
-		return this.findBranchContract(branch, null, null, null);
-	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract", params={"status"})
-	public @ResponseBody Page<Contract> findBranchContract(
-		@PathVariable int branch, 
-		@RequestParam List<Status> status
-	){
-		return this.findBranchContract(branch, status, null, null);
-	}
-	
-	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract", params={"page", "results"})
+	@RequestMapping(value="/{branch}/contract", params={"page", "results", "sortBy", "ascending"})
 	public @ResponseBody Page<Contract> findBranchContract(
 		@PathVariable int branch, 
 		@RequestParam Integer page,
-		@RequestParam Integer results
+		@RequestParam Integer results,
+		@RequestParam String sortBy,
+		@RequestParam Boolean ascending
 	){
-		return this.findBranchContract(branch, null, page, results);
+		return this.findBranchContract(branch, null, page, results, sortBy, ascending);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results"})
+	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results", "sortBy", "ascending"})
 	public @ResponseBody Page<Contract> findBranchContract(
 		@PathVariable int branch, 
 		@RequestParam List<Status> status,
 		@RequestParam Integer page,
-		@RequestParam Integer results
+		@RequestParam Integer results,
+		@RequestParam String sortBy,
+		@RequestParam Boolean ascending
 	){
 		new Thread(new Runnable() {
 			@Override
@@ -91,11 +81,15 @@ public class BranchController {
 		
 		if(page == null) page = 0;
 		if(results == null) results = 50;
+		if(sortBy == null) sortBy = "startDate";
+		if(ascending == null) ascending = true;
+		
+		PageRequest pageRequest = new PageRequest(page, results, new Sort((ascending) ? Direction.ASC : Direction.DESC, sortBy));
 		
 		if(status != null){
-			return this.contractService.findByBranchAndStatus(branchService.findOne(branch), status, page, results);
+			return this.contractService.findByBranchAndStatus(branchService.findOne(branch), status, pageRequest);
 		}else{
-			return this.contractService.findByBranch(branchService.findOne(branch), page, results);
+			return this.contractService.findByBranch(branchService.findOne(branch), pageRequest);
 		}	
 	}
-}
+ }

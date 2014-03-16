@@ -237,6 +237,8 @@ window.ContractPageView = Backbone.View.extend({
             "#" + getBranchForRouter() + "/" + 
                 (parseInt(contractPageView.model.page) - 1) + "/" + 
                 contractPageView.model.results + "/" +
+                contractPageView.model.sortBy + "/" +
+                contractPageView.model.ascending +
                 buildStatusStringForRouter(), 
             {trigger: true}
         );
@@ -246,11 +248,37 @@ window.ContractPageView = Backbone.View.extend({
             "#" + getBranchForRouter() + "/" + 
                 (parseInt(contractPageView.model.page) + 1) + "/" + 
                 contractPageView.model.results + "/" +
+                contractPageView.model.sortBy + "/" +
+                contractPageView.model.ascending +
                 buildStatusStringForRouter(), 
             {trigger: true}
         );
         
         adjustTableSize();
+
+        $(".contracts thead th a").each(function(index, element){
+            var ascending = true;
+            var sortBy = $(this).attr("data-sortBy");
+            if(sortBy == contractPageView.model.sortBy){
+                var ascending = contractPageView.model.ascending == "true";
+
+                $(element).closest("th").find(ascending ? ".ascending" : ".descending").removeClass("hide");
+
+                ascending = !ascending;
+
+            }
+
+            $(element).attr(            
+                "href", 
+                "#" + getBranchForRouter() + "/" + 
+                    contractPageView.model.page + "/" + 
+                    contractPageView.model.results + "/" +
+                    sortBy + "/" +
+                    ascending +
+                    buildStatusStringForRouter(), 
+                {trigger: true}
+            );
+        });
 
         $('.contracts table').floatThead({
             scrollContainer: function($table){

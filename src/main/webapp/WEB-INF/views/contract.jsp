@@ -7,22 +7,22 @@
 
 	var router = new Backbone.Router({
 		routes: {
-			":branch/:page/:results/": "loadPage",  // #1/1/50
-			":branch/:page/:results/:status": "loadPageWithStatus"  // #1/1/50/IN_PROGRESS&OPEN
+			":branch/:page/:results/:sortBy/:ascending": "loadPage",  // #1/1/50/creationDate/true
+			":branch/:page/:results/:sortBy/:ascending/:status": "loadPageWithStatus"  // #1/1/50/creationDate/true/IN_PROGRESS&OPEN
 		}
-	});	
+	});
 	
 	router.on(
-		"route:loadPageWithStatus", 
-		function(branch, pageNumber, results, status) {
-			loadPage(branch, pageNumber, results, status);
+		"route:loadPage",
+		function(branch, pageNumber, results, sortBy, ascending) {
+			loadPage(branch, pageNumber, results, sortBy, ascending, null);
 		}
 	);
 	
 	router.on(
-		"route:loadPage",
-		function(branch, pageNumber, results){
-			loadPage(branch, pageNumber, results, null);
+		"route:loadPageWithStatus",
+		function(branch, pageNumber, results, sortBy, ascending, status) {
+			loadPage(branch, pageNumber, results, sortBy, ascending, status);
 		}
 	);
 	
@@ -47,7 +47,7 @@
 		var statusData = $(".status select").select2("data");
 		
 		if(statusData.length > 0){
-			
+			statusString += "/";
 			for(statusIndex in statusData){
 				if(statusString != "") statusString += "&";
 				statusString += statusData[statusIndex].id;
@@ -65,7 +65,7 @@
 		}
 	};
 	
-	var loadPage = function(branch, pageNumber, results, status){
+	var loadPage = function(branch, pageNumber, results, sortBy, ascending, status){
 		var page = new ContractPage();
 				
 		// Setting branch
@@ -78,8 +78,14 @@
 		// Setting page number.
 		page.page = pageNumber;
 		
-		// Settings page results.
+		// Setting page results.
 		page.results = results;
+		
+		// Setting sortBy
+		page.sortBy = sortBy;
+		
+		// Setting ascending
+		page.ascending = ascending;
 		
 		// Settings the status.	
 		if(status != null){
@@ -119,6 +125,8 @@
 			router.navigate(
 				getBranchForRouter() + "/0/" + 
 					contractPageView.model.results + "/" +
+					contractPageView.model.sortBy + "/" +
+					contractPageView.model.ascending +
 					buildStatusStringForRouter(), 
 				{trigger: true}
 			);
@@ -126,11 +134,9 @@
 		
 		if(location.hash == ""){
 			router.navigate(
-				getBranchForRouter() + "/0/50/OPEN&IN_PROGRESS", 
+				getBranchForRouter() + "/0/50/startDate/true/OPEN&IN_PROGRESS", 
 				{trigger: true}
 			);
-		}else{
-			router.navigate(location.hash, true);
 		}
 		
 		$(window).resize(function(){
@@ -161,14 +167,44 @@
 		<table class="table table-hover">
 			<thead>
 				<tr class="active">
-					<th>#</th>
-					<th>Raison sociale</th>
-					<th>Nom</th>
-					<th>Création</th>
-					<th>Début</th>
-					<th>Fin</th>
-					<th>Véhicule</th>
-					<th>Immatriculation</th>
+					<th>
+						<a data-sortBy="id">#</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th>
+						<a data-sortBy="driver.corporateName">Raison sociale</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th>
+						<a data-sortBy="driver.lastName">Nom</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th>
+						<a data-sortBy="creationDate">Création</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th>
+						<a data-sortBy="startDate">Début</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th><a data-sortBy="endDate">Fin</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" /></th>
+					<th>
+						<a data-sortBy="vehicule.name">Véhicule</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
+					<th>
+						<a data-sortBy="vehicule.registration">Immatriculation</a>
+						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
+						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
+					</th>
 					<th>Statut</th>
 				</tr>
 			</thead>
