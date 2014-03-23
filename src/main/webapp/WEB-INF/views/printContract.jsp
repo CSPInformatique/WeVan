@@ -18,6 +18,7 @@
     <script src="<c:url value="/resources/js/libs/html2canvas.js" />"></script>
     
 	<script type="text/javascript">
+		/*
 		$(document).ready(function(){
 			html2canvas(document.getElementsByClassName("content")[0], {
 				onrendered : function(canvas){
@@ -26,6 +27,7 @@
 				}
 			});
 		});
+		*/
 	</script>
   </head>
 
@@ -72,9 +74,8 @@
       </div> <!-- Header -->
 
       <div class="driversInfo"> <!-- Drivers info -->
-        <div class="spacer">&nbsp;</div>
-        <div class="title">Le locataire &amp; les conducteurs</div>
         <div class="leftSection">
+		  <div class="title">Le locataire &amp; les conducteurs</div>
           <div class="subtitle">Locataire (et premier conducteur)</div>
           <div>
             <table>

@@ -118,6 +118,10 @@ table{
 	float: left;
 }
 
+.driversInfo .leftSection .title{
+	margin-bottom : 0px;
+}
+
 .driversInfo .leftSection table td{
 	margin-bottom: 20px;
 }
@@ -140,7 +144,6 @@ table{
 
 .driversInfo .rightSection .subtitle{
 	text-align: right;
-	margin-bottom: 10px;
 }
 
 .driversInfo .rightSection tbody{
@@ -236,6 +239,10 @@ table{
 	padding: 0px;
 }
 
+.conditions li{
+	list-style: none;
+}
+
 .endorsement{
 	border-bottom:solid 1px #2B4A77;
 	border-top:solid 1px #2B4A77;
@@ -250,6 +257,7 @@ table{
 }
 
 .endorsement li{
+	list-style: none;
 	margin-top: 10px;
 }
 
