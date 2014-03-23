@@ -7,6 +7,7 @@ import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.mail.internet.MimeMessage;
 
@@ -27,6 +28,7 @@ import com.cspinformatique.spring.web.error.service.ErrorService;
 public class ErrorServiceImpl implements ErrorService {
 	private static final Logger logger = LoggerFactory.getLogger(ErrorServiceImpl.class);
 	
+	private static final String PROP_EMAIL_ENABLED = "error.mail.enabled";
 	private static final String PROP_EMAIL_SENDER = "error.mail.sender";
 	private static final String PROP_EMAIL_RECEIVER = "error.mail.receiver";
 	
@@ -34,9 +36,13 @@ public class ErrorServiceImpl implements ErrorService {
 	
 	@Resource private Environment env;
 	
+	private boolean emailAlertEnabled = false;
 	private String hostname;
 	
-	public ErrorServiceImpl(){
+	@PostConstruct
+	public void init(){
+		this.emailAlertEnabled = env.getProperty(PROP_EMAIL_ENABLED, Boolean.class);
+
 		try {
 			this.hostname = InetAddress.getLocalHost().getHostName();
 		} catch (UnknownHostException unknownHostEx) {
@@ -46,52 +52,56 @@ public class ErrorServiceImpl implements ErrorService {
 	
 	@Override
 	public void sendEmailAlert(Exception exception){
-		StringBuffer mailContent = new StringBuffer();
-		StringWriter exceptionWriter = new StringWriter();
-		PrintWriter printWriter = new PrintWriter(exceptionWriter);
-		
-		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		
-		mailContent.append("<html>");
-		mailContent.append("<body>");
-		mailContent.append("<h1>An error occured on server " + this.hostname + " at " + date + "</h1>");
-		mailContent.append("<h3>Error detail</h3>");
-		mailContent.append("<p>");
-		
-		exception.printStackTrace(printWriter);
-		
-		mailContent.append(exceptionWriter.toString().replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
-		
-		mailContent.append("</p>");
-		mailContent.append("</body>");
-		mailContent.append("</html>");
-		
-		this.sendEmailAlert(date + " - Server " + hostname + " error report.", mailContent.toString());
+		if(emailAlertEnabled){
+			StringBuffer mailContent = new StringBuffer();
+			StringWriter exceptionWriter = new StringWriter();
+			PrintWriter printWriter = new PrintWriter(exceptionWriter);
+			
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			
+			mailContent.append("<html>");
+			mailContent.append("<body>");
+			mailContent.append("<h1>An error occured on server " + this.hostname + " at " + date + "</h1>");
+			mailContent.append("<h3>Error detail</h3>");
+			mailContent.append("<p>");
+			
+			exception.printStackTrace(printWriter);
+			
+			mailContent.append(exceptionWriter.toString().replaceAll("\n", "<br/>").replaceAll("\t", "&nbsp;&nbsp;&nbsp;&nbsp;"));
+			
+			mailContent.append("</p>");
+			mailContent.append("</body>");
+			mailContent.append("</html>");
+			
+			this.sendEmailAlert(date + " - Server " + hostname + " error report.", mailContent.toString());
+		}
 	}
 	
 	@Override
 	public void sendEmailAlert(JsError jsError) {
-		String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
-		
-		StringBuffer mailContent = new StringBuffer();
-
-		mailContent.append("<html>");
-		mailContent.append("<body>");
-		mailContent.append("<h1>An error occured on client " + jsError.getUserIp() + " at " + date + "</h1>");
-		mailContent.append("<h3>User details</h3>");
-		mailContent.append("<p>");
-		mailContent.append("<div>IP address : " + jsError.getUserIp() + "</div>");
-		mailContent.append("<div>User agent : " + jsError.getUserAgent()+ "</div>");
-		mailContent.append("<div>OS : " + jsError.getUserOs() + "</div>");
-		mailContent.append("</p");
-		mailContent.append("<h3>Error details</h3>");
-		mailContent.append("<p>");
-		mailContent.append("<div>" + jsError.getMessage() + " at " + jsError.getFileName() + " line " + jsError.getLineNumber() + " column " + jsError.getColumnNumber() + ".</div>");
-		mailContent.append("</p>");
-		mailContent.append("</body>");
-		mailContent.append("</html>");
-		
-		this.sendEmailAlert(date + " - Client " + jsError.getUserIp() + " error report.", mailContent.toString());
+		if(emailAlertEnabled){
+			String date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+			
+			StringBuffer mailContent = new StringBuffer();
+	
+			mailContent.append("<html>");
+			mailContent.append("<body>");
+			mailContent.append("<h1>An error occured on client " + jsError.getUserIp() + " at " + date + "</h1>");
+			mailContent.append("<h3>User details</h3>");
+			mailContent.append("<p>");
+			mailContent.append("<div>IP address : " + jsError.getUserIp() + "</div>");
+			mailContent.append("<div>User agent : " + jsError.getUserAgent()+ "</div>");
+			mailContent.append("<div>OS : " + jsError.getUserOs() + "</div>");
+			mailContent.append("</p");
+			mailContent.append("<h3>Error details</h3>");
+			mailContent.append("<p>");
+			mailContent.append("<div>" + jsError.getMessage() + " at " + jsError.getFileName() + " line " + jsError.getLineNumber() + " column " + jsError.getColumnNumber() + ".</div>");
+			mailContent.append("</p>");
+			mailContent.append("</body>");
+			mailContent.append("</html>");
+			
+			this.sendEmailAlert(date + " - Client " + jsError.getUserIp() + " error report.", mailContent.toString());
+		}
 	}
 	
 	private void sendEmailAlert(String subject, String alertContent){
