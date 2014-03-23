@@ -7,8 +7,8 @@
 
 	var router = new Backbone.Router({
 		routes: {
-			":branch/:page/:results/:sortBy/:ascending": "loadPage",  // #1/1/50/creationDate/true
-			":branch/:page/:results/:sortBy/:ascending/:status": "loadPageWithStatus"  // #1/1/50/creationDate/true/IN_PROGRESS&OPEN
+			":branch/:page/:results/:sortBy/:ascending": "loadPage",  // #1/1/50/startDate/true
+			":branch/:page/:results/:sortBy/:ascending/:status": "loadPageWithStatus"  // #1/1/50/startDate/true/IN_PROGRESS&OPEN
 		}
 	});
 	
@@ -183,11 +183,6 @@
 						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
 					</th>
 					<th>
-						<a data-sortBy="creationDate">Création</a>
-						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
-						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
-					</th>
-					<th>
 						<a data-sortBy="startDate">Début</a>
 						<img class="ascending hide" src="<c:url value='/resources/img/wevan-ascending.png' />" />
 						<img class="descending hide" src="<c:url value='/resources/img/wevan-descending.png' />" />
@@ -215,7 +210,6 @@
 						<td class="id"><@= contract.id @></td>
 						<td class="corporateName"><@= contract.driver.corporateName @></td>
 						<td class="lastName"><@= contract.driver.lastName @></td>
-						<td class="creationDate"><@= contract.creationDate @></th>
 						<td class="startDate"><@= contract.startDate @></td>
 						<td class="endDate"><@= contract.endDate @></td>
 						<@	if(contract.vehicule){	@>
