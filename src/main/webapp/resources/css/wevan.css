@@ -51,11 +51,15 @@ body{
 }
 
 .filters .status{
-	width: 200px;
+	width: 350px;
 }
 
 .filters select{
 	width: 100%;
+}
+
+.filters .new{
+	float: right;
 }
 
 .editContract .additionalDrivers input{

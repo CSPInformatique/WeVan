@@ -382,12 +382,10 @@
 			</select>
 		</div>
 		
+		<div class="new"><button class="btn btn-primary">Nouveau</button></div>
+		
 		<div class="clearfix"></div>
 	</div>
-</div>
-
-<div class="row actions">
-	<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
 </div>
 
 <div class="row contractPage">		
