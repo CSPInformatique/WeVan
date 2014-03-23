@@ -11,290 +11,22 @@
     <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
     
     <link href="<c:url value='/resources/lib/bootstrap/css/bootstrap.css' />" rel="stylesheet">
-
-    <style type="text/css">      
-      body{
-        color: gray;
-        font-family: Amaranth;
-        font-size: 10pt;
-      }
-
-      table{
-        width: 100%
-      }
-
-      .content{
-        height: 1040;
-        margin-left: auto;
-        margin-right: auto;
-        width: 720px;
-      }
-      
-      .value{
-      	color : black;
-      	font-weight: bold;
-      }
-
-      .spacer{
-        height: 5px;
-      }
-      
-      .header, .title, .legal{
-     	color: #00A1CB
-      }
-      
-      .subtitle{
-      	font-style: italic;
-      }      
-      
-      .header .logo{
-      	width: 200px;
-      }
-
-      .header .contactInfo{
-        text-align: right;
-      }
-
-      .header .contactInfo.agency{
-        padding-bottom: 20px;
-      }
-
-      .header .contactInfo.agency .name{
-        font-size: 12pt; 
-        font-weight: bold;
-      }
-
-      .header .leftSection{
-        float: left;
-        font-size: 14pt;
-        font-weight: bold;
-        width: 400px;
-      }
-      
-      .header .contractId{
-      	color : black;
-      }
-
-      .header .rightSection{
-        font-size: 9pt;
-        float: right;
-        margin-top: 60px;
-        width: 240px;
-      }     
-
-      .header .rightSection .yourAgency{
-        margin-top: 2px;
-      }      
-
-      .header .title{
-        font-size: 18pt;
-      }
-
-      .header .title .capital{
-        font-size: 24pt;
-      }
-
-      .driversInfo, .locationInfo, .options, .invoice{
-        border:solid 1px #2B4A77;
-        -webkit-border-top-right-radius: 30px;
-        -khtml-border-radius-topright: 30px;  
-        -moz-border-radius-topright: 30px;
-        border-top-right-radius: 30px;
-        margin-top: 20px;
-        padding: 5px;
-      }
-
-      .driversInfo table{
-        font-size: 10pt;
-      }
-
-      .driversInfo > div, .locationInfo > div{
-        padding-left: 10px;
-        padding-right: 10px;
-        width: 353px;
-      }
-
-      .driversInfo .leftSection, .locationInfo .dates{
-        border-right: solid 1px #2B4A77;
-        float: left;
-      }
-
-      .driversInfo .leftSection table td{
-        margin-bottom: 20px;
-      }
-
-      .driversInfo .leftSection .input{
-        font-weight: bold;
-      }
-
-      .driversInfo .rightSection, .locationInfo .vehicule{
-        float: right;
-      }
-
-      .driversInfo .rightSection table .license{
-        white-space: nowrap;
-      }
-
-      .driversInfo .rightSection table .name{
-        width: 100%;
-      }
-
-      .driversInfo .rightSection .subtitle{
-        text-align: right;
-        margin-bottom: 10px;
-      }
-      
-      .driversInfo .rightSection tbody{
-        font-size: 9pt;
-        font-weight: bold;
-      }
-
-      .driversInfo .title, .locationInfo .title, .vehicule .title, .options .title, .invoice .title{
-        color: #00A1CB;
-        font-size: 12pt;
-        font-weight: bold;
-        margin-bottom: 10px;
-      }
-
-      .driversInfo .subtitle{
-        font-size: 11pt;
-        font-weight: bold;
-      }
-      
-      .legal{
-        font-size: 8pt;
-        margin-left: 5px;
-        margin-top: 10px;
-        margin-right: 5px;
-        text-align: center;
-      }
-
-      .dates{
-        font-size: 10pt;
-      }
-
-      .dates > .content{
-        font-size: 11pt;
-        margin-bottom: 10px;
-      }
-      
-      .dates, .vehicule{
-        height: 110px;
-      }
-
-      .dates table .from,
-      .dates table .to{
-        width: 80px;
-      }
-      
-      .dates table .to{
-      	padding-right: 10px;
-      }
-
-      .dates table .date{
-        width: 140px;
-        text-align: center;
-      }
-
-      .dates table .at{
-        width: 50px;
-      }
-
-      .dates table .tile{
-        text-align: center;
-      }
-
-      .options, .invoice {
-        width: 350px;
-        padding-left: 10px;
-      }
-
-      .options{
-        float:left;
-      }
-
-      .invoice, .vehicule{
-        float: right;
-      }
-      
-      .invoice, .options{
-        height: 150px;
-      }
-      
-      .invoice, .options .content{
-        margin-left: 10px;
-      }
-
-      .conditions{
-        font-size: 10pt;
-        list-style-position: inside;
-        list-style-image: url("<c:url value='/resources/img/contract/V-s.png' />");
-        margin-top: 20px;
-        margin-bottom: 20px;
-        text-align: center;
-      }
-
-      .conditions ul{
-        margin: 0px;
-        padding: 0px;
-      }
-
-      .endorsement{
-        border-bottom:solid 1px #2B4A77;
-        border-top:solid 1px #2B4A77;
-      }
-
-      .endorsement ul{
-        font-size: 8pt;
-        font-weight: normal;
-        margin: 0px;
-        padding: 0px;
-        text-align: justify;
-      }
-
-      .endorsement li{
-        margin-top: 10px;
-      }
-
-      .endorsement .statement, .endorsement .signature{
-        padding-left: 15px;
-        padding-right: 15px;
-        width: 360px;
-      }
-
-      .endorsement .statement{
-        float: left;
-        list-style-position: inside;
-        list-style-image: url("<c:url value='/resources/img/contract/checkmark.png' />");
-        border-right:solid 1px #2B4A77;
-      }
-
-      .endorsement .statement .title,
-      .endorsement .signature .title{
-      	color: gray;
-        font-size: 10pt;
-        font-weight: bold;
-      }
-
-      .endorsement .statement .bolder{
-        font-size: 9pt;
-        font-weight: bolder;
-      }
-
-      .endorsement .signature{
-        float: right;
-        padding-left: 30px;
-        padding-top: 5px;
-      }
-
-      .endorsement .signature .title{
-        font-weight: bold;
-      }
-
-      .endorsement .signature .instructions{
-        font-size: 8pt;
-      }
-    </style>
+    <link href="<c:url value='/resources/css/contract-print.css' />" rel="stylesheet" media="screen">
+    <link href="<c:url value='/resources/css/contract-print.css' />" rel="stylesheet" media="print">
+    
+    <script src="<c:url value="/resources/js/libs/jquery.js" />"></script>
+    <script src="<c:url value="/resources/js/libs/html2canvas.js" />"></script>
+    
+	<script type="text/javascript">
+		$(document).ready(function(){
+			html2canvas(document.getElementsByClassName("content")[0], {
+				onrendered : function(canvas){
+					document.getElementsByClassName("print")[0].appendChild(canvas);
+					$("body > .content").remove();
+				}
+			});
+		});
+	</script>
   </head>
 
   <body>
@@ -481,10 +213,10 @@
       
       <div class="conditions"> <!-- Conditions -->
         <ul>
-          <li>Les kilomètres supplémentaires sont facturés 0,3 &euro; / km</li>
-          <li>Le gazole est à la charge du client ; le défaut de gazole est facturé 2 &euro; / l</li>
-          <li>Les départs et retours se font à l'adresse de votre agence mentionnée sur le présent contrat</li>
-          <li>Les conducteurs doivent avoir 21 ans révolus et être détenteurs d'un permis B valide depuis plus de 24 mois</li>
+          <li><img src="<c:url value='/resources/img/contract/V-s.png' />" />&nbsp;Les kilomètres supplémentaires sont facturés 0,3 &euro; / km</li>
+          <li><img src="<c:url value='/resources/img/contract/V-s.png' />" />&nbsp;Le gazole est à la charge du client ; le défaut de gazole est facturé 2 &euro; / l</li>
+          <li><img src="<c:url value='/resources/img/contract/V-s.png' />" />&nbsp;Les départs et retours se font à l'adresse de votre agence mentionnée sur le présent contrat</li>
+          <li><img src="<c:url value='/resources/img/contract/V-s.png' />" />&nbsp;Les conducteurs doivent avoir 21 ans révolus et être détenteurs d'un permis B valide depuis plus de 24 mois</li>
         </ul>
       </div> <!-- Conditions -->
 
@@ -495,9 +227,9 @@
           <div class="title">Par l'apposition de sa signature, le locataire :</div>
           <div>
             <ul>
-              <li><span class="bolder">Certifie</span> que les informations mentionnées ci-dessus sont exactes.</li>
-              <li><span class="bolder">Autorise</span> le loueur à recouvrer tout ou partie du montant de la franchise par débit de la caution.</li>
-              <li><span class="bolder">Reconnait</span> avoir pris connaissance des conditions stipulées ci-dessus ainsi que des conditions générales de location consultables en agence et sur <a href="http://www.we-van.com">www.we-van.com</a> , et de s'y conformer en tout point. Il reconnait également avoir pris connaissance et possession du document « État du Véhicule » joint à ce contrat.</li>
+              <li><img src="<c:url value='/resources/img/contract/checkmark.png' />" />&nbsp;<span class="bolder">Certifie</span> que les informations mentionnées ci-dessus sont exactes.</li>
+              <li><img src="<c:url value='/resources/img/contract/checkmark.png' />" />&nbsp;<span class="bolder">Autorise</span> le loueur à recouvrer tout ou partie du montant de la franchise par débit de la caution.</li>
+              <li><img src="<c:url value='/resources/img/contract/checkmark.png' />" />&nbsp;<span class="bolder">Reconnait</span> avoir pris connaissance des conditions stipulées ci-dessus ainsi que des conditions générales de location consultables en agence et sur <a href="http://www.we-van.com">www.we-van.com</a> , et de s'y conformer en tout point. Il reconnait également avoir pris connaissance et possession du document « État du Véhicule » joint à ce contrat.</li>
             </ul>
           </div>
         </div>
@@ -514,5 +246,9 @@
         ${contract.branch.companyType} immatriculée au ${contract.branch.registrationLocation} le <fmt:formatDate pattern="dd/MM/yyyy" value="${contract.branch.registrationDate}" /> sous le n°${contract.branch.registration} (SIRET : ${contract.branch.siret}) et dont le siège social se situe au ${contract.branch.headOffice}
       </div> <!-- Legal notice -->
     </div> <!-- Content -->
+    
+    <div class="print">
+    
+    </div>
   </body>
 </html>
