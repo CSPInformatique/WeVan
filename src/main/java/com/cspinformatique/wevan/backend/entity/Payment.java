@@ -1,7 +1,7 @@
 package com.cspinformatique.wevan.backend.entity;
 
 public class Payment {
-	private long transactionId;
+	private String transactionId;
 	private String type;
 	private double discount;
 	private double vehiculeCost;
@@ -35,7 +35,7 @@ public class Payment {
 	}
 	
 	public Payment(
-		long transactionId, 
+		String transactionId, 
 		String type, 
 		double discount,
 		double vehiculeCost, 
@@ -94,11 +94,11 @@ public class Payment {
 		this.alreadyPaid = alreadyPaid;
 	}
 
-	public long getTransactionId() {
+	public String getTransactionId() {
 		return transactionId;
 	}
 
-	public void setTransactionId(long transactionId) {
+	public void setTransactionId(String transactionId) {
 		this.transactionId = transactionId;
 	}
 

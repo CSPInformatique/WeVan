@@ -108,17 +108,30 @@ public class ContractServiceImpl implements ContractService {
 	}
 	
 	@Override
-	public long generateNewContractId(Date contractStartDate){
-		Contract contract = this.findLastContractModified();
-		String sysdatePrefix = new SimpleDateFormat("yyMMdd").format(contractStartDate);
+	public long generateNewContractId(long reservationId, Date contractStartDate){
+		Contract contract = this.contractRepository.findByReservationId(reservationId);
 		
-		long contractId = Long.parseLong(sysdatePrefix + "0001");
-		
-		if(contract != null && String.valueOf(contract.getId()).startsWith(sysdatePrefix)){
-			contractId = contract.getId() + 1;
+		if(contract != null){
+			return contract.getId();
+		}else{
+			String sysdatePrefix = new SimpleDateFormat("yyMMdd").format(contractStartDate);
+			
+			long contractId = Long.parseLong(sysdatePrefix + "0001");
+			
+			boolean newId = false;
+			
+			do{
+				if(this.contractRepository.findById(contractId) != null){
+					contractId += 1;
+				}else{
+					newId = true;
+				}
+				
+			}while(!newId);
+
+			return contractId;
 		}
 
-		return contractId;
 	}
 	
 	private double calculateDeductible(List<Option> options){
@@ -286,7 +299,7 @@ public class ContractServiceImpl implements ContractService {
 				for(long reservationId : reservationIds){
 					try{
 						backendContract = new RestTemplate().exchange(
-							"http://www.we-van.com/api/?id=" + reservationId, 
+							"http://www.we-van.com/api/?id=" + reservationId, 	
 							HttpMethod.GET, 
 							new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
 								new com.cspinformatique.wevan.backend.entity.Contract(),
@@ -300,15 +313,14 @@ public class ContractServiceImpl implements ContractService {
 						
 						logger.info("Received : " + backendContract);
 						
-						long contractId = 0l;
-						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
-						
 						Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
+						
+						long contractId = this.generateNewContractId(reservationId, contractStartDate);
+						
+						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
 						
 						if(existingContract != null){
 							contractId = existingContract.getId();
-						}else{
-							contractId = this.generateNewContractId(contractStartDate);
 						}
 						
 						logger.info("Generating contract " + contractId + " from reservation " + reservationId);
@@ -323,6 +335,11 @@ public class ContractServiceImpl implements ContractService {
 							
 							double deductible = this.calculateDeductible(options);
 							double deposit = deductible;
+							
+							String kilometersPackage = backendContract.getPayment().getKmPackage();
+							if(kilometersPackage == null){
+								kilometersPackage = "";
+							}
 							
 							Contract contract =	new Contract(
 													contractId, 
@@ -346,7 +363,7 @@ public class ContractServiceImpl implements ContractService {
 													), 
 													dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
 													dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
-													backendContract.getPayment().getKmPackage(), 
+													kilometersPackage, 
 													backendContract.getPayment().getAlreadyPaid(), 
 													backendContract.getPayment().getTotalCost(), 
 													vehicule, 

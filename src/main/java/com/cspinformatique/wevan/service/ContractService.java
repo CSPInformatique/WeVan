@@ -21,7 +21,7 @@ public interface ContractService {
 	
 	public Contract findOne(long id);
 	
-	public long generateNewContractId(Date contractStartDate);
+	public long generateNewContractId(long reservationId, Date contractStartDate);
 	
 	public Contract saveContract(Contract contract);
 }

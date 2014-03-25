@@ -11,16 +11,12 @@ import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
-	@Query(
-		"SELECT " 
-		+ "	contract "
-		+ "FROM "
-		+ "	Contract contract "
-		+ "WHERE "
-		+ "	editionDate = ( SELECT MAX(editionDate) FROM Contract )")
-	public List<Contract> findLastContractModified();
 	
 	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
+	
+	public Contract findById(long id);
+	
+	public Contract findByReservationId(long reservationId);
 	
 	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND endDate < CURRENT_TIMESTAMP")
 	public Page<Contract> findCompletedContracts(Branch branch, Pageable pageable);
@@ -40,5 +36,12 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND (startDate > CURRENT_TIMESTAMP OR endDate > CURRENT_TIMESTAMP)")
 	public Page<Contract> findOpenAndInProgressContracts(Branch branch, Pageable pageable);
 	
-	public Contract findByReservationId(long reservationId);
+	@Query(
+		"SELECT " 
+			+ "	contract "
+			+ "FROM "
+			+ "	Contract contract "
+			+ "WHERE "
+			+ "	editionDate = ( SELECT MAX(editionDate) FROM Contract )")
+	public List<Contract> findLastContractModified();
 }
