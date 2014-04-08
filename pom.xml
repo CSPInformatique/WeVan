@@ -8,6 +8,13 @@
 	<name>wevan Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 
+<!-- 	<repositories> -->
+<!-- 		<repository> -->
+<!-- 			<id>soluvas</id> -->
+<!-- 			<url>http://maven.soluvas.org/thirdparty/</url> -->
+<!-- 		</repository> -->
+<!-- 	</repositories> -->
+
 	<build>
 		<finalName>wevan</finalName>
 
@@ -184,6 +191,31 @@
 			<artifactId>servlet-api</artifactId>
 			<version>2.5</version>
 			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports</artifactId>
+			<version>5.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-fonts</artifactId>
+			<version>5.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sf.jasperreports</groupId>
+			<artifactId>jasperreports-functions</artifactId>
+			<version>5.5.1</version>
+		</dependency>
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.3</version>
+		</dependency>
+		<dependency>
+			<groupId>com.cspinformatique</groupId>
+			<artifactId>amaranth</artifactId>
+			<version>1.0.0</version>
 		</dependency>
 	</dependencies>
 </project>

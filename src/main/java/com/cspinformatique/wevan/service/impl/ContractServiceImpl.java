@@ -314,6 +314,9 @@ public class ContractServiceImpl implements ContractService {
 						logger.info("Received : " + backendContract);
 						
 						Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
+						Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+														backendContract.getEditionDate().substring(13)
+													);
 						
 						long contractId = this.generateNewContractId(reservationId, contractStartDate);
 						
@@ -323,60 +326,64 @@ public class ContractServiceImpl implements ContractService {
 							contractId = existingContract.getId();
 						}
 						
-						logger.info("Generating contract " + contractId + " from reservation " + reservationId);
-						
-						// Retreiving the branch linked with the reservation.
-						Branch branch = this.branchService.findOne(backendContract.getAgency());
-						
-						if(branch != null){
-							List<Option> options = this.calculateOptions(contractId, backendContract);
-		
-							Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+						if(existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
+							logger.info("Generating contract " + contractId + " from reservation " + reservationId);
 							
-							double deductible = this.calculateDeductible(options);
-							double deposit = deductible;
+							// Retreiving the branch linked with the reservation.
+							Branch branch = this.branchService.findOne(backendContract.getAgency());
 							
-							String kilometersPackage = backendContract.getPayment().getKmPackage();
-							if(kilometersPackage == null){
-								kilometersPackage = "";
-							}
-							
-							Contract contract =	new Contract(
-													contractId, 
-													reservationId,
-													branch, 
-													timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-													backendContract.getCreationDate().substring(
-														13
-													)), 
-													timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
-														backendContract.getEditionDate().substring(
+							if(branch != null){
+								List<Option> options = this.calculateOptions(contractId, backendContract);
+			
+								Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+								
+								double deductible = this.calculateDeductible(options);
+								double deposit = deductible;
+								
+								String kilometersPackage = backendContract.getPayment().getKmPackage();
+								if(kilometersPackage == null){
+									kilometersPackage = "";
+								}
+								
+								Contract contract =	new Contract(
+														contractId, 
+														reservationId,
+														branch, 
+														timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+														backendContract.getCreationDate().substring(
 															13
-														)),
-													Contract.Status.OPEN, 
-													new Driver(
-														0, 
-														backendContract.getUser().getCompany(), 
-														backendContract.getUser().getFirstName(), 
-														backendContract.getUser().getLastName(), 
-														""
-													), 
-													dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
-													dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
-													kilometersPackage, 
-													backendContract.getPayment().getAlreadyPaid(), 
-													backendContract.getPayment().getTotalCost(), 
-													vehicule, 
-													deductible, 
-													deposit, 
-													new ArrayList<Driver>(), 
-													options,
-													false
-												);
-							
-							contractRepository.save(contract);
+														)), 
+														timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+															backendContract.getEditionDate().substring(
+																13
+															)),
+														Contract.Status.OPEN, 
+														new Driver(
+															0, 
+															backendContract.getUser().getCompany(), 
+															backendContract.getUser().getFirstName(), 
+															backendContract.getUser().getLastName(), 
+															""
+														), 
+														dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
+														dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
+														kilometersPackage, 
+														backendContract.getPayment().getAlreadyPaid(), 
+														backendContract.getPayment().getTotalCost(), 
+														vehicule, 
+														deductible, 
+														deposit, 
+														new ArrayList<Driver>(), 
+														options,
+														false
+													);
+								
+								contractRepository.save(contract);
+							}else{
+								logger.error("Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.");
+							}
 						}else{
-							logger.error("Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.");
+							logger.info("Reservation " + reservationId + " as already been loaded in the system. Skipping.");
 						}
 					}catch(Exception ex){
 						logger.error("Error while processing reservation : " + reservationId, ex);

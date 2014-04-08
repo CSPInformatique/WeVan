@@ -1,0 +1,800 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print-Contract" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5a5ecb1-3745-4f02-a921-2f20b9df976f">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JDBC Contract"/>
+	<style name="Style" forecolor="#00A1CB" pattern="" fontName="Amaranth"/>
+	<parameter name="CONTRACT_ID" class="java.lang.Integer">
+		<defaultValueExpression><![CDATA[1404060001]]></defaultValueExpression>
+	</parameter>
+	<queryString language="SQL">
+		<![CDATA[select 
+	contract0_.`id`,
+	FORMAT(contract0_.`amountAlreadyPaid`, 2) as amountAlreadyPaid,
+	contract0_.branchId,
+	contract0_.`creationDate`,
+	FORMAT(contract0_.`deductible`, 2) as deductible,
+	FORMAT(contract0_.`deposit`, 2) as deposit,
+	contract0_.driver,
+	contract0_.`editionDate`,
+	DATE_FORMAT(contract0_.`endDate`, '%d/%m/%Y') as endDate,
+	DATE_FORMAT(contract0_.`endDate`, '%H:%i') as endTime,
+	contract0_.`kilometersPackage`,
+	contract0_.`reservationId`,
+	contract0_.`showOptionsPrices` ,
+	DATE_FORMAT(contract0_.`startDate`, '%d/%m/%Y') as startDate,
+	DATE_FORMAT(contract0_.`startDate`, '%H:%i') as startTime,
+	FORMAT(contract0_.`totalAmount`, 2) as totalAmount,
+	contract0_.vehicule ,
+	branch1_.`id`,
+	branch1_.`addressNumber`,
+	branch1_.`addressStreet`,
+	branch1_.`city`,
+	branch1_.`companyName`,
+	branch1_.`companyType`,
+	branch1_.`country`,
+	branch1_.`euVatNumber`,
+	branch1_.`headOffice`,
+	branch1_.`name`,
+	branch1_.`phone`,
+	branch1_.`postalCode`,
+	branch1_.`registration`,
+	DATE_FORMAT(branch1_.`registrationDate`, '%d/%m/%Y') as `registrationDate`,
+	branch1_.`registrationLocation`,
+	branch1_.`siret`,
+	driver2_.`id`,
+	driver2_.`corporateName`,
+	driver2_.`driverLicense`,
+	driver2_.`firstName`,
+	driver2_.`lastName`,
+	vehicule3_.`id`,
+	vehicule3_.branch,
+	vehicule3_.`model` as vehiculeModel,
+	vehicule3_.`name` as vehiculeName,
+	vehicule3_.`number` as vehiculeNumber,
+	vehicule3_.`registration` as vehiculeRegistration,
+	branch4_.`id`,
+	branch4_.`addressNumber`,
+	branch4_.`addressStreet`,
+	branch4_.`city`,
+	branch4_.`companyName`,
+	branch4_.`companyType`,
+	branch4_.`country`,
+	branch4_.`euVatNumber`,
+	branch4_.`headOffice`,
+	branch4_.`name`,
+	branch4_.`phone`,
+	branch4_.`postalCode`,
+	branch4_.`registration`,
+	branch4_.`registrationDate`,
+	branch4_.`registrationLocation`,
+	branch4_.`siret`
+from 
+	`contract` contract0_ left outer join 
+	`branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
+	`driver` driver2_ on contract0_.driver=driver2_.`id` left outer join 
+	`vehicule` vehicule3_ on contract0_.vehicule=vehicule3_.`id` left outer join 
+	`branch` branch4_ on vehicule3_.branch=branch4_.`id` 
+where contract0_.`id` = $P{CONTRACT_ID}]]>
+	</queryString>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="amountAlreadyPaid" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="branchId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="creationDate" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deductible" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="deposit" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="driver" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="editionDate" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="endDate" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="kilometersPackage" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="reservationId" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="showOptionsPrices" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="startDate" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="totalAmount" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="vehicule" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="addressNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="addressStreet" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="city" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="companyName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="companyType" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="country" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="euVatNumber" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="headOffice" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="phone" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="postalCode" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="registration" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="registrationDate" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="registrationLocation" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="siret" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corporateName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="driverLicense" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="firstName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lastName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="branch" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="endTime" class="java.lang.String"/>
+	<field name="startTime" class="java.lang.String"/>
+	<field name="vehiculeModel" class="java.lang.String"/>
+	<field name="vehiculeName" class="java.lang.String"/>
+	<field name="vehiculeNumber" class="java.lang.Integer"/>
+	<field name="vehiculeRegistration" class="java.lang.String"/>
+	<title>
+		<band height="802">
+			<image>
+				<reportElement x="0" y="179" width="555" height="100" uuid="75aaec9f-26fd-4766-b178-3ffb06c0aef6"/>
+				<imageExpression><![CDATA["img/border-drivers.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="0" y="0" width="120" height="70" uuid="731bc90b-7c89-4492-ad2f-29069563af71">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/logo-wevan-transp-medium-cropped.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="0" y="98" width="190" height="18" forecolor="#00A1CB" uuid="08cf5140-7714-46f9-a7a4-661b234f0516"/>
+				<box>
+					<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+					<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				</box>
+				<textElement>
+					<font fontName="Amaranth" size="18" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[CONTRAT DE LOCATION]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="138" width="20" height="22" forecolor="#00A1CB" uuid="2feffde4-75ab-4e56-a271-c076e4ed8454"/>
+				<textElement>
+					<font fontName="Amaranth" size="14" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Nº]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="20" y="138" width="100" height="22" forecolor="#000000" uuid="0b597ab6-a14d-4370-ad58-05b14112b93d"/>
+				<textElement>
+					<font fontName="Amaranth" size="14" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{id}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="68" width="175" height="14" forecolor="#00A1CB" uuid="249fb5fb-ccb3-4c7b-b055-f6e61c28a713"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="12" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="82" width="175" height="16" forecolor="#00A1CB" uuid="5af21584-0e30-4de1-aef2-f0871003b35d">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="9" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{phone}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="98" width="175" height="16" forecolor="#00A1CB" uuid="23ded94a-4c3b-45df-a076-8512271458e2">
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="9" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{addressNumber} + ", " + $F{addressStreet}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="114" width="175" height="16" forecolor="#00A1CB" uuid="d2c40e5f-4c4b-4197-8769-43fe9a1bf68b">
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="9" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{postalCode} + ", " + $F{city}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="320" y="68" width="90" height="20" forecolor="#00A1CB" uuid="ec368a19-fd80-4497-88a5-403fac89de17"/>
+				<textElement>
+					<font fontName="Amaranth" size="9" isBold="false" isItalic="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Votre agence]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="138" width="175" height="10" forecolor="#00A1CB" uuid="6faa7130-725b-4081-a7ea-7950684c89bc"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="9"/>
+				</textElement>
+				<text><![CDATA[AXA assistance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="380" y="148" width="175" height="10" forecolor="#00A1CB" uuid="b7b75967-bd3a-4b3d-8d75-2d9475a565ac"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="9" isBold="false" isItalic="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[+33 (0) 1 55 92 14 54]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="320" y="138" width="90" height="20" forecolor="#00A1CB" uuid="3fbd6fda-b334-4b70-bf3a-b09c31c33574"/>
+				<textElement>
+					<font fontName="Amaranth" size="9" isBold="false" isItalic="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Votre assistance]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="189" width="259" height="12" forecolor="#00A1CB" uuid="eefe56d2-02c3-4158-ae20-6639834bac59"/>
+				<textElement>
+					<font fontName="Amaranth" size="12" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Le Locataire & les conducteurs]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="206" width="259" height="12" forecolor="#777788" uuid="0c3ac60d-2c3d-49d1-9697-5564ac5e2d1c"/>
+				<textElement>
+					<font fontName="Amaranth" size="11" isBold="true" isItalic="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Locataire (et premier conducteur)]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="223" width="100" height="12" forecolor="#777788" uuid="5e598540-7e9c-47fd-a9ea-cd7eef5ce389"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Raison sociale :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="238" width="100" height="12" forecolor="#777788" uuid="8e25a9f0-7864-4648-bf65-23b19f714e83"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Nom & prénom :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="253" width="100" height="12" forecolor="#777788" uuid="79b627a8-660e-4436-a317-552f79434c09"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Permis de conduire nº :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="223" width="159" height="12" uuid="793282b9-f6ee-4663-a334-4e1afda4e459"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{corporateName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="238" width="159" height="12" uuid="3ab58c72-874f-4a48-b451-6af426c88e74"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lastName} + " " + $F{firstName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="253" width="159" height="12" uuid="31314b7b-9d94-413c-8cb4-54c993db7a9c"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{driverLicense}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="189" width="256" height="12" forecolor="#777788" uuid="87e7f1c8-12ad-4a5f-8367-7d00980b4df1"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="11" isBold="true" isItalic="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Conducteurs supplémentaires]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="201" width="126" height="12" forecolor="#777788" uuid="7c18996c-e798-4b88-9c0c-c7d7e69700c7"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="11" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Nom & prénoms]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="410" y="201" width="130" height="12" forecolor="#777788" uuid="9292b34e-8140-429a-9242-be260d6816f9"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="11" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Permis de conduire nº]]></text>
+			</staticText>
+			<image>
+				<reportElement x="0" y="300" width="555" height="100" uuid="591a6ddd-a543-4057-b6a6-91b0353020bb"/>
+				<imageExpression><![CDATA["img/border-drivers.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="10" y="310" width="259" height="12" forecolor="#00A1CB" uuid="9479f5b8-f4d5-4834-984a-0ec5c851b082"/>
+				<textElement>
+					<font fontName="Amaranth" size="12" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[La location]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="330" width="50" height="12" forecolor="#777788" uuid="10ed767e-d5ff-45e8-8c92-c2c6cbb41e2d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Location du]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="330" width="50" height="12" uuid="43c84304-831f-462e-b45f-ba83f1a463e4"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{startDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="160" y="330" width="30" height="12" forecolor="#777788" uuid="52b7d217-520f-497d-8066-d4e84aa73156"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[à]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="190" y="330" width="79" height="12" uuid="5049df48-9e27-4fd0-82bc-3648f9f2b5de"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{startTime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="110" y="350" width="50" height="12" uuid="57315832-7b47-48d2-9814-3719b37242c4"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{endDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="160" y="350" width="30" height="12" forecolor="#777788" uuid="7df0c137-b875-49dd-9361-3904ec45d0e2"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[à]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="350" width="50" height="12" forecolor="#777788" uuid="cf430cab-9b91-4708-83b3-915e607fd33d"/>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[au]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="190" y="350" width="79" height="12" uuid="6829d30c-20dd-4ec1-adaf-73fd5e160138"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{endTime}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="10" y="370" width="100" height="12" forecolor="#777788" uuid="3e788631-8fff-4efa-9f3e-d5e06bb6454a"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Forfait kilométrique :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="110" y="370" width="159" height="12" uuid="d7075ffc-68ec-4850-ba57-a6db4314a63e"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{kilometersPackage}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="284" y="330" width="86" height="12" forecolor="#777788" uuid="569ce76d-8aa2-4e01-85d0-c2ee4bf0bcd9"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Le véhicule :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="350" width="86" height="12" forecolor="#777788" uuid="416b7312-7512-4cfd-b4fa-3b142f9e0a83"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Modèle :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="284" y="370" width="86" height="12" forecolor="#777788" uuid="b460d9cc-c7ee-4791-aa17-6d1fb9ef5725"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Immatriculation :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="380" y="330" width="160" height="12" uuid="2030633b-b882-4f69-94b0-a7753ad0ca84"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehiculeName} + " " + $F{vehiculeNumber}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="350" width="160" height="12" uuid="5331e33b-0fc7-40ce-af4d-4975a57c92e3"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehiculeModel}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="380" y="370" width="160" height="12" uuid="6174889d-d434-4a01-9c09-4c066c3c586a"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{vehiculeRegistration}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="284" y="216" width="256" height="36" uuid="b71981c0-b4d6-4d3b-be5b-6c8622d657a4"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Additional-Drivers.jasper"]]></subreportExpression>
+			</subreport>
+			<image>
+				<reportElement x="0" y="423" width="269" height="120" uuid="7f104e27-c2eb-42fa-97be-5e8e24995473"/>
+				<imageExpression><![CDATA["img/border-options.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="286" y="423" width="269" height="120" uuid="b8d70ee8-5475-430b-b9a3-8bb788241ad8"/>
+				<imageExpression><![CDATA["img/border-options.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="10" y="433" width="250" height="12" forecolor="#00A1CB" uuid="793e55f2-5391-4b5e-8567-354c76ef03d6"/>
+				<textElement>
+					<font fontName="Amaranth" size="12" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Les options]]></text>
+			</staticText>
+			<subreport>
+				<reportElement isPrintRepeatedValues="false" x="19" y="448" width="240" height="80" uuid="02dffca6-95eb-46ad-92b1-84e0ec347613"/>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Options.jasper"]]></subreportExpression>
+			</subreport>
+			<staticText>
+				<reportElement x="295" y="433" width="250" height="12" forecolor="#00A1CB" uuid="87146a16-4930-45ca-b0d3-9ed7cf957c9c"/>
+				<textElement>
+					<font fontName="Amaranth" size="12" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[La facturation]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="453" width="144" height="12" forecolor="#777788" uuid="960fb53b-cea0-4672-832d-8f0d51934bec"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Somme déjà versée :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="472" width="144" height="12" forecolor="#777788" uuid="cd1cd8eb-ade7-4c43-8288-8ffd2add5513"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Montant total :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="493" width="144" height="12" forecolor="#777788" uuid="6029ca76-65be-48a5-a8dd-337d423a3301"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Franchise :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="295" y="513" width="144" height="12" forecolor="#777788" uuid="5afa9ff5-faec-4b09-86b9-f03565fd5b5f"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="10" isBold="false" isItalic="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Dépôt de garantie :]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="439" y="453" width="106" height="12" uuid="4077b567-08bc-43c6-8984-783baa99c124"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{amountAlreadyPaid} + " € TTC"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="472" width="106" height="12" uuid="80267b88-76f3-49a7-9d1d-6bc1fa08919f"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{totalAmount} + " € TTC"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="493" width="106" height="12" uuid="d6040542-d521-4722-b160-33943bcce292"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deductible} + " € TTC"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="439" y="513" width="106" height="12" uuid="5474a04f-3801-4324-b1ed-1a97e82b5bff"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{deposit} + " €"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="564" width="554" height="13" forecolor="#777788" uuid="3ec89519-bd5d-4279-b6b4-b3551a863742"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Les kilomètres supplémentaires sont facturés 0,3 € / km]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="577" width="554" height="13" forecolor="#777788" uuid="ad98003a-7617-43fe-b43c-99b2994b5a2b"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[ Le gazole est à la charge du client ; le défaut de gazole est facturé 2 € / l]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="590" width="554" height="13" forecolor="#777788" uuid="97f5c39e-7694-46eb-a3c3-b8d37e29fa45"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Les départs et retours se font à l'adresse de votre agence mentionnée sur le présent contrat]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="604" width="554" height="13" forecolor="#777788" uuid="fe1c57a4-70b7-4d23-a2ce-2a4f4026728e"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Les conducteurs doivent avoir 21 ans révolus et être détenteurs d'un permis B valide depuis plus de 24 mois]]></text>
+			</staticText>
+			<image>
+				<reportElement x="107" y="574" width="14" height="14" uuid="63723fb1-7547-4144-b74e-34aea7f3e999">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/V.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="144" y="561" width="14" height="14" uuid="639db4e2-e917-4223-b64f-cdcc98605e38">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/V.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="68" y="586" width="14" height="14" uuid="0c7d642a-e6e1-4468-a8ad-b0663500044a">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/V.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="34" y="602" width="14" height="14" uuid="4d4512c8-7725-4c2f-95d5-349073fe65b6">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/V.png"]]></imageExpression>
+			</image>
+			<image>
+				<reportElement x="-1" y="633" width="556" height="150" uuid="20b46cc3-51df-4e81-9b17-faf6a9da7a98"/>
+				<imageExpression><![CDATA["img/border-legal.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="10" y="643" width="259" height="12" forecolor="#00A1CB" uuid="f7c0370b-4e85-486b-a427-e6f35e09dada"/>
+				<textElement>
+					<font fontName="Amaranth" size="10" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Par l'apposition de sa signature, le locataire :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="663" width="28" height="10" forecolor="#777788" uuid="f37d3eb0-0b23-4641-a38c-19ae77a10fac"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="8" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Certifie]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="663" width="10" height="10" uuid="e054ea92-ab6b-4d2d-94fc-181b7fc145c8">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/checkmark.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="50" y="663" width="219" height="10" forecolor="#777788" uuid="756a6d4a-c3e5-4b1d-81d8-02875aacdd6b"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[que les informations mentionnées ci-dessus sont exactes.]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="683" width="32" height="10" forecolor="#777788" uuid="39f21997-b25b-4867-9759-d64229acbb9f"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="8" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Autorise]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="683" width="20" height="10" uuid="75f04a50-9a71-485c-a223-28e718ee4906">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/checkmark.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="55" y="683" width="214" height="10" forecolor="#777788" uuid="6dae3851-46b5-40d9-9ce2-35d06d86783c"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[le loueur à recouvrer   tout    ou partie du montant de la ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="693" width="259" height="10" forecolor="#777788" uuid="c4b58fad-db01-4d1d-b883-ca5c0265ed0b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[franchise par débit de la caution.]]></text>
+			</staticText>
+			<image>
+				<reportElement x="10" y="713" width="20" height="10" uuid="b5eb5ef8-d8c0-4074-ae9c-b33450b37ad4">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+					<property name="local_mesure_unitheight" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.height" value="px"/>
+				</reportElement>
+				<imageExpression><![CDATA["img/checkmark.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="60" y="713" width="209" height="10" forecolor="#777788" uuid="477d579b-391b-4064-b904-e1fdf7e42400"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[avoir pris   connaissance   des   conditions  stipulées ci-dessus ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="723" width="259" height="10" forecolor="#777788" uuid="44a5b1a5-0575-45e3-bbac-7d203faaac9d"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[ainsi   que  des conditions  générales de location  consultables  en agence et ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="713" width="45" height="10" forecolor="#777788" uuid="3760143e-368d-4c68-95ca-7e2bdcd992c7"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="8" isBold="true" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Reconnait]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="733" width="13" height="10" forecolor="#777788" uuid="fdfc5be0-35ef-4299-b2b6-f6c2db9a3c2b"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[sur]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="23" y="733" width="64" height="10" forecolor="#07A4CC" uuid="c675ff8a-caa7-4f28-8935-e43ff85cd949"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[www.we-van.com]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="87" y="733" width="182" height="10" forecolor="#777788" uuid="004faef4-6b13-4d7a-a72c-5541b56aa0de"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[, et    de  s'y  conformer    en  tout point.  Il  reconnait ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="743" width="259" height="10" forecolor="#777788" uuid="3e505f7a-624f-439d-883f-b5d7c675a4af"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[également  avoir  pris  connaissance  et  possession  du  document « État du ]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="10" y="753" width="259" height="10" forecolor="#777788" uuid="3dea995a-4260-45db-ba78-6901550714f1"/>
+				<textElement textAlignment="Justified">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[Véhicule » joint à ce contrat.]]></text>
+			</staticText>
+			<textField>
+				<reportElement mode="Transparent" x="291" y="643" width="259" height="12" forecolor="#00A1CB" backcolor="#FFFFFF" uuid="3f97478d-a2cb-4470-abb7-a57a7ff165e1"/>
+				<box padding="0" topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0"/>
+				<textElement textAlignment="Left" verticalAlignment="Top" rotation="None" markup="none">
+					<font fontName="Amaranth" size="10" isBold="true" isItalic="false" isUnderline="false" isStrikeThrough="false" pdfFontName="Amaranth" pdfEncoding="CP1252" isPdfEmbedded="false"/>
+					<paragraph lineSpacing="Single" lineSpacingSize="1.0" firstLineIndent="0" leftIndent="0" rightIndent="0" spacingBefore="0" spacingAfter="0" tabStopWidth="40"/>
+				</textElement>
+				<textFieldExpression><![CDATA["A " + $F{city} + ", le " + $F{startDate}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="291" y="655" width="219" height="10" forecolor="#777788" uuid="a02a00bc-e60a-47c3-97bc-7cba78de9f6e"/>
+				<textElement textAlignment="Left">
+					<font fontName="Amaranth" size="8" isBold="false" pdfFontName="Amaranth"/>
+				</textElement>
+				<text><![CDATA[(Signature précédée de la mention « lu et approuvé »)]]></text>
+			</staticText>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="10" y="783" width="535" height="19" isRemoveLineWhenBlank="true" forecolor="#07A4CC" uuid="2bb18c6d-fa43-4978-8a25-41c9c29bc479"/>
+				<textElement textAlignment="Center">
+					<font fontName="Amaranth" size="8" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{companyType} + " immatriculée au " + $F{registrationLocation} + " le " + $F{registrationDate} + " sous le n°" + $F{registration} + " (SIRET : " + $F{siret} + ") et dont le siège social se situe au " + $F{headOffice} + "."]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+</jasperReport>

@@ -49,7 +49,7 @@
 				<th>Nom</th>
 				<th class="text-center">#</th>
 				<th>Modèle</th>
-				<th>Enregistrement</th>
+				<th>Immatriculation</th>
 				<th>&nbsp;</th>
 				<th>&nbsp;</th>
 			</tr>
@@ -87,7 +87,7 @@
     <input type="text" class="form-control" id="model" placeholder="Modèle" value="<@= vehicule.model @>">
   </div>
   <div class="registration form-group">
-    <label for="registration">Enregistrement</label>
+    <label for="registration">Immatriculation</label>
     <input type="text" class="form-control" id="registration" placeholder="Enregistrement" value="<@= vehicule.registration @>">
   </div>
   <div class="branch form-group">

@@ -18,14 +18,14 @@
     <script src="<c:url value="/resources/js/libs/html2canvas.js" />"></script>
     
 	<script type="text/javascript">
-		$(document).ready(function(){
+		/*$(document).ready(function(){
 			html2canvas(document.getElementsByClassName("content")[0], {
 				onrendered : function(canvas){
 					document.getElementsByClassName("print")[0].appendChild(canvas);
 					$("body > .content").remove();
 				}
 			});
-		});
+		});*/
 	</script>
   </head>
 
