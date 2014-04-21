@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version last-->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="contractId" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="2296e320-2a7c-4ab6-a7a4-b408924e6e31">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="New Data Adapter "/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="contractId" class="java.lang.String"/>
+	<queryString language="SQL">
+		<![CDATA[select 
+	additional0_.contract, 
+	additional0_.driver, 
+	driver1_.`id`, 
+	driver1_.`corporateName`, 
+	driver1_.`driverLicense`, 
+	driver1_.`firstName`, 
+	driver1_.`lastName`
+from 
+	`contractAdditionalDriver` additional0_ inner join 
+	`driver` driver1_ on additional0_.driver=driver1_.`id` 
+where 
+	additional0_.contract = $P{contractId}]]>
+	</queryString>
+	<field name="contract" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="driver" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="id" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="corporateName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="driverLicense" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="firstName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="lastName" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<detail>
+		<band height="12" splitType="Stretch">
+			<property name="local_mesure_unitheight" value="pixel"/>
+			<property name="com.jaspersoft.studio.unit.height" value="px"/>
+			<textField>
+				<reportElement x="0" y="0" width="256" height="12" uuid="ae7fdcf5-061c-4449-9357-465591e1499b">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement>
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{lastName} + " " + $F{firstName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="126" y="0" width="130" height="12" uuid="cbd00649-ba3a-4e43-a47f-9884828b326a">
+					<property name="local_mesure_unitwidth" value="pixel"/>
+					<property name="com.jaspersoft.studio.unit.width" value="px"/>
+				</reportElement>
+				<textElement textAlignment="Right">
+					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{driverLicense}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

@@ -3,7 +3,14 @@ window.Contract = Backbone.Model.extend({
 	url : function() {
 		var base = ctx + '/contract';
 		if (this.isNew() || this.id == null) return base;
-		return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
+		
+		base = base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
+
+		if(this.reset){
+			base += "?reset";
+		}
+
+		return base;
 	},
 });
 

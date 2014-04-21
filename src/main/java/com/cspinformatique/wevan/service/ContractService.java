@@ -19,9 +19,13 @@ public interface ContractService {
 	
 	public void fetchContracts();
 	
+	public void fetchRecentContractsOnError();
+	
 	public Contract findOne(long id);
 	
 	public long generateNewContractId(long reservationId, Date contractStartDate);
+	
+	public void resetContract(long contractId);
 	
 	public Contract saveContract(Contract contract);
 }

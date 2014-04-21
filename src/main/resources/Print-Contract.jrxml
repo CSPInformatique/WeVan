@@ -491,11 +491,6 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{vehiculeRegistration}]]></textFieldExpression>
 			</textField>
-			<subreport>
-				<reportElement isPrintRepeatedValues="false" x="284" y="216" width="256" height="36" uuid="b71981c0-b4d6-4d3b-be5b-6c8622d657a4"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["Additional-Drivers.jasper"]]></subreportExpression>
-			</subreport>
 			<image>
 				<reportElement x="0" y="423" width="269" height="120" uuid="7f104e27-c2eb-42fa-97be-5e8e24995473"/>
 				<imageExpression><![CDATA["img/border-options.png"]]></imageExpression>
@@ -511,11 +506,6 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 				</textElement>
 				<text><![CDATA[Les options]]></text>
 			</staticText>
-			<subreport>
-				<reportElement isPrintRepeatedValues="false" x="19" y="448" width="240" height="80" uuid="02dffca6-95eb-46ad-92b1-84e0ec347613"/>
-				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
-				<subreportExpression><![CDATA["Options.jasper"]]></subreportExpression>
-			</subreport>
 			<staticText>
 				<reportElement x="295" y="433" width="250" height="12" forecolor="#00A1CB" uuid="87146a16-4930-45ca-b0d3-9ed7cf957c9c"/>
 				<textElement>
@@ -795,6 +785,22 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 				</textElement>
 				<textFieldExpression><![CDATA[$F{companyType} + " immatriculée au " + $F{registrationLocation} + " le " + $F{registrationDate} + " sous le n°" + $F{registration} + " (SIRET : " + $F{siret} + ") et dont le siège social se situe au " + $F{headOffice} + "."]]></textFieldExpression>
 			</textField>
+			<subreport>
+				<reportElement x="284" y="216" width="266" height="49" uuid="0a4e58c0-d48f-4984-959e-3ca2aea861a8"/>
+				<subreportParameter name="contractId">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Additional-Drivers.jasper"]]></subreportExpression>
+			</subreport>
+			<subreport>
+				<reportElement x="10" y="448" width="250" height="85" uuid="31797c81-eb19-4d03-a83b-2c453de99173"/>
+				<subreportParameter name="contractId">
+					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["Options.jasper"]]></subreportExpression>
+			</subreport>
 		</band>
 	</title>
 </jasperReport>

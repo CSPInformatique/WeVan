@@ -73,6 +73,8 @@ public class BranchController {
 			public void run() {
 				try{
 					contractService.fetchContracts();
+					
+					contractService.fetchRecentContractsOnError();
 				}catch(Exception ex){
 					logger.error("Unable to retreive contracts from we-van.com", ex);
 				}

@@ -241,8 +241,21 @@
 </script>
 <script type="text/template" id="newContract-template">
 	<input class="id" type="hidden" value="<@= contract.id @>" />
+<@	if(contract.reservationId != null && contract.reservationId != undefined){	@>
+	<input class="reservationId" type="hidden" value="<@= contract.reservationId @>" />
+<@	}	@>
 	<input class="creationDate" type="hidden" value="<@= contract.creationDate @>" />
 	<input class="editionDate" type="hidden" value="<@= contract.editionDate @>" />
+
+	<div class="reservation form-group">
+    	<label for="reservation">No réservation</label>
+<@	if(contract.reservationId == null || contract.reservationId == undefined){	@>
+		<div class="form-inline">Aucune</div>
+<@	}else{	@>
+		<div class="form-inline"><@= contract.reservationId @></div>
+<@	}	@>
+	</div>
+
 	<div class="driver form-group">
     	<label for="driver">Conducteur Principal</label>
 		<input type="text" class="form-control corporateName" placeholder="Société" value="<@= contract.driver.corporateName @>">
@@ -397,13 +410,16 @@
     <div class="modal-content">
       <div class="modal-header">
         <button type="button" class="close" data-dismiss="modal">&times;</button>
-        <h4 class="modal-title">Contract</h4>
+        <h4 class="modal-title">Contract <span></span></h4>
       </div>
       <div class="modal-body">
         
       </div>
       <div class="modal-footer">
+        <button type="button" class="reset btn btn-danger pull-left">Réinitialiser</button>
+        <img class="loading" src="<c:url value="/resources/img/loading.gif" />" alt="Loading" />
         <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+        <button type="button" class="print btn btn-success">Imprimer</button>
         <button type="button" class="save btn btn-primary">Enregistrer</button>
       </div>
     </div><!-- /.modal-content -->

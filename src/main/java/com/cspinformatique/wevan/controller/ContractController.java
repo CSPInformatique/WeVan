@@ -53,9 +53,15 @@ public class ContractController {
  
         model.put("jdbcDataSource", this.datasource);
         model.put("CONTRACT_ID", contractId);
- 
+        
         return new ModelAndView("pdfReport", model);
     }
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@RequestMapping(method=RequestMethod.PUT, produces="application/json", value="/{id}", params="reset")
+	public void resetContract(@PathVariable long id){
+		this.contractService.resetContract(id);
+	}
 	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(method={RequestMethod.POST, RequestMethod.PUT}, produces="application/json", value={"", "/{id}"})

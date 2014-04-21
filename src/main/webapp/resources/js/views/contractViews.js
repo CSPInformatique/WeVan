@@ -70,8 +70,20 @@ window.ContractPageView = Backbone.View.extend({
 
         return contract;
     },
+
+    hideEditContractLoading : function(){
+        $(".editContract input").prop("disabled", false);
+
+        if($('.editContract input.id').val() == null){
+            $("button.reset").prop("disabled", true)
+        }
+
+        $(".editContract .loading").hide();
+    },
     
     initialize : function() {
+        var view = this;
+
     	this.model.fetch();
     	
         this.template = _.template($('#contractPage-template').html());
@@ -79,6 +91,8 @@ window.ContractPageView = Backbone.View.extend({
         /*--- binding ---*/
         _.bindAll(this, 'render');
         _.bindAll(this, 'openNewContract');
+        _.bindAll(this, 'printContract');
+        _.bindAll(this, 'resetContract');
         _.bindAll(this, 'saveContract');
         this.model.bind('change', this.render);
         this.model.bind('add', this.render);
@@ -86,6 +100,8 @@ window.ContractPageView = Backbone.View.extend({
         /*---------------*/
         
         $(".new button").click(this.openNewContract);
+        $("button.print").click(this.printContract);
+        $("button.reset").click(this.resetContract);
         $("button.save").click(this.saveContract);
     },
     
@@ -109,6 +125,8 @@ window.ContractPageView = Backbone.View.extend({
 	    		vehiculeList : vehiculeList.toJSON()
     		})
     	);
+
+        $(".editContract.modal .modal-title span").html(contract.id);
     	
     	for(var driverIndex in contract.additionalDrivers){    		
     		this.addAdditionalDriver(contract.additionalDrivers[driverIndex]);
@@ -130,9 +148,6 @@ window.ContractPageView = Backbone.View.extend({
     	
     	$('.editContract.modal').modal({backdrop : 'static'});
     	
-    	$("button.save").prop('disabled', false);
-    	$("button.close").prop('disabled', false);
-    	
     	var contractPageView = this;
         $(".editContract button.addDriver").click(function(){
             contractPageView.addAdditionalDriver({
@@ -150,32 +165,8 @@ window.ContractPageView = Backbone.View.extend({
                 amount: ""
             });
         });
-    },
-    
-    openContractActions: function(contract){
-    	$('.contractActions.modal .modal-content').html(
-			_.template($('#contractActions-template').html())({
-	    		contract : contract
-    		})
-    	);
-    	
-    	$('.contractActions.modal').modal({backdrop : 'static'});
-    	
-    	var contractPageView = this;
-    	
-    	$(".contractActions button.print").click(function(){
-    		window.open(ctx + "/contract/" + $(this).attr("data-contract-id"));
-    	});
-    	
-        $(".contractActions button.edit").click(function(){
-        	$('.contractActions.modal').modal("hide");
-        	contractPageView.editContract($(this).attr("data-contract-id"));
-        });
-        
-        $(".contractActions button.delete").click(function(){
-        	$('.contractActions.modal').modal("hide");
-        	contractPageView.deleteContract($(this).attr("data-contract-id"));
-        });
+
+        this.hideEditContractLoading();
     },
     
     openNewContract: function(){
@@ -200,6 +191,14 @@ window.ContractPageView = Backbone.View.extend({
     		additionalDrivers : []
 		});
     },
+    
+    printContract: function(contractId){
+    	this.saveContract({
+    		callback : function(){
+    			window.open(ctx + "/contract/" + $('.editContract input.id').val());
+    		} 
+    	});
+    },
 
     refresh : function(){
         this.model.fetch();
@@ -215,7 +214,7 @@ window.ContractPageView = Backbone.View.extend({
         var contractPageView = this;
         
         $("table tbody tr").click(function(){
-        	contractPageView.openContractActions(contractPageView.getContractFromContent($(this).attr("data-contract-id")));
+        	contractPageView.editContract($(this).attr("data-contract-id"));
         });
         
         $("table .startDate, table .endDate, table .creationDate").each(function(index, element){
@@ -288,12 +287,38 @@ window.ContractPageView = Backbone.View.extend({
 
         return this;
     },
+
+    resetContract: function(){
+        var view = this;
+
+        this.showEditContractLoading();
+
+        var contractId = $('.editContract input.id').val();
+
+        var model = this.model;
+
+        var contract =  new Contract({   
+                            id: contractId
+                        });
+
+        contract.reset = true;
+
+        contract.save({}, { 
+            success : function(resp){
+                model.fetch().complete(function(){
+                    //$('.modal').modal('hide');
+
+                    view.editContract(contractId);
+                });
+            }
+        } );
+    },
     
-    saveContract: function(){
-    	$("button.save").prop('disabled', true);
-    	$("button.close").prop('disabled', true);
-    	
+    saveContract: function(options){   
+        var view = this;
 		var model = this.model;
+
+        this.showEditContractLoading();
 
         var contractId =  $('.editContract input.id').val();
 		
@@ -308,9 +333,9 @@ window.ContractPageView = Backbone.View.extend({
 			});
 		});
 
-        var options = [];
+        var contractOptions = [];
         $(".options .option").each(function(index, element){
-            options.push({
+            contractOptions.push({
                 id : $(this).attr("data-option-id"),
                 contract : contractId,
                 label : $(this).find("input.optionLabel").val(),
@@ -329,6 +354,7 @@ window.ContractPageView = Backbone.View.extend({
 
 		var contract = new Contract(
 			{	id: contractId,
+                reservationId : $(".editContract input.reservationId").val(),
                 creationDate : +moment(parseInt($(".editContract input.creationDate").val())),
                 editionDate : +moment(parseInt($(".editContract input.editionDate").val())),
 				branch : branch,
@@ -348,18 +374,27 @@ window.ContractPageView = Backbone.View.extend({
 				deductible : $(".editContract input.deductible").val(),
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,
-                options: options,
+                options: contractOptions,
                 showOptionsPrices : $(".showOptionsPrices input").is(":checked")
 			}
 		);
 
         contract.save({}, { 
-            async : false,
             success : function(resp){
-                model.fetch();
-                
-                $('.modal').modal('hide');
+                model.fetch().complete(function(){
+                    view.hideEditContractLoading();
+                    
+                    if(options != null && options.callback != null){
+                        options.callback();
+                    }
+                });
             }
         } );
 	},
+
+    showEditContractLoading : function(){
+        $(".editContract input").prop("disabled", true);
+
+        $(".editContract .loading").show();
+    }
 });

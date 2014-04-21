@@ -3,6 +3,7 @@ package com.cspinformatique.wevan.service.impl;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 import com.cspinformatique.commons.util.RestUtil;
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
+import com.cspinformatique.wevan.entity.ElixirAudit;
 import com.cspinformatique.wevan.entity.Option;
 import com.cspinformatique.wevan.entity.Contract.Status;
 import com.cspinformatique.wevan.entity.Driver;
@@ -29,6 +31,7 @@ import com.cspinformatique.wevan.entity.Vehicule;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.BranchService;
 import com.cspinformatique.wevan.service.ContractService;
+import com.cspinformatique.wevan.service.ElixirAuditService;
 import com.cspinformatique.wevan.service.OptionService;
 import com.cspinformatique.wevan.service.VehiculeService;
 
@@ -37,13 +40,22 @@ import com.cspinformatique.wevan.service.VehiculeService;
 public class ContractServiceImpl implements ContractService {
 	private static final Logger logger = LoggerFactory.getLogger(ContractServiceImpl.class);
 	
+	private DateFormat timeFormat;
+	private DateFormat dateFormat;
+	
 	@Autowired private BranchService branchService;
+	@Autowired private ElixirAuditService elixirAuditService;
 	@Autowired private OptionService optionService;
 	@Autowired private VehiculeService vehiculeService;
 	
 	@Autowired private ContractRepository contractRepository;
 	
 	private boolean contractFetchInProgress = false;
+	
+	public ContractServiceImpl(){
+		this.timeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
+	}
 	
 	@PostConstruct
 	public void init(){
@@ -260,6 +272,135 @@ public class ContractServiceImpl implements ContractService {
 	return options;
 		
 	}
+
+	public void fetchContract(long reservationId){
+		this.fetchContract(reservationId, false, null);
+	}
+	
+	public void fetchContract(long reservationId, boolean forceUpdate){
+		this.fetchContract(reservationId, forceUpdate, null);
+	}
+	
+	public void fetchContract(long reservationId, boolean forceUpdate, Date requestedTimestamp){
+		com.cspinformatique.wevan.backend.entity.Contract backendContract = null;
+		long contractId = 0;
+		
+		try{	
+			backendContract = new RestTemplate().exchange(
+					"http://www.we-van.com/api/?id=" + reservationId, 	
+					HttpMethod.GET, 
+					new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
+						new com.cspinformatique.wevan.backend.entity.Contract(),
+						RestUtil.createBasicAuthHeader(
+							"wevan-api", 
+							"7D4gLg"
+						) 
+					), 
+					com.cspinformatique.wevan.backend.entity.Contract.class 
+				).getBody();
+				
+				logger.info("Received : " + backendContract);
+				
+				Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
+				Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+												backendContract.getEditionDate().substring(13)
+											);
+				
+				contractId = this.generateNewContractId(reservationId, contractStartDate);
+				
+				Contract existingContract = this.contractRepository.findByReservationId(reservationId);
+				
+				if(existingContract != null){
+					contractId = existingContract.getId();
+				}
+				
+				if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
+					logger.info("Generating contract " + contractId + " from reservation " + reservationId);
+					
+					// Retreiving the branch linked with the reservation.
+					Branch branch = this.branchService.findOne(backendContract.getAgency());
+					
+					if(branch != null){
+						List<Option> options = this.calculateOptions(contractId, backendContract);
+	
+						Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+						
+						double deductible = this.calculateDeductible(options);
+						double deposit = deductible;
+						
+						String kilometersPackage = backendContract.getPayment().getKmPackage();
+						if(kilometersPackage == null){
+							kilometersPackage = "";
+						}
+						
+						Contract contract =	new Contract(
+												contractId, 
+												reservationId,
+												branch, 
+												this.timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+												backendContract.getCreationDate().substring(
+													13
+												)), 
+												this.timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+													backendContract.getEditionDate().substring(
+														13
+													)),
+												Contract.Status.OPEN, 
+												new Driver(
+													0, 
+													backendContract.getUser().getCompany(), 
+													backendContract.getUser().getFirstName(), 
+													backendContract.getUser().getLastName(), 
+													""
+												), 
+												this.dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
+												this.dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
+												kilometersPackage, 
+												backendContract.getPayment().getAlreadyPaid(), 
+												backendContract.getPayment().getTotalCost(), 
+												vehicule, 
+												deductible, 
+												deposit, 
+												new ArrayList<Driver>(), 
+												options,
+												false
+											);
+						
+						contractRepository.save(contract);
+						
+						this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "OK", backendContract);
+					}else{
+						String message = "Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.";
+						
+						logger.error(message);
+						
+						this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", backendContract, message);
+					}
+				}else{
+					String message = "Reservation " + reservationId + " as already been loaded in the system. Skipping.";
+					
+					logger.info(message);
+
+					this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", backendContract, message);
+				}
+		}catch(Exception ex){
+			this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "ERROR", backendContract, ex);
+			
+			throw new RuntimeException(ex);
+		}
+	}
+	
+	@Override
+	public void fetchRecentContractsOnError(){
+		logger.info("Fetching recent contracts on error.");
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, -7);
+		for(ElixirAudit audit : this.elixirAuditService.findAuditOnErrorSince(calendar.getTime())){
+			this.fetchContract(audit.getReservationId(), true, new Date());
+		}
+
+		logger.info("Contract on error fetch completed.");
+	}
 	
 	@Override
 	public void fetchContracts(){
@@ -275,7 +416,7 @@ public class ContractServiceImpl implements ContractService {
 					timestamp = latestContract.getEditionDate().getTime() / 1000;
 				}
 				
-				logger.info("Retreiving contracts older than " + timestamp);
+				logger.info("Retreiving contracts older than " + new Date(timestamp));
 				
 				Long[] reservationIds = new RestTemplate().exchange(
 					"http://www.we-van.com/api/?t=" + timestamp, 
@@ -292,99 +433,9 @@ public class ContractServiceImpl implements ContractService {
 				
 				logger.info(reservationIds.length + " contracts received.");
 				
-				com.cspinformatique.wevan.backend.entity.Contract backendContract;
-				DateFormat timeFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-				DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy");
-				
 				for(long reservationId : reservationIds){
 					try{
-						backendContract = new RestTemplate().exchange(
-							"http://www.we-van.com/api/?id=" + reservationId, 	
-							HttpMethod.GET, 
-							new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
-								new com.cspinformatique.wevan.backend.entity.Contract(),
-								RestUtil.createBasicAuthHeader(
-									"wevan-api", 
-									"7D4gLg"
-								) 
-							), 
-							com.cspinformatique.wevan.backend.entity.Contract.class 
-						).getBody();
-						
-						logger.info("Received : " + backendContract);
-						
-						Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
-						Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
-														backendContract.getEditionDate().substring(13)
-													);
-						
-						long contractId = this.generateNewContractId(reservationId, contractStartDate);
-						
-						Contract existingContract = this.contractRepository.findByReservationId(reservationId);
-						
-						if(existingContract != null){
-							contractId = existingContract.getId();
-						}
-						
-						if(existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
-							logger.info("Generating contract " + contractId + " from reservation " + reservationId);
-							
-							// Retreiving the branch linked with the reservation.
-							Branch branch = this.branchService.findOne(backendContract.getAgency());
-							
-							if(branch != null){
-								List<Option> options = this.calculateOptions(contractId, backendContract);
-			
-								Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
-								
-								double deductible = this.calculateDeductible(options);
-								double deposit = deductible;
-								
-								String kilometersPackage = backendContract.getPayment().getKmPackage();
-								if(kilometersPackage == null){
-									kilometersPackage = "";
-								}
-								
-								Contract contract =	new Contract(
-														contractId, 
-														reservationId,
-														branch, 
-														timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-														backendContract.getCreationDate().substring(
-															13
-														)), 
-														timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
-															backendContract.getEditionDate().substring(
-																13
-															)),
-														Contract.Status.OPEN, 
-														new Driver(
-															0, 
-															backendContract.getUser().getCompany(), 
-															backendContract.getUser().getFirstName(), 
-															backendContract.getUser().getLastName(), 
-															""
-														), 
-														dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
-														dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
-														kilometersPackage, 
-														backendContract.getPayment().getAlreadyPaid(), 
-														backendContract.getPayment().getTotalCost(), 
-														vehicule, 
-														deductible, 
-														deposit, 
-														new ArrayList<Driver>(), 
-														options,
-														false
-													);
-								
-								contractRepository.save(contract);
-							}else{
-								logger.error("Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.");
-							}
-						}else{
-							logger.info("Reservation " + reservationId + " as already been loaded in the system. Skipping.");
-						}
+						this.fetchContract(reservationId, false, new Date(timestamp));
 					}catch(Exception ex){
 						logger.error("Error while processing reservation : " + reservationId, ex);
 					}			
@@ -397,6 +448,21 @@ public class ContractServiceImpl implements ContractService {
 		}else{
 			logger.info("Contracts are already being fetch from backend.");
 		}
+	}
+	
+	@Override
+	public void resetContract(long contractId){
+		Contract contract = this.findOne(contractId);
+		
+		if(contract == null){
+			throw new RuntimeException("Contract " + contractId + " does not exist.");
+		}
+		
+		if(contract.getReservationId() == null){
+			throw new RuntimeException("The contract " + contractId + " does not have a reservation reference.");
+		}
+		
+		this.fetchContract(contract.getReservationId(), true);
 	}
 
 	@Override

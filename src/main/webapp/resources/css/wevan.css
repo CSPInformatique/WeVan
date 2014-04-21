@@ -69,3 +69,7 @@ body{
 .editContract .vehicule select{
 	width: 100%;
 }
+
+.editContract .loading{
+	margin-right: 10px;
+}
