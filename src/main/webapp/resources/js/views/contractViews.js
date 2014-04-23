@@ -72,7 +72,7 @@ window.ContractPageView = Backbone.View.extend({
     },
 
     hideEditContractLoading : function(){
-        $(".editContract input").prop("disabled", false);
+        $(".editContract input, .editContract button").prop("disabled", false);
 
         if($('.editContract input.id').val() == null){
             $("button.reset").prop("disabled", true)
@@ -393,7 +393,7 @@ window.ContractPageView = Backbone.View.extend({
 	},
 
     showEditContractLoading : function(){
-        $(".editContract input").prop("disabled", true);
+        $(".editContract input, .editContract button").prop("disabled", true);
 
         $(".editContract .loading").show();
     }

@@ -312,6 +312,9 @@ public class ContractServiceImpl implements ContractService {
 				
 				if(existingContract != null){
 					contractId = existingContract.getId();
+					
+					// Clean options.
+					
 				}
 				
 				if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
@@ -366,7 +369,7 @@ public class ContractServiceImpl implements ContractService {
 												false
 											);
 						
-						contractRepository.save(contract);
+						contract = this.saveContract(contract);
 						
 						this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "OK", backendContract);
 					}else{
@@ -462,11 +465,32 @@ public class ContractServiceImpl implements ContractService {
 			throw new RuntimeException("The contract " + contractId + " does not have a reservation reference.");
 		}
 		
+		// Removing all options.
+		for(Option option : contract.getOptions()){
+			this.optionService.deleteOption(option.getId());
+		}
+		
 		this.fetchContract(contract.getReservationId(), true);
 	}
 
 	@Override
 	public Contract saveContract(Contract contract) {
+		// Cleaning deleted contract.
+		for(Option option : this.optionService.findByContract(contract.getId())){
+			boolean optionFound = false;
+			for(Option newOption : contract.getOptions()){
+				if(newOption.getId() == option.getId()){
+					optionFound = true;
+				}
+			}
+			
+			if(optionFound){
+				this.optionService.save(option);
+			}else{
+				this.optionService.deleteOption(option.getId());
+			}
+		}
+		
 		return this.contractRepository.save(contract);
 	}
 }

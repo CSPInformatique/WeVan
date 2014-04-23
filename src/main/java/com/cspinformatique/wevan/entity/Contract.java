@@ -218,7 +218,8 @@ public class Contract {
 		this.additionalDrivers = additionalDrivers;
 	}
 
-	@OneToMany(cascade = CascadeType.ALL, mappedBy="contract")
+
+    @OneToMany(cascade=CascadeType.ALL, mappedBy="contract")
     @LazyCollection(LazyCollectionOption.FALSE)
 	public List<Option> getOptions() {
 		return options;
