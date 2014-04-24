@@ -109,20 +109,20 @@ window.ContractPageView = Backbone.View.extend({
     	var branchList = new BranchList();
     	branchList.fetch({async : false});
 
-    	var vehiculeList = new VehiculeList();
+    	this.vehiculeList = new VehiculeList();
     	var branchesSelect = $(".branches select");
     	if(branchesSelect.size() > 0){
-    		vehiculeList.branch = branchesSelect.select2("val");
+    		this.vehiculeList.branch = branchesSelect.select2("val");
     	}else{
-    		vehiculeList.branch = user.toJSON().branch.id;
+    		this.vehiculeList.branch = user.toJSON().branch.id;
     	}
-    	vehiculeList.fetch({async : false});
+    	this.vehiculeList.fetch({async : false});
     	
     	$('.editContract.modal .modal-body').html(
 			_.template($('#newContract-template').html())({
 	    		contract : contract,
 	    		branchList : branchList.toJSON,
-	    		vehiculeList : vehiculeList.toJSON()
+	    		vehiculeList : this.vehiculeList.toJSON()
     		})
     	);
 
@@ -132,7 +132,7 @@ window.ContractPageView = Backbone.View.extend({
     		this.addAdditionalDriver(contract.additionalDrivers[driverIndex]);
     	}
         
-        for(var optionIndex in contract.options){         
+        for(var optionIndex in contract.options){
             this.addOption(contract.options[optionIndex]);
         }
     	
@@ -352,6 +352,22 @@ window.ContractPageView = Backbone.View.extend({
     		branch = user.toJSON().branch;
     	}
 
+        var vehiculeId = $(".editContract .vehicule select").select2("val");
+        var vehicules = this.vehiculeList.toJSON();
+        var vehiculeName = "";
+        var vehiculeModel = "";
+        var vehiculeRegistration = "";
+
+        for(vehiculeIndex in vehicules){
+            var vehicule = vehicules[vehiculeIndex];
+            if(vehicule.id == vehiculeId){
+                vehiculeName =  vehicule.name + " " + vehicule.number;
+                vehiculeModel = vehicule.model;
+                vehiculeRegistration = vehicule.registration;
+                break;
+            }
+        }
+
 		var contract = new Contract(
 			{	id: contractId,
                 reservationId : $(".editContract input.reservationId").val(),
@@ -370,7 +386,9 @@ window.ContractPageView = Backbone.View.extend({
 				kilometersPackage : $(".editContract input.kilometers").val(),
                 amountAlreadyPaid : $(".editContract input.amountAlreadyPaid").val(),
 				totalAmount : $(".editContract input.totalAmount").val(),
-				vehicule : {id : $(".editContract .vehicule select").select2("val")},
+                vehiculeName : vehiculeName,
+                vehiculeModel : vehiculeModel,
+                vehiculeRegistration : vehiculeRegistration,
 				deductible : $(".editContract input.deductible").val(),
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,

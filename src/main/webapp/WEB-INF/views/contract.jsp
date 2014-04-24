@@ -212,17 +212,8 @@
 						<td class="lastName"><@= contract.driver.lastName @></td>
 						<td class="startDate"><@= contract.startDate @></td>
 						<td class="endDate"><@= contract.endDate @></td>
-						<@	if(contract.vehicule){	@>
-							<td class="vehicule">
-								<@= contract.vehicule.name @> <@= contract.vehicule.number @>
-							</td>
-							<td class="registration">
-								<@= contract.vehicule.registration @>
-							</td>
-						<@	}else{	@>
-							<td class="vehicule">N/A</td>
-							<td class="registration">N/A</td>
-						<@	}	@>
+						<td class="vehicule"><@= contract.vehiculeName @></td>
+						<td class="registration"><@= contract.vehiculeRegistration @></td>
 						<td class="status">
 <@	if(contract.startDate > +moment()){	@>
 							En attente
@@ -293,7 +284,7 @@
 		<div>
 			<select>
 <@	_.each(vehiculeList, function(vehicule){
-		if(contract.vehicule != null && vehicule.id == contract.vehicule.id){	@>
+		if(vehicule.registration == contract.vehiculeRegistration){	@>
 				<option value="<@= vehicule.id @>" selected="selected">
 <@		}else{	@>
 				<option value="<@= vehicule.id @>">

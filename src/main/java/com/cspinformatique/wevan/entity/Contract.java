@@ -34,7 +34,9 @@ public class Contract {
 	private String kilometersPackage;
 	private double amountAlreadyPaid;
 	private double totalAmount;
-	private Vehicule vehicule;
+	private String vehiculeName;
+	private String vehiculeModel;
+	private String vehiculeRegistration;
 	private double deductible;
 	private double deposit;
 	private List<Driver> additionalDrivers;
@@ -45,6 +47,12 @@ public class Contract {
 		
 	}
 
+	/*
+
+	private String vehiculeName;
+	private String vehiculeModel;
+	private String vehiculeRegistration;
+	 */
 	public Contract(
 		long id, 
 		Long reservationId,
@@ -58,7 +66,9 @@ public class Contract {
 		String kilometersPackage, 
 		double amountAlreadyPaid,
 		double totalAmount,
-		Vehicule vehicule, 
+		String vehiculeName,
+		String vehiculeModel,
+		String vehiculeRegistration,
 		double deductible, 
 		double deposit,
 		List<Driver> additionalDrivers,
@@ -76,7 +86,9 @@ public class Contract {
 		this.kilometersPackage = kilometersPackage;
 		this.amountAlreadyPaid = amountAlreadyPaid;
 		this.totalAmount = totalAmount;
-		this.vehicule = vehicule;
+		this.vehiculeName = vehiculeName;
+		this.vehiculeModel = vehiculeModel;
+		this.vehiculeRegistration = vehiculeRegistration;
 		this.deductible = deductible;
 		this.deposit = deposit;
 		this.additionalDrivers = additionalDrivers;
@@ -177,14 +189,28 @@ public class Contract {
 		this.totalAmount = totalAmount;
 	}
 
-	@ManyToOne
-	@JoinColumn(name="vehicule")
-	public Vehicule getVehicule() {
-		return vehicule;
+	public String getVehiculeName() {
+		return vehiculeName;
 	}
 
-	public void setVehicule(Vehicule vehicule) {
-		this.vehicule = vehicule;
+	public void setVehiculeName(String vehiculeName) {
+		this.vehiculeName = vehiculeName;
+	}
+
+	public String getVehiculeModel() {
+		return vehiculeModel;
+	}
+
+	public void setVehiculeModel(String vehiculeModel) {
+		this.vehiculeModel = vehiculeModel;
+	}
+
+	public String getVehiculeRegistration() {
+		return vehiculeRegistration;
+	}
+
+	public void setVehiculeRegistration(String vehiculeRegistration) {
+		this.vehiculeRegistration = vehiculeRegistration;
 	}
 
 	public double getDeductible() {

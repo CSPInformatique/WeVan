@@ -24,7 +24,9 @@
 	DATE_FORMAT(contract0_.`startDate`, '%d/%m/%Y') as startDate,
 	DATE_FORMAT(contract0_.`startDate`, '%H:%i') as startTime,
 	FORMAT(contract0_.`totalAmount`, 2) as totalAmount,
-	contract0_.vehicule ,
+	contract0_.`vehiculeName` as vehiculeName,
+	contract0_.`vehiculeModel` as vehiculeModel,
+	contract0_.`vehiculeRegistration` as vehiculeRegistration,
 	branch1_.`id`,
 	branch1_.`addressNumber`,
 	branch1_.`addressStreet`,
@@ -45,35 +47,11 @@
 	driver2_.`corporateName`,
 	driver2_.`driverLicense`,
 	driver2_.`firstName`,
-	driver2_.`lastName`,
-	vehicule3_.`id`,
-	vehicule3_.branch,
-	vehicule3_.`model` as vehiculeModel,
-	vehicule3_.`name` as vehiculeName,
-	vehicule3_.`number` as vehiculeNumber,
-	vehicule3_.`registration` as vehiculeRegistration,
-	branch4_.`id`,
-	branch4_.`addressNumber`,
-	branch4_.`addressStreet`,
-	branch4_.`city`,
-	branch4_.`companyName`,
-	branch4_.`companyType`,
-	branch4_.`country`,
-	branch4_.`euVatNumber`,
-	branch4_.`headOffice`,
-	branch4_.`name`,
-	branch4_.`phone`,
-	branch4_.`postalCode`,
-	branch4_.`registration`,
-	branch4_.`registrationDate`,
-	branch4_.`registrationLocation`,
-	branch4_.`siret`
+	driver2_.`lastName`
 from 
 	`contract` contract0_ left outer join 
 	`branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
-	`driver` driver2_ on contract0_.driver=driver2_.`id` left outer join 
-	`vehicule` vehicule3_ on contract0_.vehicule=vehicule3_.`id` left outer join 
-	`branch` branch4_ on vehicule3_.branch=branch4_.`id` 
+	`driver` driver2_ on contract0_.driver=driver2_.`id`
 where contract0_.`id` = $P{CONTRACT_ID}]]>
 	</queryString>
 	<field name="id" class="java.lang.Integer">
@@ -116,9 +94,6 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="totalAmount" class="java.lang.String">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
-	<field name="vehicule" class="java.lang.Integer">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
 	<field name="addressNumber" class="java.lang.String">
@@ -178,14 +153,10 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 	<field name="lastName" class="java.lang.String">
 		<fieldDescription><![CDATA[]]></fieldDescription>
 	</field>
-	<field name="branch" class="java.lang.Integer">
-		<fieldDescription><![CDATA[]]></fieldDescription>
-	</field>
 	<field name="endTime" class="java.lang.String"/>
 	<field name="startTime" class="java.lang.String"/>
 	<field name="vehiculeModel" class="java.lang.String"/>
 	<field name="vehiculeName" class="java.lang.String"/>
-	<field name="vehiculeNumber" class="java.lang.Integer"/>
 	<field name="vehiculeRegistration" class="java.lang.String"/>
 	<title>
 		<band height="802">
@@ -475,7 +446,7 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 				<textElement>
 					<font fontName="Amaranth" size="10" pdfFontName="Amaranth"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$F{vehiculeName} + " " + $F{vehiculeNumber}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{vehiculeName}]]></textFieldExpression>
 			</textField>
 			<textField>
 				<reportElement x="380" y="350" width="160" height="12" uuid="5331e33b-0fc7-40ce-af4d-4975a57c92e3"/>

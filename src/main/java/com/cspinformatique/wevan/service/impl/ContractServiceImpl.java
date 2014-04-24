@@ -328,6 +328,15 @@ public class ContractServiceImpl implements ContractService {
 	
 						Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
 						
+						String vehiculeName = "";
+						String vehiculeModel = "";
+						String vehiculeRegistration = "";
+						if(vehicule != null){
+							vehiculeName = vehicule.getName() + " " + vehicule.getNumber();
+							vehiculeModel = vehicule.getModel();
+							vehiculeRegistration = vehicule.getRegistration();
+						}
+						
 						double deductible = this.calculateDeductible(options);
 						double deposit = deductible;
 						
@@ -361,7 +370,9 @@ public class ContractServiceImpl implements ContractService {
 												kilometersPackage, 
 												backendContract.getPayment().getAlreadyPaid(), 
 												backendContract.getPayment().getTotalCost(), 
-												vehicule, 
+												vehiculeName,
+												vehiculeModel,
+												vehiculeRegistration,
 												deductible, 
 												deposit, 
 												new ArrayList<Driver>(), 
