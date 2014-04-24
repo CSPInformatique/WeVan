@@ -3,8 +3,8 @@ window.VehiculeListView = Backbone.View.extend({
 		$('.modal').modal('hide');
 	},
 	
-	deleteVehicule: function(e){
-		this.collection.get($(e.currentTarget).data('id')).destroy({
+	deleteVehicule: function(id){
+		this.collection.get(id).destroy({
 			wait : true
 		});
 	},
@@ -15,10 +15,6 @@ window.VehiculeListView = Backbone.View.extend({
 	
 	el : $('#vehiculeList-container'),
 	
-    events : {
-    	'click .delete button' : 'deleteVehicule',
-    },
-    
     initialize : function() {
     	this.collection.fetch();
     	
@@ -84,7 +80,11 @@ window.VehiculeListView = Backbone.View.extend({
         
         var vehiculeListView = this;
         $(".edit button").click(function(){
-        	vehiculeListView.editVehicule($(this).attr("data-id"));
+            vehiculeListView.editVehicule($(this).attr("data-id"));
+        });
+
+        $(".delete button").click(function(){
+            vehiculeListView.deleteVehicule($(this).attr("data-id"));
         });
         
         return this;
