@@ -85,7 +85,7 @@ public class GoogleCalendar {
 			client = new Calendar.Builder(httpTransport, JSON_FACTORY,
 					credential).setApplicationName(APPLICATION_NAME).build();
 			
-			System.out.println(credential.getTokenServerEncodedUrl());
+			System.out.println(credential.getAccessToken());
 
 			System.out.println("Success! Now add code here.");
 		} catch (Exception ex) {
