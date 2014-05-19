@@ -30,6 +30,7 @@ import com.cspinformatique.wevan.entity.Driver;
 import com.cspinformatique.wevan.entity.Vehicule;
 import com.cspinformatique.wevan.repository.ContractRepository;
 import com.cspinformatique.wevan.service.BranchService;
+import com.cspinformatique.wevan.service.CalendarService;
 import com.cspinformatique.wevan.service.ContractService;
 import com.cspinformatique.wevan.service.ElixirAuditService;
 import com.cspinformatique.wevan.service.OptionService;
@@ -44,6 +45,7 @@ public class ContractServiceImpl implements ContractService {
 	private DateFormat dateFormat;
 	
 	@Autowired private BranchService branchService;
+	@Autowired private CalendarService calendarService;
 	@Autowired private ElixirAuditService elixirAuditService;
 	@Autowired private OptionService optionService;
 	@Autowired private VehiculeService vehiculeService;
@@ -60,6 +62,10 @@ public class ContractServiceImpl implements ContractService {
 	@PostConstruct
 	public void init(){
 		final ContractService contractService = this;
+		
+		this.calendarService.cleanInvalidCalendars();
+		this.calendarService.generateMissingCalendars();
+		
 		new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -75,6 +81,11 @@ public class ContractServiceImpl implements ContractService {
 	@Override
 	public void deleteContract(long id){
 		this.contractRepository.delete(id);
+	}
+	
+	@Override
+	public List<Contract> findActiveContractsForVehicule(String vehiculeRegistration){
+		return this.contractRepository.findActiveContractsForVehicule(vehiculeRegistration);
 	}
 	
 	@Override
@@ -143,7 +154,6 @@ public class ContractServiceImpl implements ContractService {
 
 			return contractId;
 		}
-
 	}
 	
 	private double calculateDeductible(List<Option> options){
@@ -299,8 +309,6 @@ public class ContractServiceImpl implements ContractService {
 					com.cspinformatique.wevan.backend.entity.Contract.class 
 				).getBody();
 				
-				logger.info("Received : " + backendContract);
-				
 				Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
 				Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
 												backendContract.getEditionDate().substring(13)
@@ -312,9 +320,6 @@ public class ContractServiceImpl implements ContractService {
 				
 				if(existingContract != null){
 					contractId = existingContract.getId();
-					
-					// Clean options.
-					
 				}
 				
 				if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
@@ -331,10 +336,12 @@ public class ContractServiceImpl implements ContractService {
 						String vehiculeName = "";
 						String vehiculeModel = "";
 						String vehiculeRegistration = "";
+						String googleCalendarId = null;
 						if(vehicule != null){
 							vehiculeName = vehicule.getName() + " " + vehicule.getNumber();
 							vehiculeModel = vehicule.getModel();
 							vehiculeRegistration = vehicule.getRegistration();
+							googleCalendarId = vehicule.getGoogleCalendarId();
 						}
 						
 						double deductible = this.calculateDeductible(options);
@@ -345,6 +352,9 @@ public class ContractServiceImpl implements ContractService {
 							kilometersPackage = "";
 						}
 						
+						Date startDate = this.dateFormat.parse(backendContract.getEditableInfo().getStartDate());
+						Date endDate = this.dateFormat.parse(backendContract.getEditableInfo().getEndDate());
+
 						Contract contract =	new Contract(
 												contractId, 
 												reservationId,
@@ -365,8 +375,8 @@ public class ContractServiceImpl implements ContractService {
 													backendContract.getUser().getLastName(), 
 													""
 												), 
-												this.dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
-												this.dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
+												startDate,
+												endDate, 
 												kilometersPackage, 
 												backendContract.getPayment().getAlreadyPaid(), 
 												backendContract.getPayment().getTotalCost(), 
@@ -377,7 +387,9 @@ public class ContractServiceImpl implements ContractService {
 												deposit, 
 												new ArrayList<Driver>(), 
 												options,
-												false
+												false,
+												googleCalendarId,
+												null
 											);
 						
 						contract = this.saveContract(contract);
@@ -500,6 +512,37 @@ public class ContractServiceImpl implements ContractService {
 			}else{
 				this.optionService.deleteOption(option.getId());
 			}
+		}
+		
+		// Checking if old calendar event needs to be deleted.
+		Contract oldContract = this.contractRepository.findById(contract.getId());
+		if(oldContract != null){
+			if(	oldContract.getGoogleCalendarEventId() != null &&
+				oldContract.getGoogleCalendarId().equals(contract.getGoogleCalendarId()) && (
+					oldContract.getStartDate().getTime() != contract.getStartDate().getTime() || 
+					oldContract.getEndDate().getTime() != contract.getEndDate().getTime()
+				)
+			){
+				// Old calender event.
+				this.calendarService.deleteEvent(oldContract);
+			}
+		}
+		
+		// Checking if new calendar event needs to be created.
+		Vehicule vehicule = vehiculeService.findByRegistration(contract.getVehiculeRegistration());
+		if(vehicule != null){
+			if(vehicule.getGoogleCalendarId() != null){
+				if(contract.getEndDate().getTime() > new Date().getTime()){
+					contract.setGoogleCalendarId(vehicule.getGoogleCalendarId());
+					contract.setGoogleCalendarEventId(this.calendarService.createEvent(vehicule, contract));
+				}else{
+					logger.debug("Innactive contract. Skipping calendar event creation.");
+				}
+			}else{
+				logger.debug("Vehicule " + vehicule.getRegistration() + " has no Google Calendar Id configured. Skipping calendar event creation.");
+			}
+		}else{
+			logger.debug("Skipping calendar event creating since no vehicule could be found for registration " + contract.getVehiculeRegistration());
 		}
 		
 		return this.contractRepository.save(contract);

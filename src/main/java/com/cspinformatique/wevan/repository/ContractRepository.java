@@ -11,6 +11,8 @@ import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 
 public interface ContractRepository extends JpaRepository<Contract, Long> {
+	@Query("SELECT contract FROM Contract contract WHERE vehiculeRegistration = ?1 AND endDate > CURRENT_TIMESTAMP")
+	public List<Contract> findActiveContractsForVehicule(String vehiculeRegistration);
 	
 	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
 	

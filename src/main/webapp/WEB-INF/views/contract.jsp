@@ -235,6 +235,12 @@
 <@	if(contract.reservationId != null && contract.reservationId != undefined){	@>
 	<input class="reservationId" type="hidden" value="<@= contract.reservationId @>" />
 <@	}	@>
+<@	if(contract.googleCalendarId != null && contract.googleCalendarId != undefined){	@>
+	<input class="googleCalendarId" type="hidden" value="<@= contract.googleCalendarId @>" />
+<@	}	@>
+<@	if(contract.googleCalendarEventId != null && contract.googleCalendarEventId != undefined){	@>
+	<input class="googleCalendarEventId" type="hidden" value="<@= contract.googleCalendarEventId @>" />
+<@	}	@>
 	<input class="creationDate" type="hidden" value="<@= contract.creationDate @>" />
 	<input class="editionDate" type="hidden" value="<@= contract.editionDate @>" />
 

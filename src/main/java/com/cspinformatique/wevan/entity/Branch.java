@@ -25,6 +25,7 @@ public class Branch {
 	private Date registrationDate;
 	private String registrationLocation;
 	private String siret;
+	private String googleEmailAccount;
 	
 	public Branch(){
 		
@@ -46,7 +47,8 @@ public class Branch {
 		String registration,
 		Date registrationDate,
 		String registrationLocation,
-		String siret
+		String siret,
+		String googleEmailAccount
 	){
 		this.id = id;
 		this.name = name;
@@ -64,6 +66,7 @@ public class Branch {
 		this.registrationDate = registrationDate;
 		this.registrationLocation = registrationLocation;
 		this.siret = siret;
+		this.googleEmailAccount = googleEmailAccount;
 	}
 
 	@Id
@@ -194,5 +197,13 @@ public class Branch {
 
 	public void setSiret(String siret) {
 		this.siret = siret;
+	}
+
+	public String getGoogleEmailAccount() {
+		return googleEmailAccount;
+	}
+
+	public void setGoogleEmailAccount(String googleEmailAccount) {
+		this.googleEmailAccount = googleEmailAccount;
 	}
 }

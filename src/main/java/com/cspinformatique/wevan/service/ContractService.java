@@ -12,6 +12,8 @@ import com.cspinformatique.wevan.entity.Contract.Status;
 
 public interface ContractService {
 	public void deleteContract(long id);
+
+	public List<Contract> findActiveContractsForVehicule(String vehiculeRegistration);
 	
 	public Page<Contract> findByBranch(Branch branch, PageRequest pageRequest);
 	

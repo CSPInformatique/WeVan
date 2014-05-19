@@ -2,17 +2,28 @@ package com.cspinformatique.wevan.service.impl;
 
 import java.util.List;
 
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Vehicule;
 import com.cspinformatique.wevan.repository.VehiculeRepository;
+import com.cspinformatique.wevan.service.CalendarService;
+import com.cspinformatique.wevan.service.ContractService;
 import com.cspinformatique.wevan.service.VehiculeService;
 
 @Service
-public class VehiculeServiceImpl implements VehiculeService {
+public class VehiculeServiceImpl implements VehiculeService {		
+	@Autowired private CalendarService calendarService;
+	@Autowired private ContractService contractService;
 	@Autowired private VehiculeRepository vehiculeRepository;
+	
+	@PostConstruct
+	public void init(){
+		
+	}
 	
 	@Override
 	public void delete(int id) {
@@ -41,7 +52,13 @@ public class VehiculeServiceImpl implements VehiculeService {
 
 	@Override
 	public void save(Vehicule vehicule) {
+		if(vehicule.getGoogleCalendarId() == null){
+			this.calendarService.createCalendar(vehicule);
+		}
+		
 		this.vehiculeRepository.save(vehicule);
+		
+		// Retreive all active contract for the vehicule and update the agenda.
+		this.calendarService.updateVehiculeCalendars(vehicule);
 	}
-
 }

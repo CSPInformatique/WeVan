@@ -393,7 +393,9 @@ window.ContractPageView = Backbone.View.extend({
 				deposit : $(".editContract .deposit input").val(),
 				additionalDrivers : additionalDrivers,
                 options: contractOptions,
-                showOptionsPrices : $(".showOptionsPrices input").is(":checked")
+                showOptionsPrices : $(".showOptionsPrices input").is(":checked"),
+                googleCalendarId : $(".editContract input.googleCalendarId").val(),
+                googleCalendarEventId : $(".editContract input.googleCalendarEventId").val(),
 			}
 		);
 

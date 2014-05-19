@@ -227,15 +227,5 @@
 			<artifactId>google-http-client-jackson2</artifactId>
 			<version>1.18.0-rc</version>
 		</dependency>
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-java6</artifactId>
-			<version>1.18.0-rc</version>
-		</dependency>
-		<dependency>
-			<groupId>com.google.oauth-client</groupId>
-			<artifactId>google-oauth-client-jetty</artifactId>
-			<version>1.18.0-rc</version>
-		</dependency>
 	</dependencies>
 </project>

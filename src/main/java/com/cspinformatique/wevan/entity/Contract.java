@@ -42,17 +42,13 @@ public class Contract {
 	private List<Driver> additionalDrivers;
 	private List<Option> options;
 	private boolean showOptionsPrices;
+	private String googleCalendarId;
+	private String googleCalendarEventId;
 	
 	public Contract(){
 		
 	}
 
-	/*
-
-	private String vehiculeName;
-	private String vehiculeModel;
-	private String vehiculeRegistration;
-	 */
 	public Contract(
 		long id, 
 		Long reservationId,
@@ -73,7 +69,9 @@ public class Contract {
 		double deposit,
 		List<Driver> additionalDrivers,
 		List<Option> options,
-		boolean showOptionsPrices
+		boolean showOptionsPrices,
+		String googleCalendarId,
+		String googleCalendarEventId
 	) {
 		this.id = id;
 		this.reservationId = reservationId;
@@ -94,6 +92,8 @@ public class Contract {
 		this.additionalDrivers = additionalDrivers;
 		this.options = options;
 		this.showOptionsPrices = showOptionsPrices;
+		this.googleCalendarId = googleCalendarId;
+		this.googleCalendarEventId = googleCalendarEventId;
 	}
 
 	@Id
@@ -261,5 +261,21 @@ public class Contract {
 
 	public void setShowOptionsPrices(boolean showOptionsPrices) {
 		this.showOptionsPrices = showOptionsPrices;
+	}
+
+	public String getGoogleCalendarId() {
+		return googleCalendarId;
+	}
+
+	public void setGoogleCalendarId(String googleCalendarId) {
+		this.googleCalendarId = googleCalendarId;
+	}
+
+	public String getGoogleCalendarEventId() {
+		return googleCalendarEventId;
+	}
+
+	public void setGoogleCalendarEventId(String googleCalendarEventId) {
+		this.googleCalendarEventId = googleCalendarEventId;
 	}
 }

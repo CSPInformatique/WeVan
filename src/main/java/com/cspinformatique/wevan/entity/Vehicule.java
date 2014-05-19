@@ -16,18 +16,20 @@ public class Vehicule {
 	private int number;
 	private String model;
 	private String registration;
+	private String googleCalendarId;
 	
 	public Vehicule() {
 		
 	}
 
-	public Vehicule(int id, Branch branch, String name, int number, String model, String registration) {
+	public Vehicule(int id, Branch branch, String name, int number, String model, String registration, String googleCalendarId) {
 		this.id = id;
 		this.branch = branch;
 		this.name = name;
 		this.number = number;
 		this.model = model;
 		this.registration = registration;
+		this.googleCalendarId = googleCalendarId;
 	}
 
 	@Id
@@ -80,5 +82,13 @@ public class Vehicule {
 
 	public void setRegistration(String registration) {
 		this.registration = registration;
+	}
+
+	public String getGoogleCalendarId() {
+		return googleCalendarId;
+	}
+
+	public void setGoogleCalendarId(String googleCalendarId) {
+		this.googleCalendarId = googleCalendarId;
 	}
 }
