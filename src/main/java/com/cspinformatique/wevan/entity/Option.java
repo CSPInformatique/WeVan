@@ -13,7 +13,7 @@ public class Option {
 	public static final String LABEL_BEDS = "Lits";
 	public static final String LABEL_CANCEL_INSURANCE = "Assurance annulation";
 	public static final String LABEL_CAR_RACK = "Porte-bagages";
-	public static final String LABEL_CHILD_SEAT = "Siège enfant";
+	public static final String LABEL_CHILD_SEAT = "SiÃ¨ge enfant";
 	public static final String LABEL_CLEANING = "Nettoyage";
 	public static final String LABEL_GPS = "GPS";
 	public static final String LABEL_PARTIAL_DEDUCTIBLE = "Rachat Partiel de Franchise";
