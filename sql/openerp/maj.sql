@@ -1,0 +1,3 @@
+ALTER TABLE `wevan-test`.`driver` ADD COLUMN `address` VARCHAR(45) NULL  AFTER `driverLicense` , ADD COLUMN `address2` VARCHAR(45) NULL  AFTER `address` , ADD COLUMN `postalCode` VARCHAR(45) NULL  AFTER `address2` , ADD COLUMN `city` VARCHAR(45) NULL  AFTER `postalCode` , ADD COLUMN `country` VARCHAR(45) NULL  AFTER `city` , ADD COLUMN `civility` VARCHAR(45) NULL  AFTER `country` ;
+ALTER TABLE `wevan-test`.`driver` ADD COLUMN `email` VARCHAR(45) NULL  AFTER `driverLicense`;
+ALTER TABLE `wevan-test`.`driver` ADD COLUMN `phone` VARCHAR(45) NULL  AFTER `driverLicense`;

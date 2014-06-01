@@ -20,7 +20,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
+import com.cspinformatique.openerp.adapter.PartnerAdapter;
+import com.cspinformatique.openerp.entity.Partner;
 import com.cspinformatique.commons.util.RestUtil;
+import com.cspinformatique.wevan.config.WevanConfig;
 import com.cspinformatique.wevan.entity.Branch;
 import com.cspinformatique.wevan.entity.Contract;
 import com.cspinformatique.wevan.entity.ElixirAudit;
@@ -49,6 +52,10 @@ public class ContractServiceImpl implements ContractService {
 	@Autowired private VehiculeService vehiculeService;
 	
 	@Autowired private ContractRepository contractRepository;
+	
+	@Autowired private PartnerAdapter partnerAdapter;
+	
+	@Autowired private WevanConfig wevanConfig;
 	
 	private boolean contractFetchInProgress = false;
 	
@@ -363,7 +370,15 @@ public class ContractServiceImpl implements ContractService {
 													backendContract.getUser().getCompany(), 
 													backendContract.getUser().getFirstName(), 
 													backendContract.getUser().getLastName(), 
-													""
+													"",
+													backendContract.getUser().getPhone(),
+													backendContract.getUser().getEmail(),
+													backendContract.getUser().getAddress(),
+													backendContract.getUser().getAddress2(),
+													backendContract.getUser().getPostalCode(),
+													backendContract.getUser().getCity(),
+													backendContract.getUser().getCountry(),
+													backendContract.getUser().getCivility()
 												), 
 												this.dateFormat.parse(backendContract.getEditableInfo().getStartDate()),
 												this.dateFormat.parse(backendContract.getEditableInfo().getEndDate()), 
@@ -500,6 +515,20 @@ public class ContractServiceImpl implements ContractService {
 			}else{
 				this.optionService.deleteOption(option.getId());
 			}
+		}
+		
+		if(this.wevanConfig.isOpenerpActivated()){
+			this.partnerAdapter.save(
+				new Partner(
+					true,
+					contract.getDriver().getEmail(), 
+					contract.getDriver().getLastName() + " " + contract.getDriver().getFirstName(),
+					contract.getDriver().getAddress(),
+					contract.getDriver().getAddress2(),
+					contract.getDriver().getPostalCode(),
+					contract.getDriver().getPhone()
+				)
+			);
 		}
 		
 		return this.contractRepository.save(contract);
