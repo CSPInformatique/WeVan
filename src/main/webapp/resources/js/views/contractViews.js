@@ -56,7 +56,6 @@ window.ContractPageView = Backbone.View.extend({
     },
 
     getContractFromContent : function(contractId){
-        contractId = parseInt(contractId);
         var contract;
 
         var content = this.model.get("content");
@@ -84,6 +83,9 @@ window.ContractPageView = Backbone.View.extend({
     initialize : function() {
         var view = this;
 
+        // Shows loading gif.
+        $(this.$el.selector).html(_.template($('#loading-template').html())());
+
     	this.model.fetch();
     	
         this.template = _.template($('#contractPage-template').html());
@@ -99,10 +101,10 @@ window.ContractPageView = Backbone.View.extend({
         this.model.bind('remove', this.render);
         /*---------------*/
         
-        $(".new button").click(this.openNewContract);
-        $("button.print").click(this.printContract);
-        $("button.reset").click(this.resetContract);
-        $("button.save").click(this.saveContract);
+        $(".new button").off().click(this.openNewContract);
+        $("button.print").off().click(this.printContract);
+        $("button.reset").off().click(this.resetContract);
+        $("button.save").off().click(this.saveContract);
     },
     
     openContract : function(contract){
@@ -171,7 +173,6 @@ window.ContractPageView = Backbone.View.extend({
     
     openNewContract: function(){
     	this.openContract({
-    		id : 0,
     		branch : "",
     		driver : {
     			id : 0,
@@ -213,7 +214,7 @@ window.ContractPageView = Backbone.View.extend({
         
         var contractPageView = this;
         
-        $("table tbody tr").click(function(){
+        $(".contracts table tbody tr").click(function(){
         	contractPageView.editContract($(this).attr("data-contract-id"));
         });
         
@@ -237,8 +238,9 @@ window.ContractPageView = Backbone.View.extend({
                 (parseInt(contractPageView.model.page) - 1) + "/" + 
                 contractPageView.model.results + "/" +
                 contractPageView.model.sortBy + "/" +
-                contractPageView.model.ascending +
-                buildStatusStringForRouter(), 
+                contractPageView.model.ascending + "/" +
+                buildStatusStringForRouter() + "/" +
+                "false", 
             {trigger: true}
         );
 
@@ -248,8 +250,9 @@ window.ContractPageView = Backbone.View.extend({
                 (parseInt(contractPageView.model.page) + 1) + "/" + 
                 contractPageView.model.results + "/" +
                 contractPageView.model.sortBy + "/" +
-                contractPageView.model.ascending +
-                buildStatusStringForRouter(), 
+                contractPageView.model.ascending + "/" +
+                buildStatusStringForRouter() + "/" + 
+                "false", 
             {trigger: true}
         );
         
@@ -273,8 +276,9 @@ window.ContractPageView = Backbone.View.extend({
                     contractPageView.model.page + "/" + 
                     contractPageView.model.results + "/" +
                     sortBy + "/" +
-                    ascending +
-                    buildStatusStringForRouter(), 
+                    ascending + "/" +
+                    buildStatusStringForRouter() + "/" + 
+                    "false", 
                 {trigger: true}
             );
         });
@@ -401,6 +405,8 @@ window.ContractPageView = Backbone.View.extend({
 
         contract.save({}, { 
             success : function(resp){
+                model.fetchWevan = false;
+
                 model.fetch().complete(function(){
                     view.hideEditContractLoading();
                     

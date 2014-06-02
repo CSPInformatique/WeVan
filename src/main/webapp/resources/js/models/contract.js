@@ -39,6 +39,13 @@ window.ContractPage = Backbone.Model.extend({
 			if(this.ascending != null){
 				url += "&ascending=" + this.ascending;
 			}
+
+			url += "&fetchWevan=";
+			if(this.fetchWevan != null){
+				url += this.fetchWevan;
+			}else{
+				url += "false";
+			}
 			
 			return url;
 		}

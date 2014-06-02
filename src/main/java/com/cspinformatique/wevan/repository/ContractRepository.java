@@ -16,8 +16,6 @@ public interface ContractRepository extends JpaRepository<Contract, Long> {
 	
 	public Page<Contract> findByBranch(Branch branch, Pageable pageable);
 	
-	public Contract findById(long id);
-	
 	public Contract findByReservationId(long reservationId);
 	
 	@Query("SELECT contract FROM Contract contract WHERE branch = ?1 AND endDate < CURRENT_TIMESTAMP")

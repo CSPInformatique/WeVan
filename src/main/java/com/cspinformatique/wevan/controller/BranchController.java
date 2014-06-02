@@ -53,33 +53,32 @@ public class BranchController {
 		@RequestParam Integer page,
 		@RequestParam Integer results,
 		@RequestParam String sortBy,
-		@RequestParam Boolean ascending
+		@RequestParam Boolean ascending,
+		@RequestParam Boolean fetchWevan
 	){
-		return this.findBranchContract(branch, null, page, results, sortBy, ascending);
+		return this.findBranchContract(branch, null, page, results, sortBy, ascending, fetchWevan);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results", "sortBy", "ascending"})
+	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results", "sortBy", "ascending", "fetchWevan"})
 	public @ResponseBody Page<Contract> findBranchContract(
 		@PathVariable int branch, 
 		@RequestParam List<Status> status,
 		@RequestParam Integer page,
 		@RequestParam Integer results,
 		@RequestParam String sortBy,
-		@RequestParam Boolean ascending
+		@RequestParam Boolean ascending,
+		@RequestParam Boolean fetchWevan
 	){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					contractService.fetchContracts();
-					
-					contractService.fetchRecentContractsOnError();
-				}catch(Exception ex){
-					logger.error("Unable to retreive contracts from we-van.com", ex);
-				}
+		if(fetchWevan != null && fetchWevan){
+			try{
+				contractService.fetchContracts();
+				
+				contractService.fetchRecentContractsOnError();
+			}catch(Exception ex){
+				logger.error("Unable to retreive contracts from we-van.com", ex);
 			}
-		}).start();
+		}
 		
 		if(page == null) page = 0;
 		if(results == null) results = 50;

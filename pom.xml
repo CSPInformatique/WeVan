@@ -4,7 +4,7 @@
 	<groupId>com.cspinformatique</groupId>
 	<artifactId>wevan</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.1.0</version>
 	<name>wevan Maven Webapp</name>
 	<url>http://maven.apache.org</url>
 

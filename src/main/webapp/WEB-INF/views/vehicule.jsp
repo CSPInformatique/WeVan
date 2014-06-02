@@ -114,6 +114,9 @@
 			<h4>Succursale</h4>
 			<div class="branchesComboBox-container"></div>
 		</div>
+		<div class="new">
+			<button class="btn btn-primary pull-right">Nouveau</button>
+		</div>
 	</div>
 </div>
 

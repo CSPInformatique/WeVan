@@ -58,7 +58,8 @@ body{
 	width: 100%;
 }
 
-.filters .new{
+.filters .new, .filters .reload{
+	margin-left: 10px;
 	float: right;
 }
 

@@ -8,7 +8,7 @@ import javax.persistence.Id;
 @Entity(name="ElixirAudit")
 public class ElixirAudit {
 	private Long reservationId;
-	private Long contractId;
+	private long contractId;
 	private Date fetchTimestamp;
 	private Date requestedTimestamp;
 	private String status;
@@ -21,7 +21,7 @@ public class ElixirAudit {
 	
 	public ElixirAudit(
 		Long reservationId, 
-		Long contractId,
+		long contractId,
 		Date fetchTimestamp,
 		Date requestedTimestamp, 
 		String status,
@@ -46,11 +46,11 @@ public class ElixirAudit {
 		this.reservationId = reservationId;
 	}
 
-	public Long getContractId() {
+	public long getContractId() {
 		return contractId;
 	}
 
-	public void setContractId(Long contractId) {
+	public void setContractId(long contractId) {
 		this.contractId = contractId;
 	}
 

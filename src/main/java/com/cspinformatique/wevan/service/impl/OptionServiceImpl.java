@@ -14,6 +14,11 @@ public class OptionServiceImpl implements OptionService {
 	@Autowired private OptionRepository optionRepository;
 	
 	@Override
+	public void deleteByContract(long contract){
+		this.optionRepository.deleteByContract(contract);
+	}
+	
+	@Override
 	public void deleteOption(long id){
 		this.optionRepository.delete(id);
 	}

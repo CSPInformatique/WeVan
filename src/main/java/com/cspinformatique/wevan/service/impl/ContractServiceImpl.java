@@ -130,6 +130,7 @@ public class ContractServiceImpl implements ContractService {
 		}
 	}
 	
+
 	@Override
 	public long generateNewContractId(long reservationId, Date contractStartDate){
 		Contract contract = this.contractRepository.findByReservationId(reservationId);
@@ -144,7 +145,7 @@ public class ContractServiceImpl implements ContractService {
 			boolean newId = false;
 			
 			do{
-				if(this.contractRepository.findById(contractId) != null){
+				if(this.contractRepository.findOne(contractId) != null){
 					contractId += 1;
 				}else{
 					newId = true;
@@ -154,6 +155,7 @@ public class ContractServiceImpl implements ContractService {
 
 			return contractId;
 		}
+
 	}
 	
 	private double calculateDeductible(List<Option> options){
@@ -297,118 +299,118 @@ public class ContractServiceImpl implements ContractService {
 		
 		try{	
 			backendContract = new RestTemplate().exchange(
-					"http://www.we-van.com/api/?id=" + reservationId, 	
-					HttpMethod.GET, 
-					new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
-						new com.cspinformatique.wevan.backend.entity.Contract(),
-						RestUtil.createBasicAuthHeader(
-							"wevan-api", 
-							"7D4gLg"
-						) 
-					), 
-					com.cspinformatique.wevan.backend.entity.Contract.class 
-				).getBody();
+				"http://www.we-van.com/api/?id=" + reservationId, 	
+				HttpMethod.GET, 
+				new HttpEntity<com.cspinformatique.wevan.backend.entity.Contract>(
+					new com.cspinformatique.wevan.backend.entity.Contract(),
+					RestUtil.createBasicAuthHeader(
+						"wevan-api", 
+						"7D4gLg"
+					) 
+				), 
+				com.cspinformatique.wevan.backend.entity.Contract.class 
+			).getBody();
+			
+			Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
+			Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+											backendContract.getEditionDate().substring(13)
+										);
+			
+			// Retreiving the branch linked with the reservation.
+			Branch branch = this.branchService.findOne(backendContract.getAgency());
+			
+			contractId = this.generateNewContractId(reservationId, contractStartDate);
+			
+			Contract existingContract = this.contractRepository.findByReservationId(reservationId);
+			
+			if(existingContract != null){
+				contractId = existingContract.getId();
+			}
+			
+			if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
+				logger.info("Generating contract " + contractId + " from reservation " + reservationId);
 				
-				Date contractStartDate = dateFormat.parse(backendContract.getEditableInfo().getStartDate());
-				Date contractEditionDate =	timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
-												backendContract.getEditionDate().substring(13)
-											);
-				
-				contractId = this.generateNewContractId(reservationId, contractStartDate);
-				
-				Contract existingContract = this.contractRepository.findByReservationId(reservationId);
-				
-				if(existingContract != null){
-					contractId = existingContract.getId();
-				}
-				
-				if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
-					logger.info("Generating contract " + contractId + " from reservation " + reservationId);
-					
-					// Retreiving the branch linked with the reservation.
-					Branch branch = this.branchService.findOne(backendContract.getAgency());
-					
-					if(branch != null){
-						List<Option> options = this.calculateOptions(contractId, backendContract);
-	
-						Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
-						
-						String vehiculeName = "";
-						String vehiculeModel = "";
-						String vehiculeRegistration = "";
-						String googleCalendarId = null;
-						if(vehicule != null){
-							vehiculeName = vehicule.getName() + " " + vehicule.getNumber();
-							vehiculeModel = vehicule.getModel();
-							vehiculeRegistration = vehicule.getRegistration();
-							googleCalendarId = vehicule.getGoogleCalendarId();
-						}
-						
-						double deductible = this.calculateDeductible(options);
-						double deposit = deductible;
-						
-						String kilometersPackage = backendContract.getPayment().getKmPackage();
-						if(kilometersPackage == null){
-							kilometersPackage = "";
-						}
-						
-						Date startDate = this.dateFormat.parse(backendContract.getEditableInfo().getStartDate());
-						Date endDate = this.dateFormat.parse(backendContract.getEditableInfo().getEndDate());
+				if(branch != null){
+					List<Option> options = this.calculateOptions(contractId, backendContract);
 
-						Contract contract =	new Contract(
-												contractId, 
-												reservationId,
-												branch, 
-												this.timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
-												backendContract.getCreationDate().substring(
-													13
-												)), 
-												this.timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
-													backendContract.getEditionDate().substring(
-														13
-													)),
-												Contract.Status.OPEN, 
-												new Driver(
-													0, 
-													backendContract.getUser().getCompany(), 
-													backendContract.getUser().getFirstName(), 
-													backendContract.getUser().getLastName(), 
-													""
-												), 
-												startDate,
-												endDate, 
-												kilometersPackage, 
-												backendContract.getPayment().getAlreadyPaid(), 
-												backendContract.getPayment().getTotalCost(), 
-												vehiculeName,
-												vehiculeModel,
-												vehiculeRegistration,
-												deductible, 
-												deposit, 
-												new ArrayList<Driver>(), 
-												options,
-												false,
-												googleCalendarId,
-												null
-											);
-						
-						contract = this.saveContract(contract);
-						
-						this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "OK", backendContract);
-					}else{
-						String message = "Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.";
-						
-						logger.error(message);
-						
-						this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", backendContract, message);
+					Vehicule vehicule = vehiculeService.findByRegistration(backendContract.getEditableInfo().getLicense());
+					
+					String vehiculeName = "";
+					String vehiculeModel = "";
+					String vehiculeRegistration = "";
+					String googleCalendarId = null;
+					if(vehicule != null){
+						vehiculeName = vehicule.getName() + " " + vehicule.getNumber();
+						vehiculeModel = vehicule.getModel();
+						vehiculeRegistration = vehicule.getRegistration();
+						googleCalendarId = vehicule.getGoogleCalendarId();
 					}
-				}else{
-					String message = "Reservation " + reservationId + " as already been loaded in the system. Skipping.";
 					
-					logger.info(message);
+					double deductible = this.calculateDeductible(options);
+					double deposit = deductible;
+					
+					String kilometersPackage = backendContract.getPayment().getKmPackage();
+					if(kilometersPackage == null){
+						kilometersPackage = "";
+					}
+					
+					Date startDate = this.dateFormat.parse(backendContract.getEditableInfo().getStartDate().substring(0, 10) + " 09:00");
+					Date endDate = this.dateFormat.parse(backendContract.getEditableInfo().getEndDate().substring(0, 10) + " 17:00");
 
+					Contract contract =	new Contract(
+											contractId, 
+											reservationId,
+											branch, 
+											this.timeFormat.parse(backendContract.getCreationDate().substring(0, 11) + 
+											backendContract.getCreationDate().substring(
+												13
+											)), 
+											this.timeFormat.parse(backendContract.getEditionDate().substring(0, 11) + 
+												backendContract.getEditionDate().substring(
+													13
+												)),
+											Contract.Status.OPEN, 
+											new Driver(
+												0, 
+												backendContract.getUser().getCompany(), 
+												backendContract.getUser().getFirstName(), 
+												backendContract.getUser().getLastName(), 
+												""
+											), 
+											startDate,
+											endDate, 
+											kilometersPackage, 
+											backendContract.getPayment().getAlreadyPaid(), 
+											backendContract.getPayment().getTotalCost(), 
+											vehiculeName,
+											vehiculeModel,
+											vehiculeRegistration,
+											deductible, 
+											deposit, 
+											new ArrayList<Driver>(), 
+											options,
+											false,
+											googleCalendarId,
+											null
+										);
+					
+					contract = this.saveContract(contract);
+					
+					this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "OK", backendContract);
+				}else{
+					String message = "Reservation " + reservationId + " could not be saved since " + backendContract.getAgency() + " isn't configured into the system.";
+					
+					logger.error(message);
+					
 					this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", backendContract, message);
 				}
+			}else{
+				String message = "Reservation " + reservationId + " as already been loaded in the system. Skipping.";
+				
+				logger.info(message);
+
+				this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", backendContract, message);
+			}
 		}catch(Exception ex){
 			this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "ERROR", backendContract, ex);
 			
@@ -477,15 +479,15 @@ public class ContractServiceImpl implements ContractService {
 	}
 	
 	@Override
-	public void resetContract(long contractId){
-		Contract contract = this.findOne(contractId);
+	public void resetContract(long id){
+		Contract contract = this.findOne(id);
 		
 		if(contract == null){
-			throw new RuntimeException("Contract " + contractId + " does not exist.");
+			throw new RuntimeException("Contract " + id + " does not exist.");
 		}
 		
 		if(contract.getReservationId() == null){
-			throw new RuntimeException("The contract " + contractId + " does not have a reservation reference.");
+			throw new RuntimeException("The contract " + id + " does not have a reservation reference.");
 		}
 		
 		// Removing all options.
@@ -497,35 +499,49 @@ public class ContractServiceImpl implements ContractService {
 	}
 
 	@Override
+	@Transactional
 	public Contract saveContract(Contract contract) {
-		// Cleaning deleted contract.
-		for(Option option : this.optionService.findByContract(contract.getId())){
-			boolean optionFound = false;
-			for(Option newOption : contract.getOptions()){
-				if(newOption.getId() == option.getId()){
-					optionFound = true;
+		if(contract.getCreationDate() == null){
+			contract.setCreationDate(new Date());
+		}
+		
+		if(contract.getEditionDate() == null){
+			contract.setEditionDate(new Date());
+		}
+		
+		if(contract.getId() != 0){
+			// Cleaning deleted contract.
+			for(Option option : this.optionService.findByContract(contract.getId())){
+				boolean optionFound = false;
+				for(Option newOption : contract.getOptions()){
+					if(newOption.getId() == option.getId()){
+						optionFound = true;
+					}
+				}
+				
+				if(optionFound){
+					this.optionService.save(option);
+				}else{
+					this.optionService.deleteOption(option.getId());
 				}
 			}
 			
-			if(optionFound){
-				this.optionService.save(option);
-			}else{
-				this.optionService.deleteOption(option.getId());
+			// Checking if old calendar event needs to be deleted.
+			Contract oldContract = this.contractRepository.findOne(contract.getId());
+			if(oldContract != null){
+				if(	oldContract.getGoogleCalendarEventId() != null &&
+					oldContract.getGoogleCalendarId().equals(contract.getGoogleCalendarId()) && (
+						oldContract.getStartDate().getTime() != contract.getStartDate().getTime() || 
+						oldContract.getEndDate().getTime() != contract.getEndDate().getTime()
+					)
+				){
+					// Old calender event.
+					this.calendarService.deleteEvent(oldContract);
+				}
 			}
-		}
-		
-		// Checking if old calendar event needs to be deleted.
-		Contract oldContract = this.contractRepository.findById(contract.getId());
-		if(oldContract != null){
-			if(	oldContract.getGoogleCalendarEventId() != null &&
-				oldContract.getGoogleCalendarId().equals(contract.getGoogleCalendarId()) && (
-					oldContract.getStartDate().getTime() != contract.getStartDate().getTime() || 
-					oldContract.getEndDate().getTime() != contract.getEndDate().getTime()
-				)
-			){
-				// Old calender event.
-				this.calendarService.deleteEvent(oldContract);
-			}
+		}else{
+			// Generating a new contract ID.
+			contract.setId(this.generateNewContractId(0, contract.getStartDate()));
 		}
 		
 		// Checking if new calendar event needs to be created.
