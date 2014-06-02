@@ -766,7 +766,7 @@ where contract0_.`id` = $P{CONTRACT_ID}]]>
 				<subreportExpression><![CDATA["Additional-Drivers.jasper"]]></subreportExpression>
 			</subreport>
 			<subreport>
-				<reportElement x="10" y="434" width="250" height="96" uuid="31797c81-eb19-4d03-a83b-2c453de99173"/>
+				<reportElement x="10" y="434" width="250" height="169" uuid="31797c81-eb19-4d03-a83b-2c453de99173"/>
 				<subreportParameter name="contractId">
 					<subreportParameterExpression><![CDATA[$F{id}]]></subreportParameterExpression>
 				</subreportParameter>

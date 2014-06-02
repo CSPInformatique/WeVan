@@ -63,8 +63,8 @@ public class ContractServiceImpl implements ContractService {
 	public void init(){
 		final ContractService contractService = this;
 		
-		this.calendarService.cleanInvalidCalendars();
-		this.calendarService.generateMissingCalendars();
+//		this.calendarService.cleanInvalidCalendars();
+//		this.calendarService.generateMissingCalendars();
 		
 		new Thread(new Runnable() {
 			@Override
