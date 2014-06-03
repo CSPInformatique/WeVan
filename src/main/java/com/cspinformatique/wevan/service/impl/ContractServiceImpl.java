@@ -120,7 +120,7 @@ public class ContractServiceImpl implements ContractService {
 		return this.contractRepository.findOne(id);
 	}
 	
-	public Contract findLastContractModified(){
+	private Contract findLastContractModified(){
 		List<Contract> contracts = this.contractRepository.findLastContractModified();
 		
 		if(contracts.size() > 0){
@@ -129,11 +129,13 @@ public class ContractServiceImpl implements ContractService {
 			return null;
 		}
 	}
-	
 
 	@Override
 	public long generateNewContractId(long reservationId, Date contractStartDate){
-		Contract contract = this.contractRepository.findByReservationId(reservationId);
+		Contract contract = null;
+		if(reservationId != 0l){
+			contract = this.contractRepository.findByReservationId(reservationId);
+		}
 		
 		if(contract != null){
 			return contract.getId();
@@ -491,7 +493,10 @@ public class ContractServiceImpl implements ContractService {
 		}
 		
 		// Removing all options.
+		logger.info("Deleting options for contract " + contract.getId());
 		for(Option option : contract.getOptions()){
+			logger.info("Deleting option " + option.getId());
+			
 			this.optionService.deleteOption(option.getId());
 		}
 		
@@ -527,39 +532,39 @@ public class ContractServiceImpl implements ContractService {
 			}
 			
 			// Checking if old calendar event needs to be deleted.
-			Contract oldContract = this.contractRepository.findOne(contract.getId());
-			if(oldContract != null){
-				if(	oldContract.getGoogleCalendarEventId() != null &&
-					oldContract.getGoogleCalendarId().equals(contract.getGoogleCalendarId()) && (
-						oldContract.getStartDate().getTime() != contract.getStartDate().getTime() || 
-						oldContract.getEndDate().getTime() != contract.getEndDate().getTime()
-					)
-				){
-					// Old calender event.
-					this.calendarService.deleteEvent(oldContract);
-				}
-			}
+//			Contract oldContract = this.contractRepository.findOne(contract.getId());
+//			if(oldContract != null){
+//				if(	oldContract.getGoogleCalendarEventId() != null &&
+//					oldContract.getGoogleCalendarId().equals(contract.getGoogleCalendarId()) && (
+//						oldContract.getStartDate().getTime() != contract.getStartDate().getTime() || 
+//						oldContract.getEndDate().getTime() != contract.getEndDate().getTime()
+//					)
+//				){
+//					// Old calender event.
+//					this.calendarService.deleteEvent(oldContract);
+//				}
+//			}
 		}else{
 			// Generating a new contract ID.
 			contract.setId(this.generateNewContractId(0, contract.getStartDate()));
 		}
 		
 		// Checking if new calendar event needs to be created.
-		Vehicule vehicule = vehiculeService.findByRegistration(contract.getVehiculeRegistration());
-		if(vehicule != null){
-			if(vehicule.getGoogleCalendarId() != null){
-				if(contract.getEndDate().getTime() > new Date().getTime()){
-					contract.setGoogleCalendarId(vehicule.getGoogleCalendarId());
-					contract.setGoogleCalendarEventId(this.calendarService.createEvent(vehicule, contract));
-				}else{
-					logger.debug("Innactive contract. Skipping calendar event creation.");
-				}
-			}else{
-				logger.debug("Vehicule " + vehicule.getRegistration() + " has no Google Calendar Id configured. Skipping calendar event creation.");
-			}
-		}else{
-			logger.debug("Skipping calendar event creating since no vehicule could be found for registration " + contract.getVehiculeRegistration());
-		}
+//		Vehicule vehicule = vehiculeService.findByRegistration(contract.getVehiculeRegistration());
+//		if(vehicule != null){
+//			if(vehicule.getGoogleCalendarId() != null){
+//				if(contract.getEndDate().getTime() > new Date().getTime()){
+//					contract.setGoogleCalendarId(vehicule.getGoogleCalendarId());
+//					contract.setGoogleCalendarEventId(this.calendarService.createEvent(vehicule, contract));
+//				}else{
+//					logger.debug("Innactive contract. Skipping calendar event creation.");
+//				}
+//			}else{
+//				logger.debug("Vehicule " + vehicule.getRegistration() + " has no Google Calendar Id configured. Skipping calendar event creation.");
+//			}
+//		}else{
+//			logger.debug("Skipping calendar event creating since no vehicule could be found for registration " + contract.getVehiculeRegistration());
+//		}
 		
 		return this.contractRepository.save(contract);
 	}

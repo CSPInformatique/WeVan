@@ -38,7 +38,7 @@ public class ContractController {
 	}
 	
 	@RequestMapping(value="/{contractId}", method=RequestMethod.GET, produces="application/json")
-	public @ResponseBody Contract getContract(@PathVariable long contractId, Model model){		
+	public @ResponseBody Contract getContract(@PathVariable long contractId, Model model){
 		return contractService.findOne(contractId);
 	}	
 	
@@ -63,9 +63,9 @@ public class ContractController {
 		this.contractService.resetContract(id);
 	}
 	
-	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(method={RequestMethod.POST, RequestMethod.PUT}, produces="application/json", value={"", "/{id}"})
-	public void saveContract(@RequestBody Contract contract){
-		this.contractService.saveContract(contract);
+	public @ResponseBody Contract saveContract(@RequestBody Contract contract){
+		return this.contractService.saveContract(contract);
 	}
 }

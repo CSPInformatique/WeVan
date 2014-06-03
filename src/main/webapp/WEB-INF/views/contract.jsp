@@ -427,7 +427,7 @@
 		</div>
 		
 		<div class="reload">
-			<button class="btn btn-primary">Recharger de We-van.com</button>
+			<button class="btn btn-primary">Recharger we-van.com</button>
 		</div>
 		
 		<div class="clearfix"></div>

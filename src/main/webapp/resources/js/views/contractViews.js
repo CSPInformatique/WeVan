@@ -128,7 +128,12 @@ window.ContractPageView = Backbone.View.extend({
     		})
     	);
 
-        $(".editContract.modal .modal-title span").html(contract.id);
+        var contractIdSpan = "";
+        if(contract.id != undefined){
+            contractIdSpan = contract.id;
+        }
+
+        $(".editContract.modal .modal-title span").html(contractIdSpan);
     	
     	for(var driverIndex in contract.additionalDrivers){    		
     		this.addAdditionalDriver(contract.additionalDrivers[driverIndex]);
@@ -195,8 +200,8 @@ window.ContractPageView = Backbone.View.extend({
     
     printContract: function(contractId){
     	this.saveContract({
-    		callback : function(){
-    			window.open(ctx + "/contract/" + $('.editContract input.id').val());
+    		callback : function(resultContract){
+    			window.open(ctx + "/contract/" + resultContract.id);
     		} 
     	});
     },
@@ -404,14 +409,14 @@ window.ContractPageView = Backbone.View.extend({
 		);
 
         contract.save({}, { 
-            success : function(resp){
+            success : function(contractModel, contractResult){
                 model.fetchWevan = false;
 
                 model.fetch().complete(function(){
                     view.hideEditContractLoading();
                     
                     if(options != null && options.callback != null){
-                        options.callback();
+                        options.callback(contractResult);
                     }
                 });
             }
