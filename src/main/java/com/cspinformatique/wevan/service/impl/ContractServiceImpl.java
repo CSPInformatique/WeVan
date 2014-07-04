@@ -317,7 +317,19 @@ public class ContractServiceImpl implements ContractService {
 					
 				}
 				
-				if(forceUpdate || existingContract == null || existingContract.getEditionDate().getTime() > contractEditionDate.getTime()){
+				/*	Any of the following condition will allow the contract to be persisted.
+				 * 		1 - forceUpdate flag to true.
+				 * 		2 - No existing contract for the reservationId.
+				 * 		3 - The date of the existing contrat doesn't match with the one retreived from wevan.
+				 * 		4 - Vehicule from the old and new contract doesn't match.
+				 */
+				
+				if(	forceUpdate || 
+					existingContract == null || 
+					existingContract.getEditionDate().getTime() > contractEditionDate.getTime() ||
+					(backendContract.getEditableInfo().getLicense() == null && existingContract.getVehiculeRegistration() != null) || 
+					!backendContract.getEditableInfo().getLicense().equals(existingContract.getVehiculeRegistration())
+				){
 					logger.info("Generating contract " + contractId + " from reservation " + reservationId);
 					
 					// Retreiving the branch linked with the reservation.
