@@ -2,8 +2,6 @@ package com.cspinformatique.wevan.controller;
 
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +26,7 @@ import com.cspinformatique.wevan.service.VehiculeService;
 
 @Controller
 @RequestMapping("/branch")
-public class BranchController {
-	private static final Logger logger = LoggerFactory.getLogger(BranchController.class);
-	
+public class BranchController {	
 	@Autowired private BranchService branchService;
 	@Autowired private ContractService contractService;
 	@Autowired private VehiculeService vehiculeService;
@@ -67,20 +63,7 @@ public class BranchController {
 		@RequestParam Integer results,
 		@RequestParam String sortBy,
 		@RequestParam Boolean ascending
-	){
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					contractService.fetchContracts();
-					
-					contractService.fetchRecentContractsOnError();
-				}catch(Exception ex){
-					logger.error("Unable to retreive contracts from we-van.com", ex);
-				}
-			}
-		}).start();
-		
+	){		
 		if(page == null) page = 0;
 		if(results == null) results = 50;
 		if(sortBy == null) sortBy = "startDate";

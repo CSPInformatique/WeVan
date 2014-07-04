@@ -1,6 +1,6 @@
 package com.cspinformatique.wevan.backend.entity;
 
-public class Contract {
+public class WevanReservation {
 	private String agency;
 	private String creationDate;
 	private String editionDate;
@@ -8,11 +8,11 @@ public class Contract {
 	private Payment payment;
 	private EditableInfo editableInfo;
 	
-	public Contract(){
+	public WevanReservation(){
 		
 	}
 	
-	public Contract(
+	public WevanReservation(
 		String agency, 
 		String creationDate, 
 		String editionDate,
