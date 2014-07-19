@@ -24,6 +24,11 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 	private ElixirAuditRepository elixirAuditRepository;
 
 	@Override
+	public List<ElixirAudit> findAllOrderByFetchTimestampDesc(){
+		return this.elixirAuditRepository.findAllOrderByFetchTimestampDesc();
+	}
+	
+	@Override
 	public List<ElixirAudit> findAuditOnErrorSince(Date timestamp){
 		return this.elixirAuditRepository.findAuditOnErrorSince(timestamp);
 	}

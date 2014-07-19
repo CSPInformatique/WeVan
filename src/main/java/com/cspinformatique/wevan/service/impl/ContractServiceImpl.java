@@ -297,8 +297,18 @@ public class ContractServiceImpl implements ContractService {
 	
 	@Override
 	public void fetchContract(long reservationId, boolean forceUpdate, Date requestedTimestamp){
+		this.fetchContract(reservationId, 0, forceUpdate, requestedTimestamp);
+	}
+	
+	@Override
+	public void fetchContract(long reservationId, int branchId, boolean forceUpdate, Date requestedTimestamp){
 		WevanReservation wevanReservation = null;
 		long contractId = 0;
+		
+		Branch branch = null;
+		if(branchId != 0){
+			branch = this.branchService.findOne(branchId);
+		}
 		
 		try{
 			wevanReservation = new RestTemplate().exchange(
@@ -314,9 +324,13 @@ public class ContractServiceImpl implements ContractService {
 					WevanReservation.class 
 				).getBody();
 				
-				logger.info("Received : " + wevanReservation);
-				
-			this.processReservation(reservationId, wevanReservation, forceUpdate, requestedTimestamp);
+			logger.info("Received : " + wevanReservation);
+			
+			if(branchId == 0 || branch.getName().equals(wevanReservation.getAgency())){				
+				this.processReservation(reservationId, wevanReservation, forceUpdate, requestedTimestamp);
+			}else{
+				logger.debug("Reservation " + reservationId + " is not assigned to branch " + branch.getName() + ". Skipping.");
+			}
 		}catch(RuntimeException ex){
 			this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "ERROR", wevanReservation, ex);
 			
@@ -336,9 +350,24 @@ public class ContractServiceImpl implements ContractService {
 
 		logger.debug("Contract on error fetch completed.");
 	}
-	
+
 	@Override
 	public void fetchContracts(Date startDate){
+		this.fetchContracts(false, startDate);
+	}
+	
+	@Override
+	public void fetchContracts(int branch, Date startDate){
+		this.fetchContract(branch, false, startDate);
+	}
+	
+	@Override
+	public void fetchContracts(boolean forceUpdate, Date startDate){
+		this.fetchContracts(0, forceUpdate, startDate);
+	}
+	
+	@Override
+	public void fetchContracts(int branchId, boolean forceUpdate, Date startDate){	
 		if(!contractFetchInProgress){
 			try{
 				contractFetchInProgress = true;
@@ -364,7 +393,7 @@ public class ContractServiceImpl implements ContractService {
 				
 				for(long reservationId : reservationIds){
 					try{
-						this.fetchContract(reservationId, false, new Date(timestamp));
+						this.fetchContract(reservationId, branchId, forceUpdate, new Date(timestamp));
 					}catch(Exception ex){
 						logger.error("Error while processing reservation : " + reservationId, ex);
 					}			
@@ -377,6 +406,11 @@ public class ContractServiceImpl implements ContractService {
 		}else{
 			logger.info("Contracts are already being fetch from backend.");
 		}
+	}
+	
+	@Override
+	public boolean isContractFetchInProgress(){
+		return this.contractFetchInProgress;
 	}
 	
 	@Override

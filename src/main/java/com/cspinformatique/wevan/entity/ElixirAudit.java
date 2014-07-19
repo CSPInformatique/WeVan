@@ -6,6 +6,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name="elixiraudit")
 public class ElixirAudit {
@@ -80,6 +82,7 @@ public class ElixirAudit {
 		this.status = status;
 	}
 
+	@JsonIgnore
 	public String getPayload() {
 		return payload;
 	}

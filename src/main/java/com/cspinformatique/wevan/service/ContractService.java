@@ -21,10 +21,18 @@ public interface ContractService {
 	public void fetchContract(long reservationId);
 	
 	public void fetchContract(long reservationId, boolean forceUpdate);
-	
+		
 	public void fetchContract(long reservationId, boolean forceUpdate, Date requestedTimestamp);
 	
+	public void fetchContract(long reservationId, int branchId, boolean forceUpdate, Date requestedTimestamp);
+	
+	public void fetchContracts(boolean forceUpdate, Date startDate);
+	
 	public void fetchContracts(Date startDate);
+	
+	public void fetchContracts(int branch, Date startDate);
+	
+	public void fetchContracts(int branchId, boolean forceUpdate, Date startDate);
 	
 	public void fetchRecentContractsOnError();
 	
@@ -33,6 +41,8 @@ public interface ContractService {
 	public Contract findOne(long id);
 	
 	public long generateNewContractId(long reservationId, Date contractStartDate);
+	
+	public boolean isContractFetchInProgress();
 	
 	public void processReservation(long reservationId, WevanReservation wevanReservation, boolean forceUpdate, Date requestedTimestamp);
 	

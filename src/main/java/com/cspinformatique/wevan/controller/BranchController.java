@@ -1,5 +1,6 @@
 package com.cspinformatique.wevan.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,12 @@ public class BranchController {
 	@RequestMapping("/{branch}/vehicule")
 	public @ResponseBody List<Vehicule> findBranchVehicule(@PathVariable int branch){
 		return this.vehiculeService.findByBranch(this.branchService.findOne(branch));
+	}
+	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@RequestMapping(value="/{branch}/contract", params={"fetch", "startDate"}, method=RequestMethod.POST)
+	public void fetchBranchContracts(@PathVariable int branch, @RequestParam Date startDate){
+		this.contractService.fetchContracts(branch, startDate);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
