@@ -4,21 +4,35 @@
 	<groupId>com.cspinformatique</groupId>
 	<artifactId>wevan</artifactId>
 	<packaging>war</packaging>
-	<version>0.1.1</version>
-	<name>wevan Maven Webapp</name>
-	<url>http://maven.apache.org</url>
-
-<!-- 	<repositories> -->
-<!-- 		<repository> -->
-<!-- 			<id>soluvas</id> -->
-<!-- 			<url>http://maven.soluvas.org/thirdparty/</url> -->
-<!-- 		</repository> -->
-<!-- 	</repositories> -->
+	<version>0.2.0-RC1</version>
+	
+	<name>Wevan</name>
+	
+	<url>https://github.com/CSPInformatique/wevan</url>
 
 	<build>
 		<finalName>wevan</finalName>
 
 		<plugins>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<version>2.3</version>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptors>
+								<descriptor>src/assembly/assembly.xml</descriptor>
+							</descriptors>
+							<appendAssemblyId>false</appendAssemblyId>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -238,4 +252,12 @@
 			<version>1.18.0-rc</version>
 		</dependency>
 	</dependencies>
+	<organization>
+		<name>CSP Informatique</name>
+		<url>http://www.cspinformatique.com</url>
+	</organization>
+	<scm>
+		<url>https://github.com/CSPInformatique/wevan</url>
+		<developerConnection>Daniel Lavoie</developerConnection>
+	</scm>
 </project>
