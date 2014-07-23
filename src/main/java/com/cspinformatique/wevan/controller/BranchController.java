@@ -1,9 +1,8 @@
 package com.cspinformatique.wevan.controller;
 
+import java.util.Date;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -28,9 +27,7 @@ import com.cspinformatique.wevan.service.VehiculeService;
 
 @Controller
 @RequestMapping("/branch")
-public class BranchController {
-	private static final Logger logger = LoggerFactory.getLogger(BranchController.class);
-	
+public class BranchController {	
 	@Autowired private BranchService branchService;
 	@Autowired private ContractService contractService;
 	@Autowired private VehiculeService vehiculeService;
@@ -46,6 +43,12 @@ public class BranchController {
 		return this.vehiculeService.findByBranch(this.branchService.findOne(branch));
 	}
 	
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	@RequestMapping(value="/{branch}/contract", params={"fetch", "startDate"}, method=RequestMethod.POST)
+	public void fetchBranchContracts(@PathVariable int branch, @RequestParam Date startDate){
+		this.contractService.fetchContracts(branch, startDate);
+	}
+	
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value="/{branch}/contract", params={"page", "results", "sortBy", "ascending"})
 	public @ResponseBody Page<Contract> findBranchContract(
@@ -53,33 +56,21 @@ public class BranchController {
 		@RequestParam Integer page,
 		@RequestParam Integer results,
 		@RequestParam String sortBy,
-		@RequestParam Boolean ascending,
-		@RequestParam Boolean fetchWevan
+		@RequestParam Boolean ascending
 	){
-		return this.findBranchContract(branch, null, page, results, sortBy, ascending, fetchWevan);
+		return this.findBranchContract(branch, null, page, results, sortBy, ascending);
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
-	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results", "sortBy", "ascending", "fetchWevan"})
+	@RequestMapping(value="/{branch}/contract", params={"status", "page", "results", "sortBy", "ascending"})
 	public @ResponseBody Page<Contract> findBranchContract(
 		@PathVariable int branch, 
 		@RequestParam List<Status> status,
 		@RequestParam Integer page,
 		@RequestParam Integer results,
 		@RequestParam String sortBy,
-		@RequestParam Boolean ascending,
-		@RequestParam Boolean fetchWevan
-	){
-		if(fetchWevan != null && fetchWevan){
-			try{
-				contractService.fetchContracts();
-				
-				contractService.fetchRecentContractsOnError();
-			}catch(Exception ex){
-				logger.error("Unable to retreive contracts from we-van.com", ex);
-			}
-		}
-		
+		@RequestParam Boolean ascending
+	){		
 		if(page == null) page = 0;
 		if(results == null) results = 50;
 		if(sortBy == null) sortBy = "startDate";

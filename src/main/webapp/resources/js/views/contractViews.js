@@ -56,7 +56,7 @@ window.ContractPageView = Backbone.View.extend({
     },
 
     getContractFromContent : function(contractId){
-        var contract;
+        var contract = null;
 
         var content = this.model.get("content");
 
@@ -74,15 +74,13 @@ window.ContractPageView = Backbone.View.extend({
         $(".editContract input, .editContract button").prop("disabled", false);
 
         if($('.editContract input.id').val() == null){
-            $("button.reset").prop("disabled", true)
+            $("button.reset").prop("disabled", true);
         }
 
         $(".editContract .loading").hide();
     },
     
     initialize : function() {
-        var view = this;
-
         // Shows loading gif.
         $(this.$el.selector).html(_.template($('#loading-template').html())());
 
@@ -244,8 +242,7 @@ window.ContractPageView = Backbone.View.extend({
                 contractPageView.model.results + "/" +
                 contractPageView.model.sortBy + "/" +
                 contractPageView.model.ascending + "/" +
-                buildStatusStringForRouter() + "/" +
-                "false", 
+                buildStatusStringForRouter(), 
             {trigger: true}
         );
 
@@ -256,8 +253,7 @@ window.ContractPageView = Backbone.View.extend({
                 contractPageView.model.results + "/" +
                 contractPageView.model.sortBy + "/" +
                 contractPageView.model.ascending + "/" +
-                buildStatusStringForRouter() + "/" + 
-                "false", 
+                buildStatusStringForRouter(), 
             {trigger: true}
         );
         
@@ -267,7 +263,7 @@ window.ContractPageView = Backbone.View.extend({
             var ascending = true;
             var sortBy = $(this).attr("data-sortBy");
             if(sortBy == contractPageView.model.sortBy){
-                var ascending = contractPageView.model.ascending == "true";
+                ascending = contractPageView.model.ascending == "true";
 
                 $(element).closest("th").find(ascending ? ".ascending" : ".descending").removeClass("hide");
 
@@ -282,8 +278,7 @@ window.ContractPageView = Backbone.View.extend({
                     contractPageView.model.results + "/" +
                     sortBy + "/" +
                     ascending + "/" +
-                    buildStatusStringForRouter() + "/" + 
-                    "false", 
+                    buildStatusStringForRouter(), 
                 {trigger: true}
             );
         });
@@ -410,8 +405,6 @@ window.ContractPageView = Backbone.View.extend({
 
         contract.save({}, { 
             success : function(contractModel, contractResult){
-                model.fetchWevan = false;
-
                 model.fetch().complete(function(){
                     view.hideEditContractLoading();
                     

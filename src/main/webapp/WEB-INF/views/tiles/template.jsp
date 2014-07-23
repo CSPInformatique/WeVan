@@ -21,7 +21,7 @@
 	    <!-- Custom styles for this template -->
 	    <link href="<c:url value="/resources/css/wevan.css" />" rel="stylesheet">
 	    
-		<script src="<c:url value="/resources/js/libs/jquery.js" />"></script>
+		<script src="<c:url value="/resources/lib/jquery-2.1.1/jquery-2.1.1.js" />"></script>
 		<script src="<c:url value="/resources/js/libs/underscore.js" />"></script>
 	    <script src="<c:url value="/resources/js/libs/backbone.js" />"></script>
 	    <script src="<c:url value="/resources/lib/bootstrap/js/bootstrap.min.js" />"></script>

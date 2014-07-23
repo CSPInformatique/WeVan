@@ -7,22 +7,23 @@
 
 	var router = new Backbone.Router({
 		routes: {
-			":branch/:page/:results/:sortBy/:ascending/:fetchWevan": "loadPage",  // #1/1/50/startDate/true
-			":branch/:page/:results/:sortBy/:ascending/:status/:fetchWevan": "loadPageWithStatus"  // #1/1/50/startDate/true/IN_PROGRESS&OPEN
+			":branch/:page/:results/:sortBy/:ascending": "loadPage",  // #1/1/50/startDate/true
+			":branch/:page/:results/:sortBy/:ascending/": "loadPage",  // #1/1/50/startDate/true
+			":branch/:page/:results/:sortBy/:ascending/:status": "loadPageWithStatus"  // #1/1/50/startDate/true/IN_PROGRESS&OPEN
 		}
 	});
 	
 	router.on(
 		"route:loadPage",
-		function(branch, pageNumber, results, sortBy, ascending, fetchWevan) {
-			loadPage(branch, pageNumber, results, sortBy, ascending, null, fetchWevan);
+		function(branch, pageNumber, results, sortBy, ascending) {
+			loadPage(branch, pageNumber, results, sortBy, ascending, null);
 		}
 	);
 	
 	router.on(
 		"route:loadPageWithStatus",
-		function(branch, pageNumber, results, sortBy, ascending, status, fetchWevan) {
-			loadPage(branch, pageNumber, results, sortBy, ascending, status, fetchWevan);
+		function(branch, pageNumber, results, sortBy, ascending, status) {
+			loadPage(branch, pageNumber, results, sortBy, ascending, status);
 		}
 	);
 	
@@ -64,7 +65,7 @@
 		}
 	};
 	
-	var loadPage = function(branch, pageNumber, results, sortBy, ascending, status, fetchWevan){		
+	var loadPage = function(branch, pageNumber, results, sortBy, ascending, status){		
 		var page = new ContractPage();
 				
 		// Setting branch
@@ -95,9 +96,6 @@
 				page.status.push(statusData[statusIndex]);
 			}
 		}
-		
-		// Fetch Wevan flag.
-		page.fetchWevan = fetchWevan;
 			
 		// Loading contrat page view.
 		contractPageView =	new ContractPageView({model : page});
@@ -129,8 +127,7 @@
 					contractPageView.model.results + "/" +
 					contractPageView.model.sortBy + "/" +
 					contractPageView.model.ascending + "/" +
-					buildStatusStringForRouter() + 
-					"/false", 
+					buildStatusStringForRouter(), 
 				{trigger: true}
 			);
 		});
@@ -142,14 +139,13 @@
 				contractPageView.model.results, 
 				contractPageView.model.sortBy, 
 				contractPageView.model.ascending, 
-				buildStatusStringForRouter(), 
-				true
+				buildStatusStringForRouter()
 			);
 		});
 		
 		if(location.hash == ""){
 			router.navigate(
-				getBranchForRouter() + "/0/50/startDate/true/OPEN&IN_PROGRESS/true", 
+				getBranchForRouter() + "/0/50/startDate/true/OPEN&IN_PROGRESS", 
 				{trigger: true}
 			);
 		}

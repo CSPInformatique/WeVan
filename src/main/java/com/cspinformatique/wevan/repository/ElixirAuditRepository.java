@@ -10,6 +10,9 @@ import org.springframework.data.repository.query.Param;
 import com.cspinformatique.wevan.entity.ElixirAudit;
 
 public interface ElixirAuditRepository extends JpaRepository<ElixirAudit, Long> {
+	@Query("SELECT elixirAudit FROM ElixirAudit elixirAudit ORDER BY fetchTimestamp DESC")
+	public List<ElixirAudit> findAllOrderByFetchTimestampDesc();
+	
 	@Query("SELECT audit FROM ElixirAudit audit WHERE status = 'ERROR' AND fetchTimestamp > :timestamp ")
 	public List<ElixirAudit> findAuditOnErrorSince(@Param("timestamp") Date timestamp);
 }

@@ -57,6 +57,12 @@ public class ContractController {
         return new ModelAndView("pdfReport", model);
     }
 	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(method=RequestMethod.GET, produces="application/json", params="fetchStatus")
+	public boolean isContractFetchInProgress(){
+		return this.contractService.isContractFetchInProgress();
+	}
+	
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@RequestMapping(method=RequestMethod.PUT, produces="application/json", value="/{id}", params="reset")
 	public void resetContract(@PathVariable long id){

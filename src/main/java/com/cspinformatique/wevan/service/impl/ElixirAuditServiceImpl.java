@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cspinformatique.wevan.backend.entity.Contract;
+import com.cspinformatique.wevan.backend.entity.WevanReservation;
 import com.cspinformatique.wevan.entity.ElixirAudit;
 import com.cspinformatique.wevan.repository.ElixirAuditRepository;
 import com.cspinformatique.wevan.service.ElixirAuditService;
@@ -24,6 +24,11 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 	private ElixirAuditRepository elixirAuditRepository;
 
 	@Override
+	public List<ElixirAudit> findAllOrderByFetchTimestampDesc(){
+		return this.elixirAuditRepository.findAllOrderByFetchTimestampDesc();
+	}
+	
+	@Override
 	public List<ElixirAudit> findAuditOnErrorSince(Date timestamp){
 		return this.elixirAuditRepository.findAuditOnErrorSince(timestamp);
 	}
@@ -34,9 +39,9 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 		long contractId,
 		Date requestedTimestamp, 
 		String status, 
-		Contract contract
+		WevanReservation wevanReservation
 	){
-		this.save(reservationId, contractId, requestedTimestamp, status, contract, "");
+		this.save(reservationId, contractId, requestedTimestamp, status, wevanReservation, "");
 	}
 
 	@Override
@@ -45,7 +50,7 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 		long contractId,
 		Date requestedTimestamp, 
 		String status, 
-		Contract contract,
+		WevanReservation wevanReservation,
 		Throwable cause
 	){
 		// Error handling.
@@ -60,7 +65,7 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 			error = "Cause could not be transcoded to text.";
 		}
 		
-		this.save(reservationId, contractId, requestedTimestamp, status, contract, error);
+		this.save(reservationId, contractId, requestedTimestamp, status, wevanReservation, error);
 	}
 	
 	@Override
@@ -69,14 +74,14 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 		long contractId,
 		Date requestedTimestamp, 
 		String status, 
-		Contract contract,
+		WevanReservation wevanReservation,
 		String cause
 	){
 		try{
 			// Payload hanlding.
 			String payload = null;
 			try{
-				payload = new ObjectMapper().writeValueAsString(contract);
+				payload = new ObjectMapper().writeValueAsString(wevanReservation);
 			
 			}catch(JsonProcessingException jsonProcessingEx){
 				logger.error("Payload will not be transcoded to JSON.", jsonProcessingEx);
