@@ -24,6 +24,7 @@
 							<goal>single</goal>
 						</goals>
 						<configuration>
+							<finalName>docker</finalName>
 							<descriptors>
 								<descriptor>src/assembly/assembly.xml</descriptor>
 							</descriptors>
