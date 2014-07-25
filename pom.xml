@@ -4,7 +4,7 @@
 	<groupId>com.cspinformatique</groupId>
 	<artifactId>wevan</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.0-RC2</version>
+	<version>0.2.0-RC3</version>
 	
 	<name>Wevan</name>
 	
@@ -63,7 +63,7 @@
 		<dependency>
 			<groupId>com.cspinformatique</groupId>
 			<artifactId>commons</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>commons-lang</groupId>
