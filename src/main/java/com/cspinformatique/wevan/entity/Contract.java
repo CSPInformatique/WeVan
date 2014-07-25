@@ -228,7 +228,7 @@ public class Contract {
 	}
 
     @JoinTable(
-	    name="contractAdditionalDriver",
+	    name="ContractAdditionalDriver",
 	    joinColumns = @JoinColumn( name="contract", referencedColumnName="id"),
 	    inverseJoinColumns = @JoinColumn( name="driver", referencedColumnName="id")
     )
