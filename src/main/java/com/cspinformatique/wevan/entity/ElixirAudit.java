@@ -8,8 +8,8 @@ import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+@Table
 @Entity
-@Table(name="elixiraudit")
 public class ElixirAudit {
 	private Long reservationId;
 	private Long contractId;

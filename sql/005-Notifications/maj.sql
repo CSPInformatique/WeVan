@@ -1,4 +1,4 @@
-CREATE TABLE `wevan-test`.`reservationnotification` (
+CREATE TABLE `wevan-test`.`reservationNotification` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `reservationId` INT NOT NULL,
   `timestamp` DATETIME NOT NULL,
