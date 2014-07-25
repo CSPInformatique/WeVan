@@ -64,7 +64,7 @@ public class User implements UserDetails {
 	
 	@OneToMany(fetch=FetchType.EAGER)
 	@JoinTable(
-		name="userrole", 
+		name="UserRole", 
 		joinColumns=@JoinColumn(name="user", referencedColumnName="username"), 
 		inverseJoinColumns=@JoinColumn(name="role", referencedColumnName="id")
 	)
