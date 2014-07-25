@@ -13,7 +13,7 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
-@Entity(name="user")
+@Entity
 public class User implements UserDetails {
 	private static final long serialVersionUID = 487179158734855592L;
 	

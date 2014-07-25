@@ -4,11 +4,9 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-@Table
 @Entity
 public class ElixirAudit {
 	private Long reservationId;

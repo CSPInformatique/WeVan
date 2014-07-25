@@ -8,7 +8,7 @@ import javax.persistence.Transient;
 
 import org.springframework.security.core.GrantedAuthority;
 
-@Entity(name="role")
+@Entity
 public class Role implements GrantedAuthority{
 	private static final long serialVersionUID = 1916330272585475972L;
 	

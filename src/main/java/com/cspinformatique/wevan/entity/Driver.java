@@ -5,7 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-@Entity(name="driver")
+@Entity
 public class Driver {
 	private int id;
 	private String corporateName;
