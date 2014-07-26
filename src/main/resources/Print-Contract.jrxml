@@ -47,9 +47,9 @@
 	driver2_.`firstName`,
 	driver2_.`lastName`
 from 
-	`contract` contract0_ left outer join 
-	`branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
-	`driver` driver2_ on contract0_.driver=driver2_.`id`
+	`Contract` contract0_ left outer join 
+	`Branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
+	`Driver` driver2_ on contract0_.driver=driver2_.`id`
 where contract0_.`id` = $P{CONTRACT_ID}]]>
 	</queryString>
 	<field name="id" class="java.lang.String">
