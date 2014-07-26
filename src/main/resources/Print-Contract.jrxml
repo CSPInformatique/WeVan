@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Created with Jaspersoft Studio version last-->
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="Print-Contract" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d5a5ecb1-3745-4f02-a921-2f20b9df976f">
-	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="JDBC Contract"/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="database"/>
 	<style name="Style" forecolor="#00A1CB" pattern="" fontName="Amaranth"/>
 	<parameter name="CONTRACT_ID" class="java.lang.Integer"/>
 	<queryString language="SQL">
@@ -12,7 +12,7 @@
 	contract0_.`creationDate`,
 	FORMAT(contract0_.`deductible`, 2) as deductible,
 	FORMAT(contract0_.`deposit`, 2) as deposit,
-	contract0_.driver,
+	contract0_.driver, 
 	contract0_.`editionDate`,
 	DATE_FORMAT(contract0_.`endDate`, '%d/%m/%Y') as endDate,
 	DATE_FORMAT(contract0_.`endDate`, '%H:%i') as endTime,
@@ -47,9 +47,9 @@
 	driver2_.`firstName`,
 	driver2_.`lastName`
 from 
-	`contract` contract0_ left outer join 
-	`branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
-	`driver` driver2_ on contract0_.driver=driver2_.`id`
+	`Contract` contract0_ left outer join 
+	`Branch` branch1_ on contract0_.branchId=branch1_.`id` left outer join 
+	`Driver` driver2_ on contract0_.driver=driver2_.`id`
 where contract0_.`id` = $P{CONTRACT_ID}]]>
 	</queryString>
 	<field name="id" class="java.lang.String">
