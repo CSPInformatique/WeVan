@@ -1,42 +1,29 @@
 package com.cspinformatique.wevan.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import com.cspinformatique.wevan.entity.ReservationNotification;
-import com.cspinformatique.wevan.entity.ReservationNotification.Status;
-import com.cspinformatique.wevan.repository.ReservationNotificationRepository;
+import com.cspinformatique.redis.core.entity.Message;
+import com.cspinformatique.redis.message.client.service.MessageService;
 import com.cspinformatique.wevan.service.ContractService;
 import com.cspinformatique.wevan.service.ReservationService;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
-	@Autowired private ReservationNotificationRepository reservationNotificationRepository;
+	@Autowired private MessageService messageService;
 	
 	@Autowired private ContractService contractService;
 	
 	@Override
-	@Scheduled(fixedDelay=5000)
-	public void processNewReservations() {
-		for(ReservationNotification reservationNotification : this.reservationNotificationRepository.findByStatusOrderByTimestampAsc(Status.NEW)){
-			try{
-				this.contractService.fetchContract(reservationNotification.getReservationId(), true);
-				
-				reservationNotification.setStatus(Status.PROCESSED);
-			}catch(Exception ex){
-				reservationNotification.setStatus(Status.ON_ERROR);
-			}
+	public boolean processNextReservation(){		
+		Message message = messageService.consumeMessageFromQueue();
 			
-			this.reservationNotificationRepository.save(reservationNotification);
+		if(message != null){
+			this.contractService.fetchContract(Long.valueOf(message.getMessage()), true);
+			
+			return true;
 		}
-
-		this.contractService.fetchRecentContractsOnError();
+		
+		return false;
 	}
-
-	@Override
-	public ReservationNotification saveNotification(ReservationNotification reservationNotification) {
-		return this.reservationNotificationRepository.save(reservationNotification);
-	}
-
 }

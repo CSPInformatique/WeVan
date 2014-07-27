@@ -191,7 +191,7 @@
           	<tr>
           		<td>Somme déjà versée :</td>
               	<td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.amountAlreadyPaid}" /> &euro; TTC</td>
-          	</td>
+          	</tr>
             <tr>
               <td>Montant total :</td>
               <td class="value"><fmt:formatNumber type="number" minFractionDigits="2" maxFractionDigits="2" value="${contract.totalAmount}" /> &euro; TTC</td>
