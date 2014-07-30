@@ -4,7 +4,7 @@
 	<groupId>com.cspinformatique</groupId>
 	<artifactId>wevan</artifactId>
 	<packaging>war</packaging>
-	<version>0.2.0-RC3</version>
+	<version>0.3.0</version>
 	
 	<name>Wevan</name>
 	
