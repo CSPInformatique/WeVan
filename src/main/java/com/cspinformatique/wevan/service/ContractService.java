@@ -35,6 +35,8 @@ public interface ContractService {
 	public void fetchContracts(int branch, Date startDate);
 	
 	public void fetchContracts(int branchId, boolean forceUpdate, Date startDate);
+
+	public void fetchContractsOnWaiting();
 	
 	public void fetchRecentContractsOnError();
 	

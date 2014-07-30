@@ -14,5 +14,8 @@ public interface ElixirAuditRepository extends JpaRepository<ElixirAudit, Long> 
 	public List<ElixirAudit> findAllOrderByFetchTimestampDesc();
 	
 	@Query("SELECT audit FROM ElixirAudit audit WHERE status = 'ERROR' AND fetchTimestamp > :timestamp ")
-	public List<ElixirAudit> findAuditOnErrorSince(@Param("timestamp") Date timestamp);
+	public List<ElixirAudit> findAuditsOnErrorSince(@Param("timestamp") Date timestamp);
+	
+	@Query("SELECT audit FROM ElixirAudit audit WHERE status = 'WAITING'")
+	public List<ElixirAudit> findAuditsOnWaiting();
 }

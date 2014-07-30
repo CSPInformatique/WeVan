@@ -11,6 +11,7 @@ import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -34,7 +35,7 @@ public class BranchController {
 	
 	@RequestMapping(produces="application/json", method=RequestMethod.GET)
 	public @ResponseBody List<Branch> findBranchs(){
-		return this.branchService.findAll();
+		return this.branchService.findActiveBranches();
 	}
 	
 	@ResponseStatus(HttpStatus.OK)
@@ -83,5 +84,16 @@ public class BranchController {
 		}else{
 			return this.contractService.findByBranch(branchService.findOne(branch), pageRequest);
 		}	
+	}
+	
+	@RequestMapping(produces="text/html", method=RequestMethod.GET)
+	public String geBranchesPage(){
+		return "branches";
+	}
+	
+	@ResponseStatus(HttpStatus.OK)
+	@RequestMapping(method=RequestMethod.PUT, value={"", "/{id}"})
+	public @ResponseBody Branch saveBranch(@RequestBody Branch branch){
+		return this.branchService.saveBranch(branch);
 	}
  }

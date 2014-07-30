@@ -347,22 +347,9 @@ public class ContractServiceImpl implements ContractService {
 			}
 		}catch(RuntimeException ex){
 			this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "ERROR", wevanReservation, ex);
-			
-			throw ex;
-		}
-	}
-	
-	@Override
-	public void fetchRecentContractsOnError(){
-		logger.debug("Fetching recent contracts on error.");
-		
-		Calendar calendar = Calendar.getInstance();
-		calendar.add(Calendar.DAY_OF_MONTH, -7);
-		for(ElixirAudit audit : this.elixirAuditService.findAuditOnErrorSince(calendar.getTime())){
-			this.fetchContract(audit.getReservationId(), true, new Date());
-		}
 
-		logger.debug("Contract on error fetch completed.");
+			logger.error("Error while processing reservation : " + reservationId, ex);
+		}
 	}
 
 	@Override
@@ -406,11 +393,7 @@ public class ContractServiceImpl implements ContractService {
 				logger.info(reservationIds.length + " contracts received.");
 				
 				for(long reservationId : reservationIds){
-					try{
-						this.fetchContract(reservationId, branchId, forceUpdate, new Date(timestamp));
-					}catch(Exception ex){
-						logger.error("Error while processing reservation : " + reservationId, ex);
-					}			
+					this.fetchContract(reservationId, branchId, forceUpdate, new Date(timestamp));
 				}
 				
 				logger.info("Contract loading completed");
@@ -420,6 +403,30 @@ public class ContractServiceImpl implements ContractService {
 		}else{
 			logger.info("Contracts are already being fetch from backend.");
 		}
+	}
+	
+	@Override
+	public void fetchContractsOnWaiting(){
+		logger.info("Fetching contracts on WAITING.");
+		
+		for(ElixirAudit audit : this.elixirAuditService.findAuditsOnWaiting()){
+			this.fetchContract(audit.getReservationId(), true, new Date());
+		}
+		
+		logger.info("Finished fetching contracts on WAITING");
+	}
+	
+	@Override
+	public void fetchRecentContractsOnError(){
+		logger.info("Fetching recent contracts on error.");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_MONTH, -7);
+		for(ElixirAudit audit : this.elixirAuditService.findAuditOnErrorSince(calendar.getTime())){
+			this.fetchContract(audit.getReservationId(), true, new Date());
+		}
+
+		logger.info("Contract on error fetch completed.");
 	}
 	
 	@Override
@@ -531,7 +538,7 @@ public class ContractServiceImpl implements ContractService {
 					
 					logger.error(message);
 					
-					this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "SKIPPED", wevanReservation, message);
+					this.elixirAuditService.save(reservationId, contractId, requestedTimestamp, "WAITING", wevanReservation, message);
 				}
 			}else{
 				String message = "ReservationNotification " + reservationId + " as already been loaded in the system. Skipping.";

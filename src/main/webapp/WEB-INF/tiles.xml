@@ -15,6 +15,10 @@
 		<put-attribute name="footer" value="/WEB-INF/views/tiles/footer.jsp" />
 	</definition>
 		
+	<definition name="branches" extends="menuTemplate">
+		<put-attribute name="content" value="/WEB-INF/views/branches.jsp" />
+	</definition>
+		
 	<definition name="contract" extends="menuTemplate">
 		<put-attribute name="content" value="/WEB-INF/views/contract.jsp" />
 	</definition>

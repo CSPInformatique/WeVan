@@ -11,6 +11,7 @@ import javax.persistence.Id;
 public class Branch {
 	private int id;
 	private String name;
+	private boolean active;
 	private String addressNumber;
 	private String addressStreet;
 	private String companyName;
@@ -34,6 +35,7 @@ public class Branch {
 	public Branch(
 		int id, 
 		String name, 
+		boolean active,
 		String addressNumber,
 		String addressStreet, 
 		String companyName,
@@ -52,6 +54,7 @@ public class Branch {
 	){
 		this.id = id;
 		this.name = name;
+		this.active = active;
 		this.addressNumber = addressNumber;
 		this.addressStreet = addressStreet;
 		this.companyName = companyName;
@@ -85,6 +88,14 @@ public class Branch {
 
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	public boolean isActive() {
+		return active;
+	}
+
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 
 	public String getAddressNumber() {

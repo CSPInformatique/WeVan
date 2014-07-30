@@ -30,7 +30,12 @@ public class ElixirAuditServiceImpl implements ElixirAuditService {
 	
 	@Override
 	public List<ElixirAudit> findAuditOnErrorSince(Date timestamp){
-		return this.elixirAuditRepository.findAuditOnErrorSince(timestamp);
+		return this.elixirAuditRepository.findAuditsOnErrorSince(timestamp);
+	}
+	
+	@Override
+	public List<ElixirAudit> findAuditsOnWaiting(){
+		return this.elixirAuditRepository.findAuditsOnWaiting();
 	}
 	
 	@Override

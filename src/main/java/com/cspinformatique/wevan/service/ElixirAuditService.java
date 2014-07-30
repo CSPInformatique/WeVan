@@ -11,6 +11,8 @@ public interface ElixirAuditService {
 	
 	public List<ElixirAudit> findAuditOnErrorSince(Date timestamp);
 	
+	public List<ElixirAudit> findAuditsOnWaiting();
+	
 	public void save(Long reservationId, long contractId, Date requestedTimestamp, String status, WevanReservation wevanReservation);
 	
 	public void save(Long reservationId, long contractId, Date requestedTimestamp, String status, WevanReservation wevanReservation, String cause);
