@@ -79,7 +79,7 @@
     <input type="text" class="form-control" id="city" placeholder="Ville" value="<@= branch.city @>">
   </div>
   <div class="country form-group">
-    <label for="country">Ville</label>
+    <label for="country">Pays</label>
     <input type="text" class="form-control" id="country" placeholder="Pays" value="<@= branch.country @>">
   </div>
   <div class="phone form-group">
