@@ -87,7 +87,7 @@
     <input type="text" class="form-control" id="phone" placeholder="Numéro de téléphone" value="<@= branch.phone @>">
   </div>
   <div class="registration form-group">
-    <label for="registration">Numéro de téléphone</label>
+    <label for="registration">Numéro d'enregistrement</label>
     <input type="text" class="form-control" id="registration" placeholder="Numéro d'enregistrement" value="<@= branch.registration @>">
   </div>
   <div class="registrationDate form-group">
