@@ -5,7 +5,7 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@Entity(name="ElixirAudit")
+@Entity(name="elixiraudit")
 public class ElixirAudit {
 	private Long reservationId;
 	private long contractId;
