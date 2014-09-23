@@ -18,6 +18,6 @@
         username="wevan-test"
         password="wevan"
         driverClassName="com.mysql.jdbc.Driver"
-        url="jdbc:mysql://localhost:3306/wevan-test"
+        url="jdbc:mysql://docker.cspinformatique.com:3306/wevan-test"
 	/>
 </Context>
