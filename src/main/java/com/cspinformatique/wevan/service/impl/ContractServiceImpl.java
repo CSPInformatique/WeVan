@@ -61,34 +61,6 @@ public class ContractServiceImpl implements ContractService {
 		this.dateFormat = new SimpleDateFormat("dd/MM/yyyy");
 	}
 	
-	@PostConstruct
-	public void init(){
-		final ContractService contractService = this;
-		
-//		this.calendarService.cleanInvalidCalendars();
-//		this.calendarService.generateMissingCalendars();
-		
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				try{
-					Date startDate = new Date(1);
-
-					// If no contracts exists in the system, a full load will be launched. Otherwise,
-					// the edition date of the latest contract will be used to retreived all the missing contract.
-					Contract latestContract = contractService.findLastContractModified();
-					if(latestContract != null){
-						startDate = latestContract.getEditionDate();
-					}
-					
-					contractService.fetchContracts(startDate);
-				}catch(Exception ex){
-					logger.error("Unable to retreive contracts from we-van.com", ex);
-				}
-			}
-		}).start();
-	}
-	
 	@Override
 	public void deleteContract(long id){
 		this.contractRepository.delete(id);
@@ -169,7 +141,21 @@ public class ContractServiceImpl implements ContractService {
 
 			return contractId;
 		}
-
+	}
+	
+	@PostConstruct
+	public void init(){
+		final ContractService contractService = this;
+		
+//		this.calendarService.cleanInvalidCalendars();
+//		this.calendarService.generateMissingCalendars();
+		
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				contractService.fetchLatestContracts();
+			}
+		}).start();
 	}
 	
 	private double calculateDeductible(List<Option> options){
@@ -414,6 +400,27 @@ public class ContractServiceImpl implements ContractService {
 		}
 		
 		logger.info("Finished fetching contracts on WAITING");
+	}
+	
+	@Override
+	public void fetchLatestContracts(){
+		try{
+			Date startDate = new Date(1);
+
+			// If no contracts exists in the system, a full load will be launched. Otherwise,
+			// the edition date of the latest contract will be used to retreived all the missing contract.
+			Contract latestContract = this.findLastContractModified();
+			if(latestContract != null){
+				startDate = latestContract.getEditionDate();
+			}
+			
+			this.fetchContracts(startDate);
+			
+			this.fetchRecentContractsOnError();
+		}catch(Exception ex){
+			logger.error("Unable to retreive contracts from we-van.com", ex);
+		}
+		
 	}
 	
 	@Override

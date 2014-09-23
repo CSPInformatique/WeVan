@@ -38,6 +38,8 @@ public interface ContractService {
 
 	public void fetchContractsOnWaiting();
 	
+	public void fetchLatestContracts();
+	
 	public void fetchRecentContractsOnError();
 	
 	public Contract findLastContractModified();

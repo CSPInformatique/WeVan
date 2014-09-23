@@ -5,12 +5,10 @@ import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-@Entity
+@Entity(name="elixiraudit")
 public class ElixirAudit {
 	private Long reservationId;
-	private Long contractId;
+	private long contractId;
 	private Date fetchTimestamp;
 	private Date requestedTimestamp;
 	private String status;
@@ -23,7 +21,7 @@ public class ElixirAudit {
 	
 	public ElixirAudit(
 		Long reservationId, 
-		Long contractId,
+		long contractId,
 		Date fetchTimestamp,
 		Date requestedTimestamp, 
 		String status,
@@ -48,11 +46,11 @@ public class ElixirAudit {
 		this.reservationId = reservationId;
 	}
 
-	public Long getContractId() {
+	public long getContractId() {
 		return contractId;
 	}
 
-	public void setContractId(Long contractId) {
+	public void setContractId(long contractId) {
 		this.contractId = contractId;
 	}
 
@@ -80,7 +78,6 @@ public class ElixirAudit {
 		this.status = status;
 	}
 
-	@JsonIgnore
 	public String getPayload() {
 		return payload;
 	}
@@ -95,6 +92,5 @@ public class ElixirAudit {
 
 	public void setError(String error) {
 		this.error = error;
-	}
-	
+	}	
 }
