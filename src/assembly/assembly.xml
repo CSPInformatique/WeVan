@@ -15,6 +15,14 @@
 				<include>*.war</include>
 			</includes>
 		</fileSet>
+
+                <fileSet>
+                        <directory>docker-resources/image</directory>
+                        <outputDirectory>/</outputDirectory>
+                        <includes>
+                                <include>Dockerfile</include>
+                        </includes>
+                </fileSet>
 		
 		<fileSet>
 			<directory>docker-image</directory>
