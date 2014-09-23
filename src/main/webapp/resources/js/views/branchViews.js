@@ -75,6 +75,14 @@ window.BranchesView = Backbone.View.extend({
     	);
     	
     	$('.modal.branch').modal({backdrop : 'static'});
+
+	    $(".registrationDate input").each(function(index, element){
+    		var dateInput = $(element);
+    		dateInput.datetimepicker({format: 'yyyy-mm-dd'});
+    		if(dateInput.val() != ""){
+    			dateInput.val(moment(parseInt($(element).val())).format("YYYY-MM-DD"));
+    		}
+    	});
     	
     	$("button.save").prop('disabled', false);
     	$("button.close").prop('disabled', false);
