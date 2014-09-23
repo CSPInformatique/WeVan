@@ -4,8 +4,10 @@ import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
-@Entity(name="elixiraudit")
+@Entity
+@Table(name="elixiraudit")
 public class ElixirAudit {
 	private Long reservationId;
 	private long contractId;
