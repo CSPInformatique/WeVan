@@ -4,8 +4,10 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="option")
 public class Option {
 	public static final String LABEL_ADDITIONAL_DRIVER = "Conducteur(s) additionnel(s)";
 	public static final String LABEL_BEDS = "Lits";

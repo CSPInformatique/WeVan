@@ -8,8 +8,10 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="reservationnotification")
 public class ReservationNotification {
 	public enum Status{
 		ON_ERROR, NEW, PROCESSED 

@@ -10,7 +10,7 @@ import com.cspinformatique.wevan.service.ContractService;
 public class ContractTask {
 	@Autowired private ContractService contractService;
 	
-	@Scheduled(fixedDelay=30 * 1000)
+	@Scheduled(fixedDelay=60 * 1000)
 	public void fetchContracts(){
 		contractService.fetchLatestContracts();
 	}

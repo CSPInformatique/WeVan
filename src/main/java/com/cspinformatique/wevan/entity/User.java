@@ -9,11 +9,13 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.Table;
 import javax.persistence.Transient;
 
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
+@Table(name="user")
 public class User implements UserDetails {
 	private static final long serialVersionUID = 487179158734855592L;
 	
