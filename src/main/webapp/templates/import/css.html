@@ -1,0 +1,16 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+	<head th:fragment="css" th:remove="tag">
+		<!-- Bootstrap core CSS -->
+	   	<link th:href="@{/resources/lib/bootstrap/css/bootstrap.min.css}" rel="stylesheet" />
+    	<link th:href="@{/resources/lib/bootstrap-datetimepicker/css/datetimepicker.css}" rel="stylesheet" />
+	    <link th:href="@{/resources/lib/select2/css/select2.css}" rel="stylesheet" />
+	
+	    <!-- Custom styles for this template -->
+	    <link th:href="@{/resources/css/wevan.css}" rel="stylesheet" />
+	</head>
+</html>

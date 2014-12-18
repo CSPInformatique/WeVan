@@ -1,0 +1,144 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+	<head>
+		<meta th:replace="import/meta :: meta" />
+		
+	    <title>WeVan - Gestion de véhicules</title>
+	    
+	    <link th:replace="import/css :: css"/>
+	</head>
+	<body>
+		<header th:replace="import/header :: header"></header>
+	
+		<section>
+			<script type="text/template" id="branchesComboBox-template">
+				<select class="branches">
+					<@ _.each(branchesList, function(branch) { @>
+						<option value="<@= branch.id @>"><@= branch.name @></option>
+					<@ }); @>
+				</select>
+			</script>
+
+			<script type="text/template" id="vehiculeList-template">
+				<table class="table">
+					<thead>
+						<tr class="active">
+							<th>Nom</th>
+							<th class="text-center">#</th>
+							<th>Modèle</th>
+							<th>Immatriculation</th>
+							<th>&nbsp;</th>
+							<th>&nbsp;</th>
+						</tr>
+					</thead>
+					<tbody>
+			<@	_.each(vehiculeList, function(vehicule) { @>
+						<tr>
+							<td class="name"><@= vehicule.name @></td>
+							<td class="number text-center"><@= vehicule.number @></td>
+							<td class="model"><@= vehicule.model @></td>
+							<td class="registration"><@= vehicule.registration @></td>
+							<td class="edit">
+								<button class="btn btn-primary" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-edit"></span></button>
+							</td>
+							<td class="delete">
+								<button class="btn btn-danger" data-id="<@= vehicule.id @>"><span class="glyphicon glyphicon-remove"></span></button>
+							</td>
+						</tr>
+			<@	}); @>
+					</tbody>
+				</table>
+			</script>
+			<script type="text/template" id="newVehicule-template">
+			  <input class="id" type="hidden" value="<@= vehicule.id @>" />
+			  <div class="name form-group">
+			    <label for="name">Nom du véhicule</label>
+			    <input type="text" class="form-control" id="name" placeholder="Entrez le nom" value="<@= vehicule.name @>">
+			  </div>
+			  <div class="number form-group">
+			    <label for="number">Numéro</label>
+			    <input type="number" class="form-control" id="number" placeholder="Numéro" value="<@= vehicule.number @>">
+			  </div>
+			  <div class="model form-group">
+			    <label for="model">Modèle</label>
+			    <input type="text" class="form-control" id="model" placeholder="Modèle" value="<@= vehicule.model @>">
+			  </div>
+			  <div class="registration form-group">
+			    <label for="registration">Immatriculation</label>
+			    <input type="text" class="form-control" id="registration" placeholder="Enregistrement" value="<@= vehicule.registration @>">
+			  </div>
+			  <div class="branch form-group">
+			    <label for="branch">Succursale</label>
+			<@	if(user.hasRole("ADMIN")){	@>
+			    <select class="form-control" id="branch">
+			<@	}else{	@>
+			    <select class="form-control" id="branch" disabled="disabled">
+			<@	}
+				_.each(branchList, function(branch) {
+					if(	(vehicule.branch == "" && branch.id == selectedBranch) || 
+						(vehicule.branch != "" && branch.id == vehicule.branch.id)
+					){	@>
+					<option value="<@= branch.id @>" selected="selected"><@= branch.name @></option>
+			<@		}	@>
+					<option value="<@= branch.id @>"><@= branch.name @></option>
+			<@	});	@>
+				</select>
+			  </div> 
+			</script>
+			<div class="filters">
+				<div class="col-xs-12">
+					<div class="branches">
+						<h4>Succursale</h4>
+						<div class="branchesComboBox-container"></div>
+					</div>
+					<div class="new">
+						<button class="btn btn-primary pull-right">Nouveau</button>
+					</div>
+				</div>
+			</div>
+
+			<div class="vehicules">
+				<div class="table-responsive">
+					<div id="vehiculeList-container"></div>
+				</div>
+			</div>
+
+			<div>
+				<div class="col-xs-12 new"><button class="btn btn-primary">Nouveau</button></div>
+			</div>
+
+			<div class="modal fade vehicule">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<form role="form">
+							<div class="modal-header">
+							 	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+								<h4 class="modal-title">Véhicule</h4>
+							</div>
+							<div class="modal-body">
+							  
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+								<button type="button" class="save btn btn-primary">Enregistrer</button>
+							</div>
+						</form>
+					</div><!-- /.modal-content -->
+				</div><!-- /.modal-dialog -->
+			</div><!-- /.modal -->
+		</section>
+	
+		<footer th:replace="import/footer :: footer"></footer>
+		
+		<div th:replace="import/javascript :: js"></div>
+	  	<script th:src="@{/resources/js/models/branch.js}"></script>
+	  	<script th:src="@{/resources/js/models/vehicule.js}"></script>
+	  	<script th:src="@{/resources/js/vehicule/vehicule-page.js}"></script>
+	  	<script th:src="@{/resources/js/views/branchViews.js}"></script>
+	  	<script th:src="@{/resources/js/views/vehiculeViews.js}"></script>
+	</body>
+</html>

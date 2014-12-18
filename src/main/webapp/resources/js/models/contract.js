@@ -1,7 +1,7 @@
 window.Contract = Backbone.Model.extend({
 	idAttribute: "id",
 	url : function() {
-		var base = ctx + '/contract';
+		var base = $("header").attr("data-context") + 'contract';
 		if (this.isNew() || this.id == null) return base;
 		
 		base = base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.id;
@@ -17,11 +17,11 @@ window.Contract = Backbone.Model.extend({
 window.ContractPage = Backbone.Model.extend({
 	model: Contract,
 	url: function(){
-		var base = ctx + "/contract";
+		var base = $("header").attr("data-context") + "contract";
 		if(this.branch == null){
 			return base + ".json";
 		}else{
-			var url = ctx + "/branch/" + this.branch + "/contract.json";
+			var url = $("header").attr("data-context") + "branch/" + this.branch + "/contract.json";
 			
 			url += "?page=" + this.page;
 			url += "&results=" + this.results;

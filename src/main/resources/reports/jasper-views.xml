@@ -10,7 +10,7 @@
 	<bean 
 		id="pdfReport"
 		class="org.springframework.web.servlet.view.jasperreports.JasperReportsPdfView"
-		p:url="classpath:Print-Contract.jrxml"
+		p:url="classpath:Print-Contract.jasper"
 		p:reportDataKey="jdbcDataSource" 
 	/>
 </beans>

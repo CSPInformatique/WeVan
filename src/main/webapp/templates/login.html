@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+	<head>
+		<meta th:replace="import/meta :: meta" />
+		
+	    <title>WeVan - Gestion de véhicules</title>
+	    
+	    <link th:replace="import/css :: css"/>
+	    <link th:href="@{/resources/css/login.css}" rel="stylesheet" />
+	</head>
+		<header>
+			<img th:src="@{/resources/img/contract/	logo-wevan-transp-medium-cropped.png}" />
+		</header>
+		<section class="container">
+			<form class="form-signin" role="form" th:action="@{/authenticate}" method="POST">
+				<h2 class="form-signin-heading">Connexion</h2>
+				
+				<label for="agency" class="sr-only">Agence</label>
+				<input type="text" id="agency" name="agency" class="form-control" placeholder="Agence" required autofocus>
+				
+				<label for="password" class="sr-only">Mot de passe</label>
+				<input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+				
+				<button class="btn btn-lg btn-primary btn-block" type="submit">Connexion</button>
+			</form>
+		</section>
+	
+		<footer th:replace="import/footer :: footer"></footer>
+		
+		<div th:replace="import/javascript :: js"></div>
+	</body>
+</html>

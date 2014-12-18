@@ -1,0 +1,31 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:th="http://www.thymeleaf.org" 
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+>
+	<body>
+		<div th:fragment="js" th:remove="tag">
+			<script th:src="@{/resources/lib/jquery-2.1.1/jquery-2.1.1.js}"></script>
+			<script th:src="@{/resources/js/libs/underscore.js}"></script>
+			<script th:src="@{/resources/js/libs/backbone.js}"></script>
+			<script th:src="@{/resources/lib/bootstrap/js/bootstrap.min.js}"></script>
+			<script th:src="@{/resources/lib/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js}"></script>
+			<script th:src="@{/resources/lib/jquery.floatThead/js/jquery.floatThead.min.js}"></script>
+			<script th:src="@{/resources/lib/moment/js/moment-with-langs.js}"></script>
+			<script th:src="@{/resources/js/libs/multi-sort.collection.js}"></script>
+			<script th:src="@{/resources/lib/select2/js/select2.min.js}"></script>
+			
+			<script th:src="@{/resources/lib/csp-error/csp-error.js}"></script>
+			
+			<script th:src="@{/resources/js/models/user.js}"></script>
+		    <script type="text/javascript">
+		    	_.templateSettings = {
+		    	    interpolate: /\<\@\=(.+?)\@\>/gim,	
+		    	    evaluate: /\<\@([\s\S]+?)\@\>/gim,
+		    	    escape: /\<\@\-(.+?)\@\>/gim
+		    	};
+		    </script>
+		</div>
+	</body>
+</html>

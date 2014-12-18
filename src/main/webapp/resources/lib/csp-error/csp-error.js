@@ -24,7 +24,7 @@ var notifyError = function(exception){
 	//jsError.userOs = $('#UserAgent').val(navigator.oscpu);
 
 	$.ajax({
-		url : ctx + "/error.json",
+		url : $("header").attr("data-context") + "error.json",
 		type : "PUT",
 		contentType : "application/json",
 		dataType : "json",

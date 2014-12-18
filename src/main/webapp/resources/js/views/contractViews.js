@@ -199,7 +199,7 @@ window.ContractPageView = Backbone.View.extend({
     printContract: function(contractId){
     	this.saveContract({
     		callback : function(resultContract){
-    			window.open(ctx + "/contract/" + resultContract.id);
+    			window.open($("header").attr("data-context") + "contract/" + resultContract.id);
     		} 
     	});
     },

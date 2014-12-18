@@ -1,5 +1,5 @@
 window.Error = Backbone.Model.extend({
-	url : ctx + '/error'
+	url : $("header").attr("data-context") + 'error'
 });
 
 /*

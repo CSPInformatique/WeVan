@@ -1,7 +1,7 @@
 window.User = Backbone.Model.extend({
 	idAttribute: "username",
 	url : function() {
-		var base = ctx + '/user';
+		var base = $("header").attr("data-context") + 'user';
 		if (this.isNew() || this.toJSON().username == null) return base;
 		return base + (base.charAt(base.length - 1) == '/' ? '' : '/') + this.toJSON().username;
 	},

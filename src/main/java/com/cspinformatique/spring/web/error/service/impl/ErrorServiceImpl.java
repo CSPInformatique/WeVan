@@ -87,10 +87,10 @@ public class ErrorServiceImpl implements ErrorService {
 			mailContent.append("<html>");
 			mailContent.append("<body>");
 			mailContent.append("<h1>An error occured on client " + jsError.getUserIp() + " at " + date + "</h1>");
-			mailContent.append("<h3>User details</h3>");
+			mailContent.append("<h3>UserDTO details</h3>");
 			mailContent.append("<p>");
 			mailContent.append("<div>IP address : " + jsError.getUserIp() + "</div>");
-			mailContent.append("<div>User agent : " + jsError.getUserAgent()+ "</div>");
+			mailContent.append("<div>UserDTO agent : " + jsError.getUserAgent()+ "</div>");
 			mailContent.append("<div>OS : " + jsError.getUserOs() + "</div>");
 			mailContent.append("</p");
 			mailContent.append("<h3>Error details</h3>");
